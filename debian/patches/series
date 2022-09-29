@@ -1,0 +1,2 @@
+docs-Don-t-scan-ctx.h-with-gtk-doc.patch
+tests-Use-endiannness-dependent-reference-GEGL-buffers.patch

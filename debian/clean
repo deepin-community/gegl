@@ -1,0 +1,2 @@
+tests/compositions/reference/hdr-color.little-endian.gegl
+tests/compositions/reference/rgb-params.little-endian.gegl

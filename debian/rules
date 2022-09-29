@@ -1,0 +1,67 @@
+#!/usr/bin/make -f
+
+built_binaries := $(shell dh_listpackages)
+
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+export DEB_LDFLAGS_MAINT_APPEND = -Wl,-O1 -Wl,-O1 -Wl,-z,defs
+
+include /usr/share/dpkg/default.mk
+
+ifeq ($(DEB_HOST_ARCH_OS), hurd)
+	EXTRA_CONFIGURE_OPTIONS=-Dlibv4l=disabled -Dlibv4l2=disabled
+else
+	EXTRA_CONFIGURE_OPTIONS=
+endif
+
+ifeq ($(filter %-doc,$(built_binaries)),)
+EXTRA_CONFIGURE_OPTIONS += -Dgtk-doc=false
+else
+EXTRA_CONFIGURE_OPTIONS += -Dgtk-doc=true
+endif
+
+# Upstream test timeouts assume an otherwise unloaded system, but that
+# isn't necessarily the case for a porterbox or multiple parallel builds
+test_timeout_multiplier = 3
+
+ifneq ($(filter aarch64 arm% hppa mips% sparc%,$(DEB_HOST_ARCH_CPU)),)
+# These architectures are typically slower, particularly for the sort of
+# floating-point processing we're doing here
+test_timeout_multiplier = 10
+endif
+
+ifneq ($(filter m68k riscv64 sh4,$(DEB_HOST_ARCH_CPU)),)
+# These architectures are known to have qemu buildds, which are really slow
+test_timeout_multiplier = 20
+endif
+
+%:
+	dh $@
+
+# Remove this (and the corresponding entries in d/clean) if MR
+# https://gitlab.gnome.org/GNOME/gegl/-/merge_requests/108 is applied
+# in an upstream release
+set-up-test-files:
+	ln -f tests/compositions/reference/hdr-color.gegl tests/compositions/reference/hdr-color.little-endian.gegl
+	ln -f tests/compositions/reference/rgb-params.gegl tests/compositions/reference/rgb-params.little-endian.gegl
+
+override_dh_auto_configure: set-up-test-files
+	dh_auto_configure -- \
+		-Dauto_features=enabled \
+		-Ddocs=true \
+		-Djasper=disabled \
+		-Dlua=disabled \
+		-Dmrg=disabled \
+		-Dpygobject=disabled \
+		-Dsdl1=disabled \
+		-Dsdl2=disabled \
+		$(EXTRA_CONFIGURE_OPTIONS)
+
+# These json files appear to only be needed for distcheck according to git log
+override_dh_missing:
+	dh_missing -Xgrey2.json -Xdropshadow2.json
+
+override_dh_makeshlibs:
+	dh_makeshlibs -X/usr/lib/$(DEB_HOST_MULTIARCH)/gegl-0.4/ -- -c4
+
+override_dh_auto_test:
+	dh_auto_test --no-parallel -- --timeout-multiplier $(test_timeout_multiplier)

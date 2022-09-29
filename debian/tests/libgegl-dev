@@ -1,0 +1,47 @@
+#!/bin/sh
+# autopkgtest check: Build and run a program against gegl, to verify that the
+# headers and pkg-config file are installed correctly
+# (C) 2012 Canonical Ltd.
+# (C) 2018-2020 Simon McVittie
+# Authors: Martin Pitt, Simon McVittie
+
+set -eux
+
+WORKDIR=$(mktemp -d)
+export XDG_RUNTIME_DIR="$WORKDIR"
+trap 'rm -rf "$WORKDIR"' 0 INT QUIT ABRT PIPE TERM
+cd "$WORKDIR"
+
+if [ -n "${DEB_HOST_GNU_TYPE:-}" ]; then
+    CROSS_COMPILE="${DEB_HOST_GNU_TYPE}-"
+else
+    CROSS_COMPILE=
+fi
+
+cat <<'EOF' > gegl-0.4.c
+#include <gegl.h>
+
+int main(void)
+{
+    int x, y, z;
+
+    gegl_get_version (&x, &y, &z);
+    g_assert_cmpint (x, >=, 0);
+    g_assert_cmpint (y, >=, 0);
+    g_assert_cmpint (z, >=, 0);
+    return 0;
+}
+EOF
+
+# TODO: gegl-sc-0.4 not directly usable? (https://bugs.debian.org/954177)
+for lib in \
+    gegl-0.4 \
+; do
+    # Deliberately word-splitting pkg-config's output:
+    # shellcheck disable=SC2046
+    "${CROSS_COMPILE}gcc" -o "${lib}-test" "${lib}.c" $("${CROSS_COMPILE}pkg-config" --cflags --libs "${lib}")
+    echo "build ($lib): OK"
+    [ -x "${lib}-test" ]
+    xvfb-run -a "./${lib}-test"
+    echo "run ($lib): OK"
+done

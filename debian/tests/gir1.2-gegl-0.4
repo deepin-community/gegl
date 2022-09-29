@@ -1,0 +1,14 @@
+#!/usr/bin/python3
+# Copyright 2020 Simon McVittie
+# SPDX-License-Identifier: MIT
+
+import os
+
+import gi
+gi.require_version('Gegl', '0.4')
+
+from gi.repository import Gegl
+
+if __name__ == '__main__':
+    triple = Gegl.get_version()
+    assert tuple(triple) >= (0, 1)

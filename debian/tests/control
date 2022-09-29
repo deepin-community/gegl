@@ -1,0 +1,10 @@
+Tests: libgegl-dev
+Depends: build-essential,
+         libgegl-dev,
+         xauth,
+         xvfb
+Restrictions: allow-stderr superficial
+
+Tests: gir1.2-gegl-0.4
+Depends: gir1.2-gegl-0.4, python3-gi
+Restrictions: allow-stderr, superficial

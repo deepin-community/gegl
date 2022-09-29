@@ -1,0 +1,756 @@
+gegl (1:0.4.32-2) unstable; urgency=medium
+
+  * Team upload
+  * d/p/docs-Don-t-scan-ctx.h-with-gtk-doc.patch:
+    Mark patch as applied upstream
+  * d/rules: Update name of Meson option for SDL display.
+    This was intended to be disabled, but we were using an old name for the
+    option, which is an error with Meson 0.60.0. (Closes: #997938)
+
+ -- Simon McVittie <smcv@debian.org>  Thu, 28 Oct 2021 10:19:40 +0100
+
+gegl (1:0.4.32-1) unstable; urgency=medium
+
+  * Team upload
+  * New upstream release
+  * d/p/tests-Use-endiannness-dependent-reference-GEGL-buffers.patch,
+    d/rules, d/clean:
+    Avoid trying to load little-endian GEGL buffers on BE architectures
+    (Closes: #991300)
+  * d/lbgegl-0.4-0.docs: Adjust name of NEWS.adoc
+  * d/rules: Enable gtk-doc if necessary
+  * d/control.in: Don't depend on gtk-doc-tools under nodoc profile
+  * d/libgegl-0.4-0.symbols: Mark private symbols as optional
+  * d/p/docs-Don-t-scan-ctx.h-with-gtk-doc.patch:
+    Add proposed patch fixing FTBFS with current gtk-doc
+  * d/libgegl-doc.docs: Install asciidoc source instead of HTML.
+    HTML is no longer provided in the tarball release.
+
+ -- Simon McVittie <smcv@debian.org>  Thu, 09 Sep 2021 13:10:11 +0100
+
+gegl (1:0.4.30-1) unstable; urgency=medium
+
+  [ Jeremy Bicha ]
+  * New upstream release
+  * Drop fix-build-new-glib.patch: Applied in new release
+
+  [ Laurent Bigonville ]
+  * debian/control.in: Suggest the graphviz package
+    gegl now needs the "dot" executable for some optional features
+    (Closes: #985566)
+
+ -- Jeremy Bicha <jbicha@debian.org>  Sun, 18 Jul 2021 13:47:03 -0400
+
+gegl (1:0.4.28-3) unstable; urgency=medium
+
+  [ Olivier Tilloy ]
+  * Cherry-pick an upstream PR to fix build against glib 2.67.3
+    - debian/patches/fix-build-new-glib.patch
+
+ -- Jeremy Bicha <jbicha@debian.org>  Wed, 17 Mar 2021 20:22:23 -0400
+
+gegl (1:0.4.28-2) unstable; urgency=medium
+
+  * debian/control.in: Use epoch for babl dependency (Closes: #985154)
+
+ -- Jeremy Bicha <jbicha@debian.org>  Sat, 13 Mar 2021 15:53:15 -0500
+
+gegl (1:0.4.28-1) unstable; urgency=medium
+
+  * New upstream release
+  * debian/control.in: Bump minimum babl to 0.1.84
+  * debiabn/control.in: Bump minimum meson to 0.54.0
+  * debian/control.in: Build-Depend on libmaxflow-dev
+
+ -- Jeremy Bicha <jbicha@debian.org>  Fri, 12 Mar 2021 18:37:16 -0500
+
+gegl (1:0.4.26-2) unstable; urgency=medium
+
+  * Team upload
+  * Preferentially build-depend on libgdk-pixbuf-2.0-dev.
+    We don't need the deprecated Xlib integration that is also pulled in
+    by the older libgdk-pixbuf2.0-dev package (see #974870).
+  * Use secure URI in Homepage field
+  * d/upstream/metadata: Add
+  * d/copyright: Make Source consistent with d/watch
+  * Standards-Version: 4.5.1 (no changes required)
+
+ -- Simon McVittie <smcv@debian.org>  Tue, 24 Nov 2020 10:04:21 +0000
+
+gegl (1:0.4.26-1) unstable; urgency=medium
+
+  * Team upload
+  * New upstream release
+    - d/libgegl-0.4-0.symbols: Update
+  * Add an epoch to the version number.
+    This ensures that versions previously shipped by the deb-multimedia
+    third-party apt repository are correctly superseded.
+    - d/libgegl-0.4-0.symbols: Also add the epoch to all symbols introduced
+      since the last known version of gegl before it was removed from the
+      deb-multimedia repository.
+    - d/source/lintian-overrides: Justify the epoch bump
+    (Closes: #961993, #962093 and many older reports)
+  * Add a superficial autopkgtest for the GIR data
+  * Link with -Wl,-z,defs to detect any missing library dependencies
+
+ -- Simon McVittie <smcv@debian.org>  Wed, 26 Aug 2020 11:02:13 +0100
+
+gegl (0.4.24-1) unstable; urgency=medium
+
+  [ Jeremy Bicha ]
+  * New upstream release
+  * Bump minimum babl to 0.1.78
+  * debian/libgegl-0.4-0.symbols: Update
+  * Update debian/watch
+  * Drop all patches: applied in new release
+
+  [ Simon McVittie ]
+  * Remove unused build-dependency on GTK 2 (Closes: #959088)
+  * Move to debhelper compat level 13
+  * d/rules: Remove explicit -Wl,--as-needed linker flag
+
+ -- Jeremy Bicha <jbicha@debian.org>  Sat, 13 Jun 2020 12:57:47 -0400
+
+gegl (0.4.22-3) unstable; urgency=medium
+
+  * Team upload
+  * d/rules: Show testlog.txt if tests fail, like dh_auto_test does.
+    This is a useful way to correlate tests' output with which tests
+    failed.
+  * Fix max-diff property name.
+    GLib 2.64 validates property names more strictly, resulting in this
+    not working as intended, with max_diff left uninitialized. It appears
+    this caused test failures that were more likely to happen on mips*.
+    (Closes: #954196)
+  * Work around #954197.
+    GLib has a long-standing bug in which a GFileMonitor that is freed
+    without being explicitly cancelled first can result in a deadlock.
+    Work around this by explicitly cancelling it.
+
+ -- Simon McVittie <smcv@debian.org>  Wed, 18 Mar 2020 11:54:14 +0000
+
+gegl (0.4.22-2) unstable; urgency=medium
+
+  * Team upload
+
+  [ Andreas Henriksson ]
+  * Explicitly disable v4l build options on Hurd.
+    Normally these would get disabled because the options are set to
+    'auto', but because debian/rules uses -Dauto_features=enabled
+    to override the auto behaviour (to avoid feature going missing
+    surprises) we need to explicitly disable options which we don't
+    want to use.
+    This is a followup fix on #947784
+
+  [ Laurent Bigonville ]
+  * debian/control.in: Add libglib2.0-doc to B-D-I and mark the -doc
+    package with Build-Profiles: <!nodoc>
+
+  [ Simon McVittie ]
+  * d/rules: Increase timeout for unit tests on arm*, mips*, etc.
+    The upstream-set timeouts are somewhat optimistic.
+    Use `meson test` directly, instead of dh_auto_test, to get better
+    control. This can be simplified in dh compat level 13.
+    (Might resolve #951821)
+  * Set Rules-Requires-Root to no
+  * Standards-Version: 4.5.0 (no changes required)
+  * Add a superficial autopkgtest for libgegl-dev
+
+ -- Simon McVittie <smcv@debian.org>  Tue, 17 Mar 2020 20:15:24 +0000
+
+gegl (0.4.22-1) unstable; urgency=medium
+
+  * Team upload
+
+  [ Samuel Thibault ]
+  * Mark libv4l-dev build-dep as not for hurd (Closes: #947784)
+
+  [ Andreas Henriksson ]
+  * New upstream release
+  * Bump babl (build-)dep according to meson.build
+  * Revert "* debian/patches/increase_test_timeout.patch:", merged upstream.
+  * Revert "Cherry-pick meson-fix-cpu-detection.patch:"
+    - cherry-picked from upstream, now part of upstream release.
+  * Disable running tests in parallel
+
+ -- Andreas Henriksson <andreas@fatal.se>  Sat, 22 Feb 2020 18:21:29 +0100
+
+gegl (0.4.18-2) unstable; urgency=medium
+
+  * debian/patches/increase_test_timeout.patch:
+    - increase the ff-load-save test timeout from 120s to 360s, it's needed
+      on some of the slower architectures
+
+ -- Sebastien Bacher <seb128@ubuntu.com>  Thu, 21 Nov 2019 13:28:09 +0100
+
+gegl (0.4.18-1) unstable; urgency=medium
+
+  * New upstream release
+  * Build with meson
+  * Build-Depend on liblensfun-dev, libsdl2-dev (instead of 1.2) & libv4l-dev
+  * Bump minimum libbabl-dev to 0.172-3~ for gir1.2-babl-0.1
+  * debian/libgegl-0.4-0.symbols: Update
+  * debian/libgegl-0.4-0.docs: Install docs/NEWS.txt
+  * debian/libgegl-0.4-0.docs: README is no longer provided
+  * Drop test timeout patch: Applied in new release
+  * Cherry-pick meson-fix-cpu-detection.patch:
+    - Fix build on several architectures
+
+ -- Jeremy Bicha <jbicha@debian.org>  Fri, 08 Nov 2019 19:22:33 -0500
+
+gegl (0.4.16-2) unstable; urgency=medium
+
+  * Build-Depend on debhelper-compat 12 and drop debian/compat
+  * Build-Depend on dh-sequence-gnome and dh-sequence-gir
+  * Bump Standards-Version to 4.4.1
+
+ -- Jeremy Bicha <jbicha@debian.org>  Sun, 27 Oct 2019 17:32:50 -0400
+
+gegl (0.4.16-1) unstable; urgency=medium
+
+  * New upstream release
+  * debian/libgegl-0.4-0.symbols: Add new symbols
+  * Drop direct Build-Depends on libexiv2-dev per configure.ac update
+
+ -- Jeremy Bicha <jbicha@debian.org>  Sun, 13 Oct 2019 20:47:03 -0400
+
+gegl (0.4.14-2) unstable; urgency=high
+
+  * Cherry-pick commit which increased a test timeout affecting the mips
+    builders. Thanks Bernhard Übelacker. (Closes: #940190)
+
+ -- Jeremy Bicha <jbicha@debian.org>  Sun, 15 Sep 2019 22:05:05 -0400
+
+gegl (0.4.14-1) unstable; urgency=medium
+
+  * New upstream release
+  * Build-Depend on libpoppler-glib-dev
+  * Bump minimum babl to 0.1.62
+  * Update debian/libgegl-0.4-0.symbols
+
+ -- Jeremy Bicha <jbicha@debian.org>  Tue, 05 Mar 2019 03:05:53 -0500
+
+gegl (0.4.12-2) unstable; urgency=medium
+
+  * Restore -Wl,-O1 to our LDFLAGS
+  * Bump Standards-Version to 4.3.0
+
+ -- Jeremy Bicha <jbicha@debian.org>  Mon, 24 Dec 2018 09:12:28 -0500
+
+gegl (0.4.12-1) unstable; urgency=medium
+
+  * New upstream release
+
+ -- Jeremy Bicha <jbicha@debian.org>  Thu, 08 Nov 2018 20:26:48 -0500
+
+gegl (0.4.10-1) unstable; urgency=medium
+
+  * New upstream release
+  * debian/control.in: Bump minimum babl to 0.1.58
+  * debian/libgegl-0.4-0.symbols: Update
+
+ -- Jeremy Bicha <jbicha@debian.org>  Tue, 16 Oct 2018 16:12:38 -0400
+
+gegl (0.4.8-1) unstable; urgency=medium
+
+  * New upstream release
+  * debian/control.in: Bump minimum babl to 0.1.56
+
+ -- Jeremy Bicha <jbicha@debian.org>  Mon, 20 Aug 2018 07:11:54 -0400
+
+gegl (0.4.6-1) unstable; urgency=medium
+
+  * New upstream release
+  * debian/control.in: Bump minimum babl to 0.1.54
+  * debian/libgegl-0.4-0.symbols: Add new symbols
+
+ -- Jeremy Bicha <jbicha@debian.org>  Tue, 31 Jul 2018 13:29:20 -0400
+
+gegl (0.4.2-1) unstable; urgency=medium
+
+  * New upstream release
+  * Bump minimum libbabl-dev to 0.1.48
+  * debian/libgegl-0.4-0.symbols: Add new symbols
+  * debian/gbp.conf: Update
+
+ -- Jeremy Bicha <jbicha@debian.org>  Sun, 20 May 2018 22:52:50 -0400
+
+gegl (0.4.0-1) unstable; urgency=medium
+
+  * New upstream release
+    - 0.4.x is a new stable series for the gimp 2.10 series
+  * Update package names for soname bump
+  * Add libgegl-common package for translations
+  * debian/copyright: Update
+
+ -- Jeremy Bicha <jbicha@debian.org>  Fri, 27 Apr 2018 12:44:45 -0400
+
+gegl (0.3.34-1) unstable; urgency=medium
+
+  * New upstream release
+  * Bump minimum babl to 0.1.46 (Closes: #894471)
+  * debian/libgegl-0.3-0.symbols: Add new symbols
+  * Bump Standards-Version to 4.1.4
+
+ -- Jeremy Bicha <jbicha@debian.org>  Tue, 17 Apr 2018 20:50:32 -0400
+
+gegl (0.3.30-1) unstable; urgency=medium
+
+  * New upstream release
+  * Drop all patches: Applied in new release
+  * debian/libgegl-0.3-0.symbols: Add new symbols
+
+ -- Jeremy Bicha <jbicha@debian.org>  Tue, 27 Mar 2018 10:19:24 -0400
+
+gegl (0.3.28-4) unstable; urgency=high
+
+  * Add dont-run-perf-tests.patch:
+    - Skip running perf tests to fix build on s390x. See GNOME bug 794334
+
+ -- Jeremy Bicha <jbicha@debian.org>  Wed, 14 Mar 2018 20:16:55 -0400
+
+gegl (0.3.28-3) unstable; urgency=high
+
+  * Cherry-pick buffer-verify-alignment-in-optimized-buffer.patch:
+    - Fixes build test failure on Ubuntu's armhf builders
+  * Bump urgency to not further delay ongoing transition
+
+ -- Jeremy Bicha <jbicha@debian.org>  Wed, 14 Mar 2018 09:11:41 -0400
+
+gegl (0.3.28-2) unstable; urgency=medium
+
+  * Build GObject Introspection bindings (Closes: #877555)
+
+ -- Jeremy Bicha <jbicha@debian.org>  Wed, 21 Feb 2018 20:40:49 -0500
+
+gegl (0.3.28-1) unstable; urgency=medium
+
+  * New upstream release
+  * Bump minimum babl to 0.1.42
+  * debian/libgegl-0.3-0.symbols: Update
+
+ -- Jeremy Bicha <jbicha@debian.org>  Fri, 26 Jan 2018 09:36:02 -0500
+
+gegl (0.3.26-1) unstable; urgency=medium
+
+  * New upstrem release
+  * Add debian/gbp.conf
+  * Update Vcs fields for move to Debian Salsa
+  * debian/libgegl-0.3-0.symbols: Add new symbols
+  * Bump debhelper compat to 11
+  * Bump Standards-Version to 4.1.3
+
+ -- Jeremy Bicha <jbicha@debian.org>  Wed, 10 Jan 2018 10:32:28 -0500
+
+gegl (0.3.24-1) unstable; urgency=medium
+
+  * New upstream release
+  * debian/libgegl-0.3-0.symbols: Add new symbol
+
+ -- Jeremy Bicha <jbicha@debian.org>  Sun, 26 Nov 2017 11:59:30 -0500
+
+gegl (0.3.22-1) unstable; urgency=medium
+
+  * New upstream release
+  * debian/control.in:
+    - Bump Build-Depends for libbabl-dev (>= 0.1.36),
+      libcairo2-dev (>= 0.12.2), and librsvg2-dev (>= 2.40.6)
+    - Drop obsolete intltool Build-Depends
+  * debian/copyright: Update
+  * debian/libgegl-0.3-0.symbols: Update
+  * Drop 0001-Fix_PATH_MAX_on_Hurd.patch: Applied in new release
+  * debian/rules: Allow failing build tests to fail the build
+
+ -- Jeremy Bicha <jbicha@debian.org>  Sat, 25 Nov 2017 22:54:52 -0500
+
+gegl (0.3.20-3) unstable; urgency=medium
+
+  * Set Debian GNOME team as maintainer & update Vcs fields (Closes: #866874)
+  * Switch from cdbs to dh
+  * Bump debhelper compat to 10
+  * Bump Standards-Version to 4.1.1
+  * Switch to automatic dbgsym packages
+  * Enable all hardening flags
+  * debian/control.in:
+    - Build-Depend on graphviz and libgexiv2-dev
+    - Drop Build-Conflicts: libtiff5-dev, libwebp-dev (Closes: #824254)
+  * debian/rules: Don't make build tests fatal yet
+
+ -- Jeremy Bicha <jbicha@debian.org>  Sun, 15 Oct 2017 21:46:53 -0400
+
+gegl (0.3.20-2) unstable; urgency=medium
+
+  * QA upload.
+  * debian/patches/: patchset updated
+    - 0001-Fix_PATH_MAX_on_Hurd.patch added
+
+ -- Matteo F. Vescovi <mfv@debian.org>  Sat, 02 Sep 2017 15:09:34 +0200
+
+gegl (0.3.20-1) unstable; urgency=medium
+
+  * QA upload.
+  * New upstream release
+    - debian/control: bump b-dep libbabl-dev (>= 0.1.30)
+
+ -- Matteo F. Vescovi <mfv@debian.org>  Thu, 31 Aug 2017 23:02:24 +0200
+
+gegl (0.3.18-3) unstable; urgency=medium
+
+  * debian/control: orphaning the package
+
+ -- Matteo F. Vescovi <mfv@debian.org>  Sun, 02 Jul 2017 14:19:46 +0200
+
+gegl (0.3.18-2) unstable; urgency=medium
+
+  * Upload to unstable
+  * debian/control: S-V bump 3.9.8 -> 4.0.0 (no changes needed)
+
+ -- Matteo F. Vescovi <mfv@debian.org>  Wed, 28 Jun 2017 14:41:47 +0200
+
+gegl (0.3.18-1) experimental; urgency=medium
+
+  * New upstream release
+
+ -- Matteo F. Vescovi <mfv@debian.org>  Fri, 02 Jun 2017 15:44:32 +0200
+
+gegl (0.3.16-2) experimental; urgency=medium
+
+  * debian/libgegl-0.3-0.symbols: symbols fixed
+
+ -- Matteo F. Vescovi <mfv@debian.org>  Sat, 27 May 2017 22:05:55 +0200
+
+gegl (0.3.16-1) experimental; urgency=medium
+
+  * New upstream release
+    - debian/control: b-dep bump for libbabl
+      (as per configure.ac)
+
+ -- Matteo F. Vescovi <mfv@debian.org>  Sat, 27 May 2017 14:47:09 +0200
+
+gegl (0.3.14-2) experimental; urgency=medium
+
+  * debian/rules: MMX and SSE support added for amd64 (Closes: #857146)
+
+ -- Matteo F. Vescovi <mfv@debian.org>  Sat, 18 Mar 2017 23:28:39 +0100
+
+gegl (0.3.14-1) experimental; urgency=medium
+
+  * New upstream release (Closes: #856531)
+
+ -- Matteo F. Vescovi <mfv@debian.org>  Fri, 03 Mar 2017 14:30:44 +0100
+
+gegl (0.3.12-1) experimental; urgency=medium
+
+  * New upstream release
+    - debian/control: b-dep version bump for libbabl-dev
+    - debian/libgegl-0.3-0.symbols: new symbol added
+
+ -- Matteo F. Vescovi <mfv@debian.org>  Sun, 19 Feb 2017 13:47:59 +0100
+
+gegl (0.3.10-1) experimental; urgency=medium
+
+  * New upstream release (Closes: #850548)
+
+ -- Matteo F. Vescovi <mfv@debian.org>  Mon, 09 Jan 2017 21:34:01 +0100
+
+gegl (0.3.8-3) unstable; urgency=medium
+
+  * debian/control: libjasper-dev b-dep dropped (Closes: #818200)
+
+ -- Matteo F. Vescovi <mfv@debian.org>  Sun, 26 Jun 2016 14:02:45 +0200
+
+gegl (0.3.8-2) unstable; urgency=medium
+
+  * debian/libgegl-0.3-0.symbols: symbols updated
+
+ -- Matteo F. Vescovi <mfv@debian.org>  Sat, 25 Jun 2016 22:26:35 +0200
+
+gegl (0.3.8-1) unstable; urgency=medium
+
+  * New upstream release
+    - debian/patches/: patchset dropped (applied upstream)
+  * debian/control: Build-Conflicts package list added (Closes: #824254)
+
+ -- Matteo F. Vescovi <mfv@debian.org>  Sat, 25 Jun 2016 14:15:58 +0200
+
+gegl (0.3.6-4) unstable; urgency=medium
+
+  * Revert "debian/control: libjasper-dev -> libopenjpeg-dev"
+  * debian/patches/: patchset updated
+    - 0002-Fix_Hurd_FTBFS.patch added (Closes: #821160)
+      Thanks to Pino Toscano (pino) for the patch.
+  * debian/control: S-V bump 3.9.7 -> 3.9.8 (no changes needed)
+
+ -- Matteo F. Vescovi <mfv@debian.org>  Sat, 16 Apr 2016 14:19:44 +0200
+
+gegl (0.3.6-3) unstable; urgency=medium
+
+  * debian/control: libswscale-dev b-dep added.
+    This development library is needed to fulfill
+    real AVFormat support.
+
+ -- Matteo F. Vescovi <mfv@debian.org>  Sun, 03 Apr 2016 22:30:49 +0200
+
+gegl (0.3.6-2) unstable; urgency=medium
+
+  * debian/control: libjasper-dev -> libopenjpeg-dev (Closes: #818200)
+  * debian/control: libraw-dev b-dep added (Closes: #819863)
+
+ -- Matteo F. Vescovi <mfv@debian.org>  Sun, 03 Apr 2016 21:37:12 +0200
+
+gegl (0.3.6-1) unstable; urgency=medium
+
+  * New upstream release
+    - debian/patches/: patchset updated
+      - 0001-Fix_format-security_error.patch added
+    - debian/libgegl-0.3-0.symbols: symbols updated against 0.3.6
+  * debian/control: S-V bump 3.9.6 -> 3.9.7 (no changes needed)
+  * debian/control: Vcs-* fields updated for https:// usage
+
+ -- Matteo F. Vescovi <mfv@debian.org>  Sun, 20 Mar 2016 09:16:44 +0100
+
+gegl (0.3.4-1) unstable; urgency=medium
+
+  * New upstream release
+
+ -- Matteo F. Vescovi <mfv@debian.org>  Fri, 27 Nov 2015 21:51:20 +0100
+
+gegl (0.3.2-1) unstable; urgency=medium
+
+  * New upstream release
+    - debian/control: babl deps bumped to 0.1.14
+    - debian/libgegl-0.3-0.symbols: symbols updated
+
+ -- Matteo F. Vescovi <mfv@debian.org>  Wed, 25 Nov 2015 08:28:46 +0100
+
+gegl (0.3.0-5) unstable; urgency=medium
+
+  * Upload to unstable (Closes: #793762)
+
+ -- Matteo F. Vescovi <mfv@debian.org>  Mon, 05 Oct 2015 17:23:43 +0200
+
+gegl (0.3.0-4) experimental; urgency=medium
+
+  * debian/: libs installation modified to fix circular dependency
+  * debian/control:
+    - Breaks/Replaces added to main library package
+    - Breaks/Replaces updated for -dbg package
+  * debian/libgegl-0.3-0.symbols: symbols files updated
+
+ -- Matteo F. Vescovi <mfv@debian.org>  Wed, 29 Jul 2015 10:47:44 +0200
+
+gegl (0.3.0-3) experimental; urgency=medium
+
+  * debian/: manpages added
+  * debian/control:
+    - libjson-glib-dev added as regular dependency
+    - Section fields updated
+    - gegl package description updated
+
+ -- Matteo F. Vescovi <mfv@debian.org>  Mon, 27 Jul 2015 14:22:54 +0200
+
+gegl (0.3.0-2) experimental; urgency=medium
+
+  * debian/copyright: libs/poly2tri-c/* entry added (Closes: #790315)
+
+ -- Matteo F. Vescovi <mfv@debian.org>  Mon, 29 Jun 2015 10:55:27 +0200
+
+gegl (0.3.0-1) experimental; urgency=medium
+
+  * New upstream release (Closes: #740109, #749725)
+    - debian/: massive SONAME bump 0.2.0 => 0.3.0
+    - debian/control: babl deps bumped to 0.1.12
+    - debian/control: libjson-glib-dev b-dep added
+    - debian/libgegl-0.3-0.symbols: massive update
+    - debian/libgegl-doc.doc-base: paths updated
+    - debian/libgegl-doc.docs: obsolete path dropped
+    - debian/patches/: entirely dropped since applied upstream
+  * debian/: gcc-5 test settings dropped
+  * debian/control: {shlibs:Depends} added for -dev package
+  * debian/control: Multi-Arch set for -dbg package
+  * debian/copyright: debian/ copyright updated
+
+ -- Matteo F. Vescovi <mfv@debian.org>  Mon, 15 Jun 2015 22:20:56 +0200
+
+gegl (0.2.0-8) experimental; urgency=medium
+
+  * Test build using g++/gcc v5 (Closes: #777870)
+    - debian/control: g++-5 b-dep added
+    - debian/rules: variables set to use gcc/g++ v5
+    - debian/libgegl-0.2-0.symbols: symbols updated
+  * debian/copyright: entries updated
+  * debian/control: S-V bump 3.9.5 => 3.9.6 (no changes needed)
+  * debian/control: Maintainer e-mail address updated
+
+ -- Matteo F. Vescovi <mfv@debian.org>  Thu, 12 Feb 2015 14:35:35 +0100
+
+gegl (0.2.0-7) unstable; urgency=medium
+
+  * debian/control: libblas-dev b-dep added (Closes: #760821)
+
+ -- Matteo F. Vescovi <mfvescovi@gmail.com>  Mon, 08 Sep 2014 10:36:25 +0200
+
+gegl (0.2.0-6) unstable; urgency=medium
+
+  * debian/watch: ftp:// => http://
+  * debian/rules: parallel building enabled. (Closes: #759127)
+    Thanks to Pino Toscano (pino) for the patch.
+
+ -- Matteo F. Vescovi <mfvescovi@gmail.com>  Mon, 25 Aug 2014 15:12:36 +0200
+
+gegl (0.2.0-5) unstable; urgency=medium
+
+  * debian/: dh-autoreconf usage added (Closes: #747137)
+    Thanks to Fernando Seiti Furusato for the patch.
+  * debian/control: S-V bump 3.9.4 => 3.9.5 (no changes needed)
+  * debian/control: Maintainer e-mail address updated
+
+ -- Matteo F. Vescovi <mfvescovi@gmail.com>  Tue, 06 May 2014 08:23:57 +0200
+
+gegl (0.2.0-4) unstable; urgency=low
+
+  * debian/patches/: patchset updated
+    - debian/patches/cve-2012-4433.patch renamed
+      to 0001-Fix_CVE-2012-4433.patch
+    - 0002-Port_gegl_forward_to_libav54.patch added (Closes: #721533)
+
+ -- Matteo F. Vescovi <mfv.debian@gmail.com>  Mon, 09 Sep 2013 17:40:09 +0200
+
+gegl (0.2.0-3) unstable; urgency=low
+
+  * debian/control: bump of valac b-dep version (Closes: #709736)
+  * debian/control: S-V 3.9.3 => 3.9.4 (no changes needed)
+  * debian/: 8 => 9 debhelper bump
+  * Acknowledgement of NMU for 0.2.0-2+nmu1
+    Thanks to Michael Gilbert (mgilbert)
+
+ -- Matteo F. Vescovi <mfv.debian@gmail.com>  Wed, 05 Jun 2013 10:01:12 +0200
+
+gegl (0.2.0-2+nmu1) unstable; urgency=high
+
+  * Non-maintainer upload.
+  * Fix cve-2012-4433: multiple buffer overflow issues (closes: #692435).
+
+ -- Michael Gilbert <mgilbert@debian.org>  Thu, 22 Nov 2012 08:04:44 +0000
+
+gegl (0.2.0-2) unstable; urgency=low
+
+  * debian/control: dbg package Breaks/Replaces added (Closes: #671917)
+
+ -- Matteo F. Vescovi <mfv.debian@gmail.com>  Thu, 10 May 2012 15:19:28 +0200
+
+gegl (0.2.0-1) unstable; urgency=low
+
+  [ Matteo F. Vescovi ]
+  * New upstream release
+    + debian/patches/: dropped since applied upstream
+  * debian/copyright: debian/* license to LGPL-3+
+
+  [ Jordi Mallach ]
+  * Add additional build dependencies to enable extra modules
+
+ -- Matteo F. Vescovi <mfv.debian@gmail.com>  Sun, 06 May 2012 11:39:39 +0200
+
+gegl (0.1.8-3) unstable; urgency=low
+
+  * debian/control: Breaks/Replaces for -dbg added (Closes: #664047)
+
+ -- Matteo F. Vescovi <mfv.debian@gmail.com>  Thu, 15 Mar 2012 08:54:16 +0100
+
+gegl (0.1.8-2) unstable; urgency=low
+
+  * Upload to unstable
+  * debian/control: moved to libpng-dev in b-deps (Closes: #662345)
+
+ -- Matteo F. Vescovi <mfv.debian@gmail.com>  Wed, 14 Mar 2012 16:37:58 +0100
+
+gegl (0.1.8-1) experimental; urgency=low
+
+  * New "0.1.x series" release
+    + debian/control: VCS links added
+    + debian/copyright: cleaning old dh_make stuff
+    + debian/patches/: #0001 created to fix few typos
+    + debian/: doc-base config file added
+  * debian/: removing GNOME Uploaders machinery
+  * debian/control: fixing package version names
+  * debian/libgegl-0.1-0.docs: file added
+  * debian/control: Breaks/Replaces added to -dev
+  * debian/control: added Provides to -dev package
+  * debian/control: Uploaders field removed
+  * debian/control: Standards-Version bumped to 3.9.3
+  * debian/: Multi-Arch support added
+  * debian/copyright: DEP-5 compliance
+
+ -- Matteo F. Vescovi <mfv.debian@gmail.com>  Thu, 23 Feb 2012 15:22:12 +0100
+
+gegl (0.0.22-3) unstable; urgency=low
+
+  * New maintainer (Closes: #499224)
+  * debian/patches: #01 updated to be DEP-3 compliant
+  * debian/: bump debhelper support to 8 and compliance
+  * debian/control.in: typos corrected (Closes: #552310)
+    Thanks to Martin Eberhard Schauer for this patch
+  * debian/watch: config file added (Closes: #591044)
+  * debian/control.in: dbg package added (Closes: #503655)
+  * debian/control.in: homepage link added (Closes: #591042)
+    Thanks to Artur Rona for these two last patches
+  * Acknowledgement of NMU for 0.0.22-2.1 (Closes: #657886)
+    Thanks to Julien Cristau (jcristau)
+
+ -- Matteo F. Vescovi <mfv.debian@gmail.com>  Mon, 06 Feb 2012 16:49:32 +0100
+
+gegl (0.0.22-2.1) unstable; urgency=low
+
+  * Non-maintainer upload.
+  * Build-Depend on libjpeg-dev, not libjpeg62-dev (closes: #641693).
+  * Disable mmx and sse (closes: #604556)
+
+ -- Julien Cristau <jcristau@debian.org>  Sun, 29 Jan 2012 17:25:47 +0100
+
+gegl (0.0.22-2) unstable; urgency=low
+
+  * debian/patches/01_gegl_PATH_MAX.patch:
+    - Use dynamic allocation rather than PATH_MAX for string buffers.
+      Fixes FTBFS on Hurd.
+  * debian/source/format:
+    - Switch to source format 3.0 (quilt).
+  * debian/control.in:
+    - Standards-Version is 3.8.4, no changes needed.
+    - Let libgegl-0.0-dev and libgegl-0.0-doc depend on ${misc:Depends}.
+    - Fix a typo in gegl's description.
+
+ -- Emilio Pozuelo Monfort <pochu@debian.org>  Sun, 02 May 2010 10:52:51 +0200
+
+gegl (0.0.22-1) unstable; urgency=low
+
+  * Put the package under team maintenance.
+  * New upstream release. Closes: #516809.
+  * Bump shlibs.
+  * Update build-dependencies.
+  * Wrap build-dependencies.
+  * Don’t generate shlibs for plugins.
+  * The -dev package is architecture: any.
+  * Fix some dependencies.
+
+ -- Josselin Mouette <joss@debian.org>  Fri, 30 Apr 2010 17:57:29 +0200
+
+gegl (0.0.20-1) unstable; urgency=low
+
+  * New upstream release
+    - Fix gegl.h header file. (Closes: #491327)
+
+ -- Rob Bradford <robster@debian.org>  Mon, 13 Oct 2008 10:25:23 +0100
+
+gegl (0.0.18-1) unstable; urgency=low
+
+  * New upstream release
+    - Fix segfault (Closes: #483264)
+
+ -- Ross Burton <ross@debian.org>  Mon, 16 Jun 2008 11:45:24 +0100
+
+gegl (0.0.16-1) unstable; urgency=low
+
+  * Initial upload to Debian (Closes: #451247)
+  * Initially based on packages by Étienne Bersac <bersace03@laposte.net>.
+
+ -- Ross Burton <ross@debian.org>  Sat, 01 Mar 2008 15:06:56 +0000

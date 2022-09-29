@@ -1,0 +1,3 @@
+version=4
+https://download.gimp.org/pub/@PACKAGE@/([\d\.]+)/ \
+	@PACKAGE@@ANY_VERSION@@ARCHIVE_EXT@
