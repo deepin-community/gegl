@@ -38,23 +38,35 @@ property_file_path (path, _("File"), "/tmp/gegl-logo.svg")
 static void
 load_cache (GeglProperties *op_magick_load)
 {
-  if (!op_magick_load->user_data)
+  gchar *convert;
+
+  convert = g_find_program_in_path ("convert");
+
+  if (convert && !op_magick_load->user_data)
     {
       gchar    *filename;
-      gchar    *cmd;
       GeglNode *graph, *sink, *loader;
       GeglBuffer *newbuf = NULL;
 
       /* ImageMagick backed fallback FIXME: make this robust.
        * maybe use pipes in a manner similar to the raw loader,
        * or at least use a properly unique filename  */
+      char     *argv[4]  = {convert, NULL, NULL, NULL};
 
       filename = g_build_filename (g_get_tmp_dir (), "gegl-magick.png", NULL);
-      cmd = g_strdup_printf ("convert \"%s\"'[0]' \"%s\"",
-                             op_magick_load->path, filename);
-      if (system (cmd) == -1)
+
+      argv[1] = g_strdup_printf ("%s[0]", op_magick_load->path);
+      if (argv[1][0]=='-') /* clobber argument if path starts with a dash     */
+        argv[1][0]='_';    /* which when controlling the file system leads
+                              to being able to selection parameters for
+                              imagemagic.  */
+      argv[2] = filename;
+      if (!g_spawn_sync (NULL, argv, NULL,
+                         G_SPAWN_STDOUT_TO_DEV_NULL|G_SPAWN_STDERR_TO_DEV_NULL,
+                         NULL, NULL, NULL, NULL, NULL, NULL))
         g_warning ("Error executing ImageMagick convert program");
 
+      g_free (argv[1]);
 
       graph = gegl_node_new ();
       sink = gegl_node_new_child (graph,
@@ -67,9 +79,10 @@ load_cache (GeglProperties *op_magick_load)
       gegl_node_process (sink);
       op_magick_load->user_data = (gpointer) newbuf;
       g_object_unref (graph);
-      g_free (cmd);
       g_free (filename);
     }
+
+  g_free (convert);
 }
 
 static GeglRectangle
@@ -112,6 +125,19 @@ process (GeglOperation         *operation,
   return  TRUE;
 }
 
+static gboolean
+gegl_magick_load_is_available (void)
+{
+  gchar    *convert;
+  gboolean  found = FALSE;
+
+  convert = g_find_program_in_path ("convert");
+  found = (convert != NULL);
+  g_free (convert);
+
+  return found;
+}
+
 static void finalize (GObject *object)
 {
   GeglOperation *op = (void*) object;
@@ -134,8 +160,9 @@ gegl_op_class_init (GeglOpClass *klass)
   object_class->finalize = finalize;
 
   operation_class->process = process;
-  operation_class->get_bounding_box = get_bounding_box;
+  operation_class->get_bounding_box  = get_bounding_box;
   operation_class->get_cached_region = get_cached_region;;
+  operation_class->is_available      = gegl_magick_load_is_available;
 
   gegl_operation_class_set_keys (operation_class,
         "name"       , "gegl:magick-load",

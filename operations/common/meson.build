@@ -1,5 +1,6 @@
 gegl_common_sources = files(
   'absolute.c',
+  'alpha-clip.c',
   'alien-map.c',
   'bilateral-filter.c',
   'bloom.c',
@@ -50,6 +51,7 @@ gegl_common_sources = files(
   'levels.c',
   'linear-gradient.c',
   'little-planet.c',
+  'local-threshold.c',
   'long-shadow.c',
   'magick-load.c',
   'mantiuk06.c',
@@ -108,7 +110,6 @@ gegl_common_sources = files(
   'unpremultiply.c',
   'unsharp-mask.c',
   'value-invert.c',
-  'vector-fill.c',
   'vignette.c',
   'waterpixels.c',
   'watershed-transform.c',
@@ -137,6 +138,7 @@ gegl_common = shared_library('gegl-common',
     glib,
     json_glib,
     math,
+    openmp,
   ],
   link_with: [
     gegl_lib,
@@ -150,3 +152,44 @@ gegl_common = shared_library('gegl-common',
 )
 
 gegl_operations += gegl_common
+
+if host_cpu_family == 'x86_64'
+
+  gegl_common_x86_64_v2 = shared_library('gegl-common-x86_64-v2',
+    gegl_common_sources, opencl_headers,
+    include_directories: [ rootInclude, geglInclude, ],
+    dependencies: [ babl, glib, json_glib, math, openmp, ],
+    link_with: [ gegl_lib, ],
+    c_args: [ '-DGEGL_OP_BUNDLE' ] + x86_64_v2_flags,
+    name_prefix: '',
+    install: true,
+    install_dir: get_option('libdir') / api_name,
+  )
+  gegl_operations += gegl_common_x86_64_v2
+
+  gegl_common_x86_64_v3 = shared_library('gegl-common-x86_64-v3',
+    gegl_common_sources, opencl_headers,
+    include_directories: [ rootInclude, geglInclude, ],
+    dependencies: [ babl, glib, json_glib, math, openmp, ],
+    link_with: [ gegl_lib, ],
+    c_args: [ '-DGEGL_OP_BUNDLE' ] + x86_64_v3_flags,
+    name_prefix: '',
+    install: true,
+    install_dir: get_option('libdir') / api_name,
+  )
+  
+  gegl_operations += gegl_common_x86_64_v3
+elif host_cpu_family == 'arm'
+
+  gegl_common_arm_neon = shared_library('gegl-common-arm-neon',
+    gegl_common_sources, opencl_headers,
+    include_directories: [ rootInclude, geglInclude, ],
+    dependencies: [ babl, glib, json_glib, math, openmp, ],
+    link_with: [ gegl_lib, ],
+    c_args: [ '-DGEGL_OP_BUNDLE' ] + arm_neon_flags,
+    name_prefix: '',
+    install: true,
+    install_dir: get_option('libdir') / api_name,
+  )
+  gegl_operations += gegl_common_arm_neon
+endif

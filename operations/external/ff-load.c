@@ -62,9 +62,11 @@ property_audio_fragment (audio, _("audio"), 0)
 #include <limits.h>
 #include <stdlib.h>
 
+#include <libavutil/channel_layout.h>
 #include <libavutil/avutil.h>
 #include <libavutil/imgutils.h>
 #include <libavformat/avformat.h>
+#include <libavcodec/avcodec.h>
 #include <libswscale/swscale.h>
 
 
@@ -74,11 +76,12 @@ typedef struct
   gint             height;
   gdouble          fps;
   gint             codec_delay;
+  int64_t          first_dts;
 
   gchar           *loadedfilename; /* to remember which file is "cached"     */
 
   AVFormatContext *audio_fcontext;
-  AVCodec         *audio_codec;
+  const AVCodec   *audio_codec;
   int              audio_index;
   GList           *audio_track;
   long             audio_cursor_pos;
@@ -90,8 +93,10 @@ typedef struct
   AVFormatContext *video_fcontext;
   int              video_index;
   AVStream        *video_stream;
+  AVCodecContext  *video_ctx;
   AVStream        *audio_stream;
-  AVCodec         *video_codec;
+  AVCodecContext  *audio_ctx;
+  const AVCodec   *video_codec;
   AVFrame         *lavc_frame;
   AVFrame         *rgb_frame;
   glong            prevframe;      /* previously decoded frame number */
@@ -140,10 +145,8 @@ ff_cleanup (GeglProperties *o)
     {
       clear_audio_track (o);
       g_free (p->loadedfilename);
-      if (p->video_stream && p->video_stream->codec)
-        avcodec_close (p->video_stream->codec);
-      if (p->audio_stream && p->audio_stream->codec)
-        avcodec_close (p->audio_stream->codec);
+      avcodec_free_context (&p->video_ctx);
+      avcodec_free_context (&p->audio_ctx);
       if (p->video_fcontext)
         avformat_close_input(&p->video_fcontext);
       if (p->audio_fcontext)
@@ -202,14 +205,14 @@ decode_audio (GeglOperation *operation,
      if (av_seek_frame (p->audio_fcontext, p->audio_stream->index, seek_target, (AVSEEK_FLAG_BACKWARD)) < 0)
       fprintf (stderr, "audio seek error!\n");
      else
-      avcodec_flush_buffers (p->audio_stream->codec);
+      avcodec_flush_buffers (p->audio_ctx);
 
   }
 
   while (p->prevapts <= pts2)
     {
       AVPacket  pkt = {0,};
-      int       decoded_bytes;
+      int       ret;
 
       if (av_read_frame (p->audio_fcontext, &pkt) < 0)
          {
@@ -219,77 +222,93 @@ decode_audio (GeglOperation *operation,
       if (pkt.stream_index==p->audio_index && p->audio_stream)
         {
           static AVFrame frame;
-          int got_frame;
 
-          decoded_bytes = avcodec_decode_audio4(p->audio_stream->codec,
-                                     &frame, &got_frame, &pkt);
-
-          if (decoded_bytes < 0)
+          ret = avcodec_send_packet (p->audio_ctx, &pkt);
+          if (ret < 0)
             {
-              fprintf (stderr, "avcodec_decode_audio4 failed for %s\n",
+              fprintf (stderr, "avcodec_send_packet failed for %s\n",
                                 o->path);
             }
-
-          if (got_frame) {
-            int samples_left = frame.nb_samples;
-            int si = 0;
-
-            while (samples_left)
+          while (ret == 0)
             {
-               int sample_count = samples_left;
-               int channels = MIN(p->audio_stream->codecpar->channels, GEGL_MAX_AUDIO_CHANNELS);
-               GeglAudioFragment *af = gegl_audio_fragment_new (o->audio_sample_rate, channels,
-                          AV_CH_LAYOUT_STEREO, samples_left);
-//);
-               switch (p->audio_stream->codec->sample_fmt)
-               {
-                 case AV_SAMPLE_FMT_FLT:
-                   for (gint i = 0; i < sample_count; i++)
-                     for (gint c = 0; c < channels; c++)
-                       af->data[c][i] = ((int16_t *)frame.data[0])[(i + si) * channels + c];
-                   break;
-                 case AV_SAMPLE_FMT_FLTP:
-                   for (gint i = 0; i < sample_count; i++)
-                     for (gint c = 0; c < channels; c++)
-                       {
-                         af->data[c][i] = ((float *)frame.data[c])[i + si];
-                       }
-                   break;
-                 case AV_SAMPLE_FMT_S16:
-                   for (gint i = 0; i < sample_count; i++)
-                     for (gint c = 0; c < channels; c++)
-                       af->data[c][i] = ((int16_t *)frame.data[0])[(i + si) * channels + c] / 32768.0;
-                   break;
-                 case AV_SAMPLE_FMT_S16P:
-                   for (gint i = 0; i < sample_count; i++)
-                     for (gint c = 0; c < channels; c++)
-                       af->data[c][i] = ((int16_t *)frame.data[c])[i + si] / 32768.0;
-                   break;
-                 case AV_SAMPLE_FMT_S32:
-                   for (gint i = 0; i < sample_count; i++)
-                     for (gint c = 0; c < channels; c++)
-                       af->data[c][i] = ((int32_t *)frame.data[0])[(i + si) * channels + c] / 2147483648.0;
+              ret = avcodec_receive_frame (p->audio_ctx, &frame);
+              if (ret == AVERROR(EAGAIN))
+                {
+                  // no more frames; should send the next packet now
+                  ret = 0;
                   break;
-                case AV_SAMPLE_FMT_S32P:
-                   for (gint i = 0; i < sample_count; i++)
-                    for (gint c = 0; c < channels; c++)
-                      af->data[c][i] = ((int32_t *)frame.data[c])[i + si] / 2147483648.0;
-                  break;
-                default:
-                  g_warning ("undealt with sample format\n");
                 }
-                gegl_audio_fragment_set_sample_count (af, sample_count);
-                gegl_audio_fragment_set_pos (af, 
-  (long int)av_rescale_q ((pkt.pts), p->audio_stream->time_base, AV_TIME_BASE_Q) * o->audio_sample_rate /AV_TIME_BASE);
+              else if (ret < 0)
+                {
+                  fprintf (stderr, "avcodec_receive_frame failed for %s\n",
+                                    o->path);
+                  break;
+                }
+              int samples_left = frame.nb_samples;
+              int si = 0;
 
-                p->audio_pos += sample_count;
-                p->audio_track = g_list_append (p->audio_track, af);
+              while (samples_left)
+              {
+                 int sample_count = samples_left;
+                 int channels = MIN(p->audio_stream->codecpar->channels, GEGL_MAX_AUDIO_CHANNELS);
+                 GeglAudioFragment *af = gegl_audio_fragment_new (o->audio_sample_rate, channels,
+                            AV_CH_LAYOUT_STEREO, samples_left);
+  //);
+                 switch (p->audio_ctx->sample_fmt)
+                 {
+                   case AV_SAMPLE_FMT_FLT:
+                     for (gint i = 0; i < sample_count; i++)
+                       for (gint c = 0; c < channels; c++)
+                         af->data[c][i] = ((int16_t *)frame.data[0])[(i + si) * channels + c];
+                     break;
+                   case AV_SAMPLE_FMT_FLTP:
+                     for (gint i = 0; i < sample_count; i++)
+                       for (gint c = 0; c < channels; c++)
+                         {
+                           af->data[c][i] = ((float *)frame.data[c])[i + si];
+                         }
+                     break;
+                   case AV_SAMPLE_FMT_S16:
+                     for (gint i = 0; i < sample_count; i++)
+                       for (gint c = 0; c < channels; c++)
+                         af->data[c][i] = ((int16_t *)frame.data[0])[(i + si) * channels + c] / 32768.0;
+                     break;
+                   case AV_SAMPLE_FMT_S16P:
+                     for (gint i = 0; i < sample_count; i++)
+                       for (gint c = 0; c < channels; c++)
+                         af->data[c][i] = ((int16_t *)frame.data[c])[i + si] / 32768.0;
+                     break;
+                   case AV_SAMPLE_FMT_S32:
+                     for (gint i = 0; i < sample_count; i++)
+                       for (gint c = 0; c < channels; c++)
+                         af->data[c][i] = ((int32_t *)frame.data[0])[(i + si) * channels + c] / 2147483648.0;
+                    break;
+                  case AV_SAMPLE_FMT_S32P:
+                     for (gint i = 0; i < sample_count; i++)
+                      for (gint c = 0; c < channels; c++)
+                        af->data[c][i] = ((int32_t *)frame.data[c])[i + si] / 2147483648.0;
+                    break;
+                  default:
+                    g_warning ("undealt with sample format\n");
+                  }
+                  gegl_audio_fragment_set_sample_count (af, sample_count);
+                  gegl_audio_fragment_set_pos (
+                    af,
+                    (long int)av_rescale_q (
+                      (pkt.pts),
+                      p->audio_stream->time_base,
+                      AV_TIME_BASE_Q
+                    ) * o->audio_sample_rate / AV_TIME_BASE
+                  );
 
-                samples_left -= sample_count;
-                si += sample_count;
-              }
-            p->prevapts = pkt.pts * av_q2d (p->audio_stream->time_base);
-          }
+                  p->audio_pos += sample_count;
+                  p->audio_track = g_list_append (p->audio_track, af);
+
+                  samples_left -= sample_count;
+                  si += sample_count;
+                }
+              p->prevapts = pkt.pts * av_q2d (p->audio_stream->time_base);
+            }
         }
       av_packet_unref (&pkt);
     }
@@ -325,12 +344,12 @@ decode_frame (GeglOperation *operation,
   if (frame < 2 || frame > prevframe + 64 || frame < prevframe )
   {
     int64_t seek_target = av_rescale_q (((frame) * AV_TIME_BASE * 1.0) / o->frame_rate
-, AV_TIME_BASE_Q, p->video_stream->time_base) / p->video_stream->codec->ticks_per_frame;
+, AV_TIME_BASE_Q, p->video_stream->time_base) / p->video_ctx->ticks_per_frame;
 
     if (av_seek_frame (p->video_fcontext, p->video_index, seek_target, (AVSEEK_FLAG_BACKWARD )) < 0)
       fprintf (stderr, "video seek error!\n");
     else
-      avcodec_flush_buffers (p->video_stream->codec);
+      avcodec_flush_buffers (p->video_ctx);
 
     prevframe = -1;
   }
@@ -340,7 +359,7 @@ decode_frame (GeglOperation *operation,
       int       got_picture = 0;
       do
         {
-          int       decoded_bytes;
+          int       ret;
           AVPacket  pkt = {0,};
 
           do
@@ -354,33 +373,52 @@ decode_frame (GeglOperation *operation,
           }
           while (pkt.stream_index != p->video_index);
 
-          decoded_bytes = avcodec_decode_video2 (
-                 p->video_stream->codec, p->lavc_frame,
-                 &got_picture, &pkt);
-          if (decoded_bytes < 0)
+          ret = avcodec_send_packet (p->video_ctx, &pkt);
+          if (ret < 0)
             {
-              fprintf (stderr, "avcodec_decode_video failed for %s\n",
+              fprintf (stderr, "avcodec_send_packet failed for %s\n",
                        o->path);
               return -1;
             }
-
-          if(got_picture)
-          {
-             if ((pkt.dts == pkt.pts) || (p->lavc_frame->key_frame!=0))
-             {
-               p->lavc_frame->pts = (p->video_stream->cur_dts -
-                                     p->video_stream->first_dts);
-               p->prevpts =  av_rescale_q (p->lavc_frame->pts,
-                                           p->video_stream->time_base,
-                                           AV_TIME_BASE_Q) * 1.0 / AV_TIME_BASE;
-               decodeframe = roundf( p->prevpts * o->frame_rate);
-             }
-             else
-             {
-               p->prevpts += 1.0 / o->frame_rate;
-               decodeframe = roundf ( p->prevpts * o->frame_rate);
-             }
-          }
+          while (ret == 0)
+            {
+              if (!p->first_dts)
+                p->first_dts = pkt.dts;
+              ret = avcodec_receive_frame (p->video_ctx, p->lavc_frame);
+              if (ret == AVERROR(EAGAIN))
+                {
+                  // no more frames; should send the next packet now
+                  ret = 0;
+                  break;
+                }
+              else if (ret < 0)
+                {
+                  fprintf (stderr, "avcodec_receive_frame failed for %s\n",
+                                    o->path);
+                  break;
+                }
+              got_picture = 1;
+              if ((pkt.dts == pkt.pts) || (p->lavc_frame->key_frame!=0))
+                {
+                  // cur_dts and first_dts are moved to libavformat/internal.h
+                  /*
+                  p->lavc_frame->pts = (p->video_stream->cur_dts -
+                                        p->video_stream->first_dts);
+                  */
+                  p->lavc_frame->pts = pkt.dts - p->first_dts;
+                  p->prevpts =  av_rescale_q (p->lavc_frame->pts,
+                                              p->video_stream->time_base,
+                                              AV_TIME_BASE_Q) * 1.0 / AV_TIME_BASE;
+                  decodeframe = roundf( p->prevpts * o->frame_rate);
+                }
+              else
+                {
+                  p->prevpts += 1.0 / o->frame_rate;
+                  decodeframe = roundf ( p->prevpts * o->frame_rate);
+                }
+              if (decodeframe > frame + p->codec_delay)
+                break;
+            }
 #if 0
           if (decoded_bytes != pkt.size)
             fprintf (stderr, "bytes left!\n");
@@ -429,6 +467,7 @@ prepare (GeglOperation *operation)
       if (err < 0)
         {
           print_error (o->path, err);
+          return;
         }
       err = avformat_find_stream_info (p->video_fcontext, NULL);
       if (err < 0)
@@ -440,6 +479,7 @@ prepare (GeglOperation *operation)
       if (err < 0)
         {
           print_error (o->path, err);
+          return;
         }
       err = avformat_find_stream_info (p->audio_fcontext, NULL);
       if (err < 0)
@@ -467,16 +507,26 @@ prepare (GeglOperation *operation)
         {
           p->video_codec = avcodec_find_decoder (p->video_stream->codecpar->codec_id);
           if (p->video_codec == NULL)
-            g_warning ("video codec not found");
-          p->video_stream->codec->err_recognition = AV_EF_IGNORE_ERR |
+            {
+              g_warning ("video codec not found");
+              p->video_ctx = NULL;
+              return;
+            }
+          p->video_ctx = avcodec_alloc_context3 (p->video_codec);
+          if (avcodec_parameters_to_context (p->video_ctx, p->video_stream->codecpar) < 0)
+            {
+              fprintf (stderr, "cannot copy video codec parameters\n");
+              return;
+            }
+          p->video_ctx->err_recognition = AV_EF_IGNORE_ERR |
                                                     AV_EF_BITSTREAM |
                                                     AV_EF_BUFFER;
-          p->video_stream->codec->workaround_bugs = FF_BUG_AUTODETECT;
+          p->video_ctx->workaround_bugs = FF_BUG_AUTODETECT;
 
 
-          if (avcodec_open2 (p->video_stream->codec, p->video_codec, NULL) < 0)
+          if (avcodec_open2 (p->video_ctx, p->video_codec, NULL) < 0)
           {
-            g_warning ("error opening codec %s", p->video_stream->codec->codec->name);
+            g_warning ("error opening codec %s", p->video_ctx->codec->name);
             return;
           }
         }
@@ -485,10 +535,20 @@ prepare (GeglOperation *operation)
         {
           p->audio_codec = avcodec_find_decoder (p->audio_stream->codecpar->codec_id);
           if (p->audio_codec == NULL)
-            g_warning ("audio codec not found");
-          else if (avcodec_open2 (p->audio_stream->codec, p->audio_codec, NULL) < 0)
             {
-              g_warning ("error opening codec %s", p->audio_stream->codec->codec->name);
+              g_warning ("audio codec not found");
+              p->audio_ctx = NULL;
+              return;
+            }
+          p->audio_ctx = avcodec_alloc_context3 (p->audio_codec);
+          if (avcodec_parameters_to_context (p->audio_ctx, p->audio_stream->codecpar) < 0)
+            {
+              fprintf (stderr, "cannot copy audio codec parameters\n");
+              return;
+            }
+          if (avcodec_open2 (p->audio_ctx, p->audio_codec, NULL) < 0)
+            {
+              g_warning ("error opening codec %s", p->audio_ctx->codec->name);
             }
           else
             {
@@ -544,8 +604,9 @@ prepare (GeglOperation *operation)
              fprintf (stdout, "duration: %02i:%02i:%02i\n", h, m, s);
            }
 #endif
-          p->codec_delay = p->video_stream->codec->delay;
-
+          p->codec_delay = 0;
+#if 0
+          p->codec_delay = p->video_ctx->delay;
           if (!strcmp (o->video_codec, "mpeg1video"))
             p->codec_delay = 1;
           else if (!strcmp (o->video_codec, "h264"))
@@ -559,6 +620,7 @@ prepare (GeglOperation *operation)
               else
                 p->codec_delay = 0;
             }
+#endif
         }
       else
         {
@@ -736,7 +798,7 @@ process (GeglOperation       *operation,
         if (p->video_stream == NULL)
           return TRUE;
 
-        if (p->video_stream->codec->pix_fmt == AV_PIX_FMT_RGB24)
+        if (p->video_ctx->pix_fmt == AV_PIX_FMT_RGB24)
         {
           GeglRectangle extent = {0,0,p->width,p->height};
           gegl_buffer_set (output, &extent, 0, babl_format("R'G'B' u8"), p->lavc_frame->data[0], GEGL_AUTO_ROWSTRIDE);
@@ -746,7 +808,7 @@ process (GeglOperation       *operation,
           struct SwsContext *img_convert_ctx;
           GeglRectangle extent = {0,0,p->width,p->height};
 
-          img_convert_ctx = sws_getContext(p->width, p->height, p->video_stream->codec->pix_fmt,
+          img_convert_ctx = sws_getContext(p->width, p->height, p->video_ctx->pix_fmt,
                                            p->width, p->height, AV_PIX_FMT_RGB24,
                                            SWS_BICUBIC, NULL, NULL, NULL);
           if (!p->rgb_frame)

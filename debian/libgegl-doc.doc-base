@@ -7,5 +7,5 @@ Abstract: This manual describes what gegl is
 Section: Graphics
 
 Format: HTML
-Index: /usr/share/doc/libgegl-dev/index.html
-Files: /usr/share/doc/libgegl-dev/gegl*.html
+Index: /usr/share/doc/gegl-0.4/index.html
+Files: /usr/share/doc/gegl-0.4/*.html

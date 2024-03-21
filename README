@@ -12,7 +12,9 @@ other projects (imgflo, GNOME Photos, iconographer, …)
 With GEGL you chain together processing operations to represent the
 desired image processing pipeline. GEGL provides operations for image
 loading and storing, color adjustments, GIMPs artistic filters and more
-forms of image processing GEGL can also be used from the command-line.
+forms of image processing GEGL can be used on the command-line with the
+same syntax that can be used for creating processing flows
+interactively with text from GIMP using gegl-graph.
 
 The primary repository for the GEGL source code is in the GNOME git
 repository. Release tarballs may be downloaded from the GIMP download
@@ -27,4 +29,4 @@ capabilities as well as to perform general maintenance activities, is
 welcome through the patreon campaign at GIMPs donation page.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Last updated 2021-04-30 16:56:18 CEST
+Last updated 2023-01-15 19:01:21 CET

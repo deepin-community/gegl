@@ -44,6 +44,7 @@
 #include "gegl-tile-backend-swap.h"
 #include "gegl-tile-backend-ram.h"
 #include "gegl-buffer-formats.h"
+#include "gegl-algorithms.h"
 
 #ifdef GEGL_ENABLE_DEBUG
 #define DEBUG_ALLOCATIONS (gegl_debug_flags & GEGL_DEBUG_BUFFER_ALLOC)
@@ -1303,3 +1304,143 @@ gegl_buffer_get_tile (GeglBuffer *buffer,
 void (*gegl_tile_handler_cache_ext_flush) (void *cache, const GeglRectangle *rect)=NULL;
 void (*gegl_buffer_ext_flush) (GeglBuffer *buffer, const GeglRectangle *rect)=NULL;
 void (*gegl_buffer_ext_invalidate) (GeglBuffer *buffer, const GeglRectangle *rect)=NULL;
+
+void (*gegl_resample_bilinear) (guchar              *dest_buf,
+                                const guchar        *source_buf,
+                                const GeglRectangle *dst_rect,
+                                const GeglRectangle *src_rect,
+                                gint                 s_rowstride,
+                                gdouble              scale,
+                                const Babl          *format,
+                                gint                 d_rowstride) =
+      gegl_resample_bilinear_generic;
+
+
+void (*gegl_resample_boxfilter) (guchar              *dest_buf,
+                                 const guchar        *source_buf,
+                                 const GeglRectangle *dst_rect,
+                                 const GeglRectangle *src_rect,
+                                 gint                 s_rowstride,
+                                 gdouble              scale,
+                                 const Babl          *format,
+                                 gint                 d_rowstride) =
+      gegl_resample_boxfilter_generic;
+
+
+void (*gegl_resample_nearest) (guchar              *dest_buf,
+                               const guchar        *source_buf,
+                               const GeglRectangle *dst_rect,
+                               const GeglRectangle *src_rect,
+                               gint                 s_rowstride,
+                               gdouble              scale,
+                               const gint           bpp,
+                               gint                 d_rowstride) =
+      gegl_resample_nearest_generic;
+
+void (*gegl_downscale_2x2) (const Babl *format,
+                            gint        src_width,
+                            gint        src_height,
+                            guchar     *src_data,
+                            gint        src_rowstride,
+                            guchar     *dst_data,
+                            gint        dst_rowstride) =
+      gegl_downscale_2x2_generic;
+
+
+#define GEGL_VARIANTS(variant) \
+void gegl_resample_nearest_##variant   (guchar              *dest_buf,     \
+                                        const guchar        *source_buf,   \
+                                        const GeglRectangle *dst_rect,     \
+                                        const GeglRectangle *src_rect,     \
+                                        gint                 s_rowstride,  \
+                                        gdouble              scale,        \
+                                        const gint           bpp,          \
+                                        gint                 d_rowstride); \
+void gegl_resample_bilinear_##variant  (guchar              *dest_buf,     \
+                                        const guchar        *source_buf,   \
+                                        const GeglRectangle *dst_rect,     \
+                                        const GeglRectangle *src_rect,     \
+                                        gint                 s_rowstride,  \
+                                        gdouble              scale,        \
+                                        const Babl          *format,       \
+                                        gint                 d_rowstride); \
+void gegl_resample_boxfilter_##variant (guchar              *dest_buf,     \
+                                        const guchar        *source_buf,   \
+                                        const GeglRectangle *dst_rect,     \
+                                        const GeglRectangle *src_rect,     \
+                                        gint                 s_rowstride,  \
+                                        gdouble              scale,        \
+                                        const Babl          *format,       \
+                                        gint                 d_rowstride); \
+void gegl_downscale_2x2_##variant      (const Babl          *format,       \
+                                        gint                 src_width,    \
+                                        gint                 src_height,   \
+                                        guchar              *src_data,     \
+                                        gint                 src_rowstride,\
+                                        guchar              *dst_data,     \
+                                        gint                 dst_rowstride);
+
+#include "gegl-variants.inc"
+//GEGL_VARIANTS(generic)
+#undef GEGL_VARIANTS
+
+guint16 gegl_lut_u8_to_u16[256];
+gfloat  gegl_lut_u8_to_u16f[256];
+guint8  gegl_lut_u16_to_u8[65536/GEGL_ALGORITHMS_LUT_DIVISOR];
+
+
+void _gegl_init_buffer (int variant);
+void _gegl_init_buffer (int variant)
+{
+  static int inited = 0;
+  guint8 u8_ramp[256];
+  guint16 u16_ramp[65536/GEGL_ALGORITHMS_LUT_DIVISOR];
+  int i;
+
+  if (inited)
+    return;
+  inited = 1;
+
+  for (i = 0; i < 256; i++) u8_ramp[i]=i;
+  for (i = 0; i < 65536/GEGL_ALGORITHMS_LUT_DIVISOR; i++) u16_ramp[i]=i * GEGL_ALGORITHMS_LUT_DIVISOR;
+  babl_process (babl_fish (babl_format ("Y' u8"), babl_format("Y u16")),
+                &u8_ramp[0], &gegl_lut_u8_to_u16[0],
+                256);
+  for (i = 0; i < 256; i++)
+  {
+    gegl_lut_u8_to_u16[i]  = gegl_lut_u8_to_u16[i]/GEGL_ALGORITHMS_LUT_DIVISOR;
+    gegl_lut_u8_to_u16f[i] = gegl_lut_u8_to_u16[i];
+  }
+
+  babl_process (babl_fish (babl_format ("Y u16"), babl_format("Y' u8")),
+                &u16_ramp[0], &gegl_lut_u16_to_u8[0],
+                65536/GEGL_ALGORITHMS_LUT_DIVISOR);
+#ifdef ARCH_ARM
+  if (variant)
+  {
+    gegl_resample_bilinear  = gegl_resample_bilinear_arm_neon;
+    gegl_resample_boxfilter = gegl_resample_boxfilter_arm_neon;
+    gegl_resample_nearest   = gegl_resample_nearest_arm_neon;
+    gegl_downscale_2x2      = gegl_downscale_2x2_arm_neon;
+  }
+#endif
+#ifdef ARCH_X86_64
+  switch (variant)
+  {
+    case 0:
+    case 1: break;
+    case 2:
+      gegl_resample_bilinear  = gegl_resample_bilinear_x86_64_v2;
+      gegl_resample_boxfilter = gegl_resample_boxfilter_x86_64_v2;
+      gegl_resample_nearest   = gegl_resample_nearest_x86_64_v2;
+      gegl_downscale_2x2      = gegl_downscale_2x2_x86_64_v2;
+      break;
+    case 3:
+      gegl_resample_bilinear  = gegl_resample_bilinear_x86_64_v3;
+      gegl_resample_boxfilter = gegl_resample_boxfilter_x86_64_v3;
+      gegl_resample_nearest   = gegl_resample_nearest_x86_64_v3;
+      gegl_downscale_2x2      = gegl_downscale_2x2_x86_64_v3;
+      break;
+  }
+#endif
+}

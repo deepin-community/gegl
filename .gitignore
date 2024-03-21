@@ -1,1 +1,6 @@
-.pc/
+# Meson build system
+/_build
+/compile_commands.json
+
+# Atom
+/.vscode

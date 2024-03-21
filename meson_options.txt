@@ -10,6 +10,11 @@ option('gtk-doc',
   value: 'false',
   description: 'build gtk-doc reference',
 )
+option('gi-docgen',
+  type: 'feature',
+  value: 'auto',
+  description: 'Build developer documentation (uses gi-docgen)'
+)
 option('workshop',
   type: 'boolean',
   value: 'false',
@@ -57,6 +62,7 @@ option('lua',           type: 'feature', value: 'auto')
 option('mrg',           type: 'feature', value: 'auto')
 option('maxflow',       type: 'feature', value: 'auto')
 option('openexr',       type: 'feature', value: 'auto')
+option('openmp',        type: 'feature', value: 'auto')
 option('cairo',         type: 'feature', value: 'auto')
 option('pango',         type: 'feature', value: 'auto')
 option('pangocairo',    type: 'feature', value: 'auto')
