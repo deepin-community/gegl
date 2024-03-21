@@ -1,4 +1,3 @@
-
 gegl_library_build_dir = meson.current_build_dir()
 
 geglInclude = include_directories(
@@ -10,7 +9,6 @@ geglInclude = include_directories(
   'operation',
   'process',
   'property-types',
-  'ctx'
 )
 
 gegl_cflags = [
@@ -83,7 +81,6 @@ subdir('opencl')
 subdir('operation')
 subdir('process')
 subdir('property-types')
-subdir('ctx')
 
 gegl_headers += gegl_introspectable_headers
 
@@ -92,6 +89,19 @@ install_headers(gegl_headers,
 )
 
 gegl_ldflags = os_osx ? ['-framework', 'OpenCL'] : []
+
+opencl_dep = declare_dependency(
+  sources : [opencl_headers],
+)
+
+
+if host_cpu_family == 'x86_64'
+  simd_extra = [lib_gegl_x86_64_v2, lib_gegl_x86_64_v3]
+elif host_cpu_family == 'arm'
+  simd_extra = [lib_gegl_arm_neon]
+else
+  simd_extra = []
+endif
 
 gegl_lib = library(api_name,
   gegl_sources,
@@ -102,8 +112,11 @@ gegl_lib = library(api_name,
     gio,
     math,
     gmodule,
+    opencl_dep,
   ],
   c_args: gegl_cflags,
+
+  link_with: simd_extra,
   link_args: gegl_ldflags,
   install: true,
   version: so_version,
@@ -124,6 +137,7 @@ if g_ir.found()
     symbol_prefix: 'gegl',
     header: 'gegl.h',
     includes: [ 'GLib-2.0', 'GObject-2.0', 'Babl-0.1' ],
+    dependencies: [babl],
     export_packages: 'gegl-' + api_version,
     install: true,
   )

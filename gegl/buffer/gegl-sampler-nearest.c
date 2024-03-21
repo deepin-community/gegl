@@ -91,7 +91,7 @@ gegl_sampler_nearest_dispose (GObject *object)
   G_OBJECT_CLASS (gegl_sampler_nearest_parent_class)->dispose (object);
 }
 
-static void inline
+static inline void
 gegl_sampler_get_pixel (GeglSampler    *sampler,
                         gint            x,
                         gint            y,
@@ -195,7 +195,11 @@ gegl_sampler_get_pixel (GeglSampler    *sampler,
         tp = gegl_tile_get_data (tile) +
              (offsety * tile_width + offsetx) * nearest_sampler->buffer_bpp;
 
-        babl_process (sampler->fish, tp, buf, 1);
+#if BABL_MINOR_VERSION>1 || (BABL_MINOR_VERSION==1 && BABL_MICRO_VERSION >= 90)
+    sampler->fish_process (sampler->fish, (void*)tp, (void*)buf, 1, NULL);
+#else
+    babl_process (sampler->fish, (void*)tp, (void*)buf, 1);
+#endif
       }
   }
 
@@ -224,4 +228,7 @@ gegl_sampler_nearest_prepare (GeglSampler* restrict sampler)
   GEGL_SAMPLER_NEAREST (sampler)->buffer_bpp = babl_format_get_bytes_per_pixel (sampler->buffer->format);
 
   sampler->fish = babl_fish (sampler->buffer->soft_format, sampler->format);
+#if BABL_MINOR_VERSION > 1 || (BABL_MINOR_VERSION ==1 && BABL_MICRO_VERSION >= 90)
+  sampler->fish_process = babl_fish_get_process (sampler->fish);
+#endif
 }

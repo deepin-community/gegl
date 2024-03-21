@@ -116,7 +116,23 @@ enum
 
 enum
 {
-  ARCH_X86_INTEL_FEATURE_PNI      = 1 << 0
+  ARCH_X86_INTEL_FEATURE_PNI      = 1 << 0,
+  ARCH_X86_INTEL_FEATURE_SSSE3    = 1 << 9,
+  ARCH_X86_INTEL_FEATURE_FMA      = 1 << 12,
+  ARCH_X86_INTEL_FEATURE_SSE4_1   = 1 << 19,
+  ARCH_X86_INTEL_FEATURE_SSE4_2   = 1 << 20,
+  ARCH_X86_INTEL_FEATURE_MOVBE    = 1 << 22,
+  ARCH_X86_INTEL_FEATURE_POPCNT   = 1 << 23,
+  ARCH_X86_INTEL_FEATURE_XSAVE    = 1 << 26,
+  ARCH_X86_INTEL_FEATURE_OSXSAVE  = 1 << 27,
+  ARCH_X86_INTEL_FEATURE_AVX      = 1 << 28,
+  ARCH_X86_INTEL_FEATURE_F16C     = 1 << 29,
+
+ // extended features
+
+  ARCH_X86_INTEL_FEATURE_BMI1     = 1 << 3,
+  ARCH_X86_INTEL_FEATURE_BMI2     = 1 << 8,
+  ARCH_X86_INTEL_FEATURE_AVX2     = 1 << 5,
 };
 
 #if !defined(ARCH_X86_64) && (defined(PIC) || defined(__PIC__))
@@ -128,7 +144,7 @@ enum
              "=S" (ebx),           \
              "=c" (ecx),           \
              "=d" (edx)            \
-           : "0" (op))
+           : "0" (op), "2" (0))
 #else
 #define cpuid(op,eax,ebx,ecx,edx)  \
   __asm__ ("cpuid"                 \
@@ -136,7 +152,7 @@ enum
              "=b" (ebx),           \
              "=c" (ecx),           \
              "=d" (edx)            \
-           : "0" (op))
+           : "0" (op), "2" (0))
 #endif
 
 
@@ -240,6 +256,50 @@ arch_accel_intel (void)
 
     if (ecx & ARCH_X86_INTEL_FEATURE_PNI)
       caps |= GEGL_CPU_ACCEL_X86_SSE3;
+
+    if (ecx & ARCH_X86_INTEL_FEATURE_SSSE3)
+      caps |= GEGL_CPU_ACCEL_X86_SSSE3;
+
+    if (ecx & ARCH_X86_INTEL_FEATURE_SSE4_1)
+      caps |= GEGL_CPU_ACCEL_X86_SSE4_1;
+
+    if (ecx & ARCH_X86_INTEL_FEATURE_SSE4_2)
+      caps |= GEGL_CPU_ACCEL_X86_SSE4_2;
+
+    if (ecx & ARCH_X86_INTEL_FEATURE_AVX)
+      caps |= GEGL_CPU_ACCEL_X86_AVX;
+
+    if (ecx & ARCH_X86_INTEL_FEATURE_POPCNT)
+      caps |= GEGL_CPU_ACCEL_X86_POPCNT;
+
+    if (ecx & ARCH_X86_INTEL_FEATURE_XSAVE)
+      caps |= GEGL_CPU_ACCEL_X86_XSAVE;
+
+    if (ecx & ARCH_X86_INTEL_FEATURE_OSXSAVE)
+      caps |= GEGL_CPU_ACCEL_X86_OSXSAVE;
+
+    if (ecx & ARCH_X86_INTEL_FEATURE_FMA)
+      caps |= GEGL_CPU_ACCEL_X86_FMA;
+
+    if (ecx & ARCH_X86_INTEL_FEATURE_F16C)
+      caps |= GEGL_CPU_ACCEL_X86_F16C;
+
+    if (ecx & ARCH_X86_INTEL_FEATURE_MOVBE)
+      caps |= GEGL_CPU_ACCEL_X86_MOVBE;
+
+    cpuid (0, eax, ebx, ecx, edx);
+    if (eax >= 7)
+    {
+      cpuid (7, eax, ebx, ecx, edx);
+      if (ebx & ARCH_X86_INTEL_FEATURE_AVX2)
+        caps |= GEGL_CPU_ACCEL_X86_AVX2;
+      if (ebx & ARCH_X86_INTEL_FEATURE_BMI1)
+        caps |= GEGL_CPU_ACCEL_X86_BMI1;
+      if (ebx & ARCH_X86_INTEL_FEATURE_BMI2)
+        caps |= GEGL_CPU_ACCEL_X86_BMI2;
+    }
+
+
 #endif /* USE_SSE */
   }
 #endif /* USE_MMX */
@@ -485,6 +545,42 @@ arch_accel (void)
 
 #endif /* ARCH_PPC && USE_ALTIVEC */
 
+
+#if defined(ARCH_ARM)
+
+#include <unistd.h>
+#include <fcntl.h>
+#include <string.h>
+#include <elf.h>
+
+#define HAVE_ACCEL 1
+
+static guint32
+arch_accel (void)
+{
+  /* TODO : add or hardcode the other ways it can be on arm, where
+   *        this info comes from the system and not from running cpu
+   *        instructions
+   */
+  int has_neon = 0;
+  int fd = open ("/proc/self/auxv", O_RDONLY);
+  Elf32_auxv_t auxv;
+  if (fd >= 0)
+  {
+    while (read (fd, &auxv, sizeof (Elf32_auxv_t)) == sizeof (Elf32_auxv_t))
+    {
+      if (auxv.a_type == AT_HWCAP)
+      {
+        if (auxv.a_un.a_val & 4096)
+          has_neon = 1;
+      }
+    }
+    close (fd);
+  }
+  return has_neon?GEGL_CPU_ACCEL_ARM_NEON:0;
+}
+
+#endif /* ARCH_ARM  */
 
 static GeglCpuAccelFlags
 cpu_accel (void)

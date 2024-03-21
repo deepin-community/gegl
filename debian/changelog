@@ -1,3 +1,203 @@
+gegl (1:0.4.48-2.4) unstable; urgency=medium
+
+  * Non-maintainer upload.
+  * More symbols file fixes for t64.
+
+ -- Matthias Klose <doko@debian.org>  Sun, 17 Mar 2024 20:51:24 +0100
+
+gegl (1:0.4.48-2.3) unstable; urgency=medium
+
+  * Non-maintainer upload.
+  * Fix symbols file for t64.
+
+ -- Matthias Klose <doko@debian.org>  Sun, 17 Mar 2024 18:41:45 +0100
+
+gegl (1:0.4.48-2.2) unstable; urgency=medium
+
+  * Non-maintainer upload.
+  * Fix build depedency on dpkg-dev to use >= not >> (sorry).
+
+ -- Michael Hudson-Doyle <michael.hudson@ubuntu.com>  Tue, 05 Mar 2024 09:37:53 +1300
+
+gegl (1:0.4.48-2.1) unstable; urgency=medium
+
+  * Non-maintainer upload.
+  * Add build depedency on dpkg-dev (>= 1.22.5) for time_t transition.
+    (Closes: #1065260)
+
+ -- Michael Hudson-Doyle <mwhudson@debian.org>  Mon, 04 Mar 2024 23:38:29 +1300
+
+gegl (1:0.4.48-2) unstable; urgency=medium
+
+  * Release to unstable (Closes: #1062066)
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Tue, 27 Feb 2024 21:37:42 -0500
+
+gegl (1:0.4.48-1.1~exp1) experimental; urgency=medium
+
+  * Non-maintainer upload.
+  * Rename libraries for 64-bit time_t transition.
+
+ -- Steve Langasek <vorlon@debian.org>  Sat, 24 Feb 2024 05:55:17 +0000
+
+gegl (1:0.4.48-1) unstable; urgency=medium
+
+  * New upstream release
+  * Build-Depend on gi-docgen instead of gtk-doc-tools
+  * debian/libgegl-0.4-0.symbols: Add new symbols
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Wed, 14 Feb 2024 09:20:00 -0500
+
+gegl (1:0.4.46-4.1~exp1) experimental; urgency=medium
+
+  * Non-maintainer upload.
+  * Rename libraries for 64-bit time_t transition.
+
+ -- Lukas Märdian <slyon@debian.org>  Wed, 31 Jan 2024 09:05:27 +0000
+
+gegl (1:0.4.46-4) unstable; urgency=medium
+
+  * Team upload
+
+  [ Amin Bandali ]
+  * Update packaging branch to debian/latest
+
+  [ Simon McVittie ]
+  * d/control: Stop generating from d/control.in
+  * d/control: Add ${gir:Depends}, ${gir:Provides} to -dev package
+    (Helps: #1030223)
+  * d/control: Explicitly build-depend on required GIR XML
+    (Helps: #1030223)
+
+ -- Simon McVittie <smcv@debian.org>  Wed, 15 Nov 2023 12:36:24 +0000
+
+gegl (1:0.4.46-3) unstable; urgency=medium
+
+  [ Simon McVittie ]
+  * d/control.in: Remove unused libopenraw-dev build-dependency
+
+  [ Jeremy Bícha ]
+  * Disable libav feature that isn't used yet & crashes with ffmpeg 6
+    (Closes: #1041382)
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Fri, 04 Aug 2023 18:07:45 -0400
+
+gegl (1:0.4.46-2) unstable; urgency=medium
+
+  [ Simon McVittie ]
+  * d/control.in: Remove unused libopenraw-dev build-dependency
+
+  [ Jeremy Bícha ]
+  * Disable libav feature that isn't used yet & crashes with ffmpeg 6
+    (Closes: #1041382)
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Fri, 04 Aug 2023 18:06:44 -0400
+
+gegl (1:0.4.46-1) unstable; urgency=medium
+
+  * New upstream release
+  * debian/libgegl-0.4-0.symbols: Add new symbols
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Fri, 30 Jun 2023 20:16:07 -0400
+
+gegl (1:0.4.44-3) unstable; urgency=medium
+
+  * Release to unstable
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Mon, 12 Jun 2023 13:09:52 -0400
+
+gegl (1:0.4.44-2) experimental; urgency=medium
+
+  * debian/control.in: Bump minimum babl to 0.1.99 for babl-0.1.pc rename
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Wed, 24 May 2023 11:52:36 -0400
+
+gegl (1:0.4.44-1) experimental; urgency=medium
+
+  * New upstream release
+    - Fix invalid free triggered with glib 2.76
+
+ -- Jeremy Bicha <jbicha@ubuntu.com>  Sun, 02 Apr 2023 12:34:30 -0400
+
+gegl (1:0.4.42-2) unstable; urgency=medium
+
+  * Release to unstable
+
+ -- Jeremy Bicha <jbicha@ubuntu.com>  Fri, 24 Feb 2023 07:52:59 -0500
+
+gegl (1:0.4.42-1) experimental; urgency=medium
+
+  * New upstream release
+
+ -- Jeremy Bicha <jbicha@ubuntu.com>  Thu, 23 Feb 2023 18:57:01 -0500
+
+gegl (1:0.4.40-2) unstable; urgency=high
+
+  [ Simon McVittie ]
+  * d/control.in: Drop compatibility with old libgdk-pixbuf2.0-dev package
+
+  [ Jeremy Bicha ]
+  * debian/control.in: Move asciidoc-base to Build-Depends-Indep
+  * Update standards version to 4.6.2, no changes needed
+
+  [ Debian Janitor ]
+  * Remove constraints unnecessary since buster (oldstable)
+
+ -- Jeremy Bicha <jbicha@ubuntu.com>  Sun, 15 Jan 2023 12:57:58 -0500
+
+gegl (1:0.4.40-1) unstable; urgency=medium
+
+  * New upstream release
+  * debian/control.in: Build-Depend on asciidoc-base
+  * Revert "d/libgegl-doc.docs: Install asciidoc source instead of HTML"
+
+ -- Jeremy Bicha <jbicha@ubuntu.com>  Fri, 18 Nov 2022 12:34:53 -0500
+
+gegl (1:0.4.38-1) unstable; urgency=medium
+
+  * New upstream release
+  * Drop all patches: applied in new release
+
+ -- Jeremy Bicha <jbicha@ubuntu.com>  Thu, 28 Jul 2022 14:17:44 -0400
+
+gegl (1:0.4.36-3.1) unstable; urgency=medium
+
+  * Non-maintainer upload.
+  * debian/patches: Apply upstream patches to fix build with ffmpeg 5.0
+    (Closes: #1004771)
+
+ -- Sebastian Ramacher <sramacher@debian.org>  Thu, 23 Jun 2022 19:06:53 +0200
+
+gegl (1:0.4.36-3) unstable; urgency=medium
+
+  * debian/libgegl-0.4-0.symbols: Add optional symbols for armel/armhf
+
+ -- Jeremy Bicha <jbicha@ubuntu.com>  Fri, 25 Mar 2022 13:03:00 -0400
+
+gegl (1:0.4.36-2) unstable; urgency=medium
+
+  * debian/libgegl-0.4-0.symbols: Mark some symbols as amd64/x32 only
+
+ -- Jeremy Bicha <jbicha@ubuntu.com>  Fri, 25 Mar 2022 11:29:53 -0400
+
+gegl (1:0.4.36-1) unstable; urgency=medium
+
+  * New upstream release
+  * debian/control.in: Bump minimum babl to 0.1.90
+  * debian/libgegl-0.4-0.symbols: Update
+
+ -- Jeremy Bicha <jbicha@ubuntu.com>  Thu, 24 Mar 2022 17:49:05 -0400
+
+gegl (1:0.4.34-1) unstable; urgency=high
+
+  * New upstream release
+    - Includes fix for CVE-2021-45463 (Closes: #1002661)
+  * Drop all patches: applied in new release
+  * Drop debian/rules & debian/clean workaround for endian issue fixed in
+    new release
+
+ -- Jeremy Bicha <jbicha@debian.org>  Sun, 26 Dec 2021 17:43:33 -0500
+
 gegl (1:0.4.32-2) unstable; urgency=medium
 
   * Team upload

@@ -14,9 +14,9 @@ else
 endif
 
 ifeq ($(filter %-doc,$(built_binaries)),)
-EXTRA_CONFIGURE_OPTIONS += -Dgtk-doc=false
+EXTRA_CONFIGURE_OPTIONS += -Dgi-docgen=disabled
 else
-EXTRA_CONFIGURE_OPTIONS += -Dgtk-doc=true
+EXTRA_CONFIGURE_OPTIONS += -Dgi-docgen=enabled
 endif
 
 # Upstream test timeouts assume an otherwise unloaded system, but that
@@ -37,18 +37,12 @@ endif
 %:
 	dh $@
 
-# Remove this (and the corresponding entries in d/clean) if MR
-# https://gitlab.gnome.org/GNOME/gegl/-/merge_requests/108 is applied
-# in an upstream release
-set-up-test-files:
-	ln -f tests/compositions/reference/hdr-color.gegl tests/compositions/reference/hdr-color.little-endian.gegl
-	ln -f tests/compositions/reference/rgb-params.gegl tests/compositions/reference/rgb-params.little-endian.gegl
-
-override_dh_auto_configure: set-up-test-files
+override_dh_auto_configure:
 	dh_auto_configure -- \
 		-Dauto_features=enabled \
 		-Ddocs=true \
 		-Djasper=disabled \
+		-Dlibav=disabled \
 		-Dlua=disabled \
 		-Dmrg=disabled \
 		-Dpygobject=disabled \
@@ -65,3 +59,6 @@ override_dh_makeshlibs:
 
 override_dh_auto_test:
 	dh_auto_test --no-parallel -- --timeout-multiplier $(test_timeout_multiplier)
+
+override_dh_gnome_clean:
+	dh_gnome_clean --no-control

@@ -22,7 +22,22 @@
 #include "geglmodule.h"
 #include "geglmoduledb.h"
 #include "gegldatafiles.h"
+#include "gegl-cpuaccel.h"
 #include "gegl-config.h"
+
+
+#ifdef ARCH_X86_64
+#define ARCH_SIMD
+#endif
+#ifdef ARCH_ARM
+#define ARCH_SIMD
+#endif
+
+#ifdef __APPLE__ /* G_MODULE_SUFFIX is defined to .so instead of .dylib */
+#define MODULE_SUFFIX "dylib"
+#else
+#define MODULE_SUFFIX G_MODULE_SUFFIX
+#endif
 
 enum
 {
@@ -33,26 +48,11 @@ enum
 };
 
 
-/*  #define DUMP_DB 1  */
-
-
 static void         gegl_module_db_finalize            (GObject      *object);
 
-static void         gegl_module_db_module_initialize   (const GeglDatafileData *file_data,
+static void         gegl_module_db_module_search       (const GeglDatafileData *file_data,
                                                         gpointer                user_data);
 
-static GeglModule * gegl_module_db_module_find_by_path (GeglModuleDB *db,
-                                                        const char   *fullpath);
-
-#ifdef DUMP_DB
-static void         gegl_module_db_dump_module         (gpointer      data,
-                                                        gpointer      user_data);
-#endif
-
-static void         gegl_module_db_module_on_disk_func (gpointer      data,
-                                                        gpointer      user_data);
-static void         gegl_module_db_module_remove_func  (gpointer      data,
-                                                        gpointer      user_data);
 static void         gegl_module_db_module_modified     (GeglModule   *module,
                                                         GeglModuleDB *db);
 
@@ -178,52 +178,92 @@ is_in_inhibit_list (const gchar *filename,
   return FALSE;
 }
 
-/**
- * gegl_module_db_set_load_inhibit:
- * @db:           A #GeglModuleDB.
- * @load_inhibit: A #G_SEARCHPATH_SEPARATOR delimited list of module
- *                filenames to exclude from auto-loading.
- *
- * Sets the @load_inhibit flag for all #GeglModule's which are kept
- * by @db (using gegl_module_set_load_inhibit()).
- **/
-void
-gegl_module_db_set_load_inhibit (GeglModuleDB *db,
-                                 const gchar  *load_inhibit)
+#ifdef ARCH_SIMD
+
+static gboolean
+gegl_str_has_one_of_suffixes (const char *str,
+                              char **suffixes)
 {
-  GList *list;
+  for (int i = 0; suffixes[i]; i++)
+  {
+    if (g_str_has_suffix (str, suffixes[i]))
+      return TRUE;
+  }
+  return FALSE;
+}
 
-  g_return_if_fail (GEGL_IS_MODULE_DB (db));
+static void
+gegl_module_db_remove_duplicates (GeglModuleDB *db)
+{
+#ifdef ARCH_X86_64
 
-  g_free (db->load_inhibit);
-  db->load_inhibit = g_strdup (load_inhibit);
+  char *suffix_list[] = {"-x86_64-v2." MODULE_SUFFIX,"-x86_64-v3." MODULE_SUFFIX, NULL};
 
-  for (list = db->modules; list; list = g_list_next (list))
+  GList *suffix_entries = NULL;
+  int preferred = -1;
+  GeglCpuAccelFlags cpu_accel = gegl_cpu_accel_get_support ();
+  if (cpu_accel & GEGL_CPU_ACCEL_X86_64_V3) preferred = 1;
+  else if (cpu_accel & GEGL_CPU_ACCEL_X86_64_V2) preferred = 0;
+
+#endif
+#ifdef ARCH_ARM
+  char *suffix_list[] = {"-arm-neon." MODULE_SUFFIX, NULL};
+
+  GList *suffix_entries = NULL;
+  int preferred = -1;
+
+  GeglCpuAccelFlags cpu_accel = gegl_cpu_accel_get_support ();
+  if (cpu_accel & GEGL_CPU_ACCEL_ARM_NEON) preferred = 0;
+#endif
+
+  for (GList *l = db->to_load; l; l = l->next)
+  {
+    char *filename = l->data;
+    if (gegl_str_has_one_of_suffixes (filename, suffix_list))
     {
-      GeglModule *module = list->data;
-
-      gegl_module_set_load_inhibit (module,
-                                    is_in_inhibit_list (module->filename,
-                                                        load_inhibit));
+       suffix_entries = g_list_prepend (suffix_entries, filename);
     }
-}
+  }
 
-/**
- * gegl_module_db_get_load_inhibit:
- * @db: A #GeglModuleDB.
- *
- * Return the #G_SEARCHPATH_SEPARATOR selimited list of module filenames
- * which are excluded from auto-loading.
- *
- * Return value: the @db's @load_inhibit string.
- **/
-const gchar *
-gegl_module_db_get_load_inhibit (GeglModuleDB *db)
-{
-  g_return_val_if_fail (GEGL_IS_MODULE_DB (db), NULL);
+  for (GList *l = suffix_entries; l; l = l->next)
+  {
+    db->to_load = g_list_remove (db->to_load, l->data);
+  }
 
-  return db->load_inhibit;
+  if (preferred>-1)
+  {
+  
+  for (GList *l = suffix_entries; l; l = l->next)
+  {
+    char *filename = l->data;
+    if (g_str_has_suffix (filename, suffix_list[preferred]))
+    {
+       char *expected = g_strdup (filename);
+       char *e = strrchr (expected, '.');
+       char *p = e;
+       while (p && p>expected && *p != 'x' ) p--;
+       if (p && *p == 'x' && p[-1] == '-'){
+         p--;
+         strcpy (p, e);
+       }
+       for (GList *l2 = db->to_load; l2; l2=l2->next)
+       {
+         char *filename2 = l2->data;
+         if (!strcmp (filename2, expected))
+         {
+           g_free (l2->data);
+           l2->data = g_strdup (filename);
+         }
+       }
+       g_free (expected);
+    }
+  }
+
+  }
+
+  g_list_free_full(suffix_entries, g_free);
 }
+#endif
 
 /**
  * gegl_module_db_load:
@@ -243,52 +283,38 @@ gegl_module_db_load (GeglModuleDB *db,
   g_return_if_fail (module_path != NULL);
 
   if (g_module_supported ())
+  {
+    GeglModule   *module;
+    gboolean load_inhibit;
+
     gegl_datafiles_read_directories (module_path,
                                      G_FILE_TEST_EXISTS,
-                                     gegl_module_db_module_initialize,
+                                     gegl_module_db_module_search,
                                      db);
-
-#ifdef DUMP_DB
-  g_list_foreach (db->modules, gegl_module_db_dump_module, NULL);
+#ifdef ARCH_SIMD
+    gegl_module_db_remove_duplicates (db);
 #endif
-}
+    while (db->to_load)
+    {
+      char *filename = db->to_load->data;
+      load_inhibit = is_in_inhibit_list (filename,
+                                         db->load_inhibit);
 
-/**
- * gegl_module_db_refresh:
- * @db:          A #GeglModuleDB.
- * @module_path: A #G_SEARCHPATH_SEPARATOR delimited list of directories
- *               to load modules from.
- *
- * Does the same as gegl_module_db_load(), plus removes all #GeglModule
- * instances whose modules have been deleted from disk.
- *
- * Note that the #GeglModule's will just be removed from the internal
- * list and not freed as this is not possible with #GTypeModule
- * instances which actually implement types.
- **/
-void
-gegl_module_db_refresh (GeglModuleDB *db,
-                        const gchar  *module_path)
-{
-  GList *kill_list = NULL;
+      module = gegl_module_new (filename,
+                                load_inhibit,
+                                db->verbose);
 
-  g_return_if_fail (GEGL_IS_MODULE_DB (db));
-  g_return_if_fail (module_path != NULL);
+      g_signal_connect (module, "modified",
+                        G_CALLBACK (gegl_module_db_module_modified),
+                        db);
 
-  /* remove modules we don't have on disk anymore */
-  g_list_foreach (db->modules,
-                  gegl_module_db_module_on_disk_func,
-                  &kill_list);
-  g_list_foreach (kill_list,
-                  gegl_module_db_module_remove_func,
-                  db);
-  g_list_free (kill_list);
+      db->modules = g_list_append (db->modules, module);
+      g_signal_emit (db, db_signals[ADD], 0, module);
+      db->to_load = g_list_remove (db->to_load, filename);
+      g_free (filename);
+    }
+  }
 
-  /* walk filesystem and add new things we find */
-  gegl_datafiles_read_directories (module_path,
-                                   G_FILE_TEST_EXISTS,
-                                   gegl_module_db_module_initialize,
-                                   db);
 }
 
 /* name must be of the form lib*.so (Unix) or *.dll (Win32) */
@@ -308,10 +334,9 @@ valid_module_name (const gchar *filename)
         }
     }
 #ifdef __APPLE__ /* G_MODULE_SUFFIX is defined to .so instead of .dylib */
-  if (! gegl_datafiles_check_extension (basename, ".dylib" ) ||
-      strstr (filename, ".dSYM"))
+  if (! g_str_has_suffix (basename, ".dylib" ) || strstr (filename, ".dSYM"))
 #else
-  if (! gegl_datafiles_check_extension (basename, "." G_MODULE_SUFFIX))
+  if (! g_str_has_suffix (basename, "." G_MODULE_SUFFIX))
 #endif
     {
       g_free (basename);
@@ -324,111 +349,18 @@ valid_module_name (const gchar *filename)
   return TRUE;
 }
 
+
+
 static void
-gegl_module_db_module_initialize (const GeglDatafileData *file_data,
-                                  gpointer                user_data)
+gegl_module_db_module_search (const GeglDatafileData *file_data,
+                              gpointer                user_data)
 {
   GeglModuleDB *db = GEGL_MODULE_DB (user_data);
-  GeglModule   *module;
-  gboolean      load_inhibit;
 
   if (! valid_module_name (file_data->filename))
     return;
 
-  /* don't load if we already know about it */
-  if (gegl_module_db_module_find_by_path (db, file_data->filename))
-    return;
-
-  load_inhibit = is_in_inhibit_list (file_data->filename,
-                                     db->load_inhibit);
-
-  module = gegl_module_new (file_data->filename,
-                            load_inhibit,
-                            db->verbose);
-
-  g_signal_connect (module, "modified",
-                    G_CALLBACK (gegl_module_db_module_modified),
-                    db);
-
-  db->modules = g_list_append (db->modules, module);
-  g_signal_emit (db, db_signals[ADD], 0, module);
-}
-
-static GeglModule *
-gegl_module_db_module_find_by_path (GeglModuleDB *db,
-                                    const char   *fullpath)
-{
-  GList *list;
-
-  for (list = db->modules; list; list = g_list_next (list))
-    {
-      GeglModule *module = list->data;
-
-      if (! strcmp (module->filename, fullpath))
-        return module;
-    }
-
-  return NULL;
-}
-
-#ifdef DUMP_DB
-static void
-gegl_module_db_dump_module (gpointer data,
-                            gpointer user_data)
-{
-  GeglModule *module = data;
-
-  g_print ("\n%s: %s\n",
-           module->filename,
-           gegl_module_state_name (module->state));
-
-  g_print ("  module: %p  lasterr: %s  query: %p register: %p\n",
-           module->module,
-           module->last_module_error ? module->last_module_error : "NONE",
-           module->query_module,
-           module->register_module);
-}
-#endif
-
-static void
-gegl_module_db_module_on_disk_func (gpointer data,
-                                    gpointer user_data)
-{
-  GeglModule  *module    = data;
-  GList      **kill_list = user_data;
-  gboolean     old_on_disk;
-
-  old_on_disk = module->on_disk;
-
-  module->on_disk = g_file_test (module->filename, G_FILE_TEST_IS_REGULAR);
-
-  /* if it's not on the disk, and it isn't in memory, mark it to be
-   * removed later.
-   */
-  if (! module->on_disk && ! module->module)
-    {
-      *kill_list = g_list_append (*kill_list, module);
-      module = NULL;
-    }
-
-  if (module && module->on_disk != old_on_disk)
-    gegl_module_modified (module);
-}
-
-static void
-gegl_module_db_module_remove_func (gpointer data,
-                                   gpointer user_data)
-{
-  GeglModule   *module = data;
-  GeglModuleDB *db     = user_data;
-
-  g_signal_handlers_disconnect_by_func (module,
-                                        gegl_module_db_module_modified,
-                                        db);
-
-  db->modules = g_list_remove (db->modules, module);
-
-  g_signal_emit (db, db_signals[REMOVE], 0, module);
+  db->to_load = g_list_prepend (db->to_load, g_strdup (file_data->filename));
 }
 
 static void

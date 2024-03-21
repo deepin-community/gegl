@@ -83,6 +83,7 @@ guint gegl_debug_flags = 0;
 #include "graph/gegl-node-private.h"
 #include "gegl-random-private.h"
 #include "gegl-parallel-private.h"
+#include "gegl-cpuaccel.h"
 
 static gboolean  gegl_post_parse_hook (GOptionContext *context,
                                        GOptionGroup   *group,
@@ -164,7 +165,15 @@ gboolean gegl_is_main_thread (void)
   return g_thread_self () == main_thread;
 }
 
-void _gegl_init_u8_lut (void);
+#if BABL_MINOR_VERSION>1 || (BABL_MINOR_VERSION==1 && BABL_MICRO_VERSION >= 90)
+static gboolean gegl_idle_gc (gpointer user_data)
+{
+  babl_gc ();
+  return TRUE;
+}
+#endif
+
+void _gegl_init_buffer (int x86_64_version);
 
 void
 gegl_init (gint    *argc,
@@ -193,6 +202,10 @@ gegl_init (gint    *argc,
     }
 
   g_option_context_free (context);
+
+#if BABL_MINOR_VERSION>1 || (BABL_MINOR_VERSION==1 && BABL_MICRO_VERSION >= 97)
+  g_timeout_add_seconds (10, gegl_idle_gc, NULL);
+#endif
 }
 
 static gchar    *cmd_gegl_swap             = NULL;
@@ -540,7 +553,20 @@ gegl_post_parse_hook (GOptionContext *context,
   gegl_config_parse_env (config);
 
   babl_init ();
-  _gegl_init_u8_lut ();
+
+#if ARCH_ARM
+  GeglCpuAccelFlags cpu_accel = gegl_cpu_accel_get_support ();
+  _gegl_init_buffer ((cpu_accel & GEGL_CPU_ACCEL_ARM_NEON) != 0);
+#else
+  GeglCpuAccelFlags cpu_accel = gegl_cpu_accel_get_support ();
+  int x86_64_version = 0;
+  if ((cpu_accel & GEGL_CPU_ACCEL_X86_64_V2) == GEGL_CPU_ACCEL_X86_64_V2)
+    x86_64_version = 2;
+  if ((cpu_accel & GEGL_CPU_ACCEL_X86_64_V3) == GEGL_CPU_ACCEL_X86_64_V3)
+    x86_64_version = 3;
+
+  _gegl_init_buffer (x86_64_version);
+#endif
 
 #ifdef GEGL_ENABLE_DEBUG
   {

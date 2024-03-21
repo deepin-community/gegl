@@ -297,7 +297,7 @@ gegl_sampler_nohalo_init (GeglSamplerNohalo *self)
   level->context_rect.height = NOHALO_SIZE_0;
 }
 
-static void inline
+static inline void
 nohalo_subdivision (const gfloat           uno_two,
                     const gfloat           uno_thr,
                     const gfloat           uno_fou,
@@ -1920,7 +1920,11 @@ gegl_sampler_nohalo_get (      GeglSampler*    restrict  self,
       /*
        * Ship out the result:
        */
-      babl_process (self->fish, newval, output, 1);
+#if BABL_MINOR_VERSION>1 || (BABL_MINOR_VERSION==1 && BABL_MICRO_VERSION >= 90)
+        self->fish_process (self->fish, (void*)newval, (void*)output, 1, NULL);
+#else
+        babl_process (self->fish, (void*)newval, (void*)output, 1);
+#endif
       return;
     }
   }

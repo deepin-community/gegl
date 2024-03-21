@@ -348,7 +348,6 @@ gegl_path_to_string (GeglPath  *vector)
 {
   GeglPathPrivate *priv;
   GString *str;
-  gchar *ret;
   GeglPathList *iter;
   if (!vector)
     return g_strdup ("");
@@ -389,9 +388,7 @@ gegl_path_to_string (GeglPath  *vector)
         }
     }
 
-  ret = str->str;
-  g_string_free (str, FALSE);
-  return ret;
+  return g_string_free (str, FALSE);
 }
 
 void
@@ -814,16 +811,16 @@ gegl_path_parse_string (GeglPath    *vector,
 
       if (!info && ((type>= '0' && type <= '9') || type == '-'))
         {
-          if (previnfo->type == 'M')
+          if (previnfo && previnfo->type == 'M')
             {
               info = lookup_instruction_info(type = 'L');
             }
-          else if (previnfo->type == 'm')
+          else if (previnfo && previnfo->type == 'm')
             {
               info = lookup_instruction_info(type = 'l');
             }
-          else if (previnfo->type == ' ')
-            g_warning ("EEEK");
+          else if (!previnfo || previnfo->type == ' ')
+            g_warning ("EEEK invalid path");
         }
 
       if (info)

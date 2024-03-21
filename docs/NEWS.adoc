@@ -1,3 +1,249 @@
+GEGL=0.4.48 2024-02-11
+----------------------
+
+Core:
+~~~~~
+
+GeglColor extended with GBytes API, and space aware accesors for RGB and CMYK.
+Better runtime handling of mismatched GEGL ops in graphs.
+
+Build:
+~~~~~
+
+Use gi-docgen
+
+Updated vendored libraries
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+ctx has been updated from upstream.
+
+Operations:
+~~~~~~~~~~~
+
+ - dropshadow: Fix shrinking with negative-grow radius.
+ - mantiuk: opt out of OpenMP when building with clang.
+ - voroni: fix crash.
+ - shuffle-search: in progress (in workshop, not built by default) brute-force
+  dither optimizer.
+
+
+Contributors to this release
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Alan Mortensen, Anders Jonsson, Andre Klapper, Andre Klapper, Asier Sarasua
+Garmendia, dimspingos, Ekaterine Papava, Jacob Boerema, Jan Tojnar, Jehan,
+Jordi Mas, Luming Zh, Marco Ciampa, Martin, Øyvind Kolås, Piotr Drąg, Rodrigo
+Lledó, Sabri Ünal, Víttor Paulo Vieira da Costa, woob and Yuri Chornoivan,
+
+
+GEGL-0.4.46 2023-06-26
+----------------------
+
+Core:
+~~~~~
+
+New simpler API for connecting pads, gegl_node_connect which can be
+used instead of either gegl_node_connect_from or gegl_node_connect_to by
+autosensing the neccesary direction of the connection.
+
+Operations:
+~~~~~~~~~~~
+
+GIMP has now started looking at the "gimp:menu-path" key among the GEGL
+operation class key/value pairs, and putting operations in the corresponding
+menu.
+
+- local-threshold: new operation that does neighborhood aware and optionally
+antialiased thresholding of an image. The operation is equivalent to doing an
+unsharp mask with a large radius, followed by scaling the image up applying
+threshold and scaling down by the inverse of the scale up factor.
+
+- chamfer: new operation in workshop that useis distance-transform and emboss or
+LinuxBeaver's research into modeling different bevels with combinations of
+blurs.
+
+- ff-load,ff-save: clean up of deprecated API, builds with ffmpeg-6.0
+but ff-save hasn't been made to work with this release of ffmpeg yet.
+
+
+Updated vendored libraries
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+ctx and libnsgif have been updated from upstream.
+
+Build:
+~~~~~~
+
+ - Depend on meson 0.55.0
+ - various cleanups including re-enabling of deprecation warnings.
+ - make ctx be an internal library.
+
+Contributors to this release
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Alexandre Prokoudine, Asier Sarasua Garmendia, Ekaterine Papava, LinuxBeaver,
+Marco Ciampa, Martin, Øyvind Kolås, Piotr Drąg, Rodrigo Lledó, Sabri Ünal,
+Yuri Chornoivan.
+
+
+GEGL-0.4.44 2023-03-26
+----------------------
+
+GeglBuffer:
+~~~~~~~~~~~
+
+Fixed a invalid free that gets umasked by GLib 2.75.3 and newer.
+
+ctx:
+~~~~
+
+Updated vendored library from upstream.
+
+
+Contributors to this release:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Øyvind Kolås, Tim Sabsch, dimspingos and Jan Tojnar.
+
+
+GEGL-0.4.42 2023-02-20
+----------------------
+
+Operations:
+~~~~~~~~~~~
+
+ - raw-load: add conditional support for 0.21.0 API
+ - rgb-clib: improved ui-ranges
+ - perlin, mosiac, c2g, long-shadow: small cleanups
+ - gif-load: update vendored dependency, including code updates.
+
+Build:
+~~~~~~
+ - keeping up with babl
+
+Contributors to this release:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Alan Mortensen, Chris Mayo, Jehan, Jordi Mas, Michael Drakei, Øyvind Kolås
+and Sabri Ünal
+
+
+GEGL-0.4.40 2022-11-13
+----------------------
+
+Operations:
+~~~~~~~~~~~
+
+ - newsprint: do not drop alpha channel in RGB modes.
+
+Core
+~~~~
+
+  - fixes for legacy build, still supporting building latest GEGL for
+    stable GIMP with old babl (not recommended if distros can have
+    recent enough meson.).
+  - avoiding possible multi thread race in babl garbage collection
+
+Contributors to this release
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Asier Sarasua Garmendia, Enrico Nicoletto, Fran Dieguez, Jehan, Jordi Mas,
+Luming Zh, Marco Ciampa, Matheus Barbosa, nikita, Øyvind Kolås, Sabri Ünal and
+Sam James.
+
+
+GEGL-0.4.38 2022-07-13
+----------------------
+
+Operations:
+~~~~~~~~~~~
+
+ - denoise-dct: a NEW denoising operation which decomposes the input buffer to
+sliding overlapping patches, calculates the DCT denoising in each patch, and
+then aggregates the denoised patches to the output buffer averaging the
+overlapped pixels.
+ - ff-load and ff-save: big cleanup API cleanup, now ffmpeg-5.0 compatible
+ - gif-load: updated to latest upstream libnsgif version
+ - slic: progress reporting and improved parameter handling.
+ - vector-fill: updated to latest upstream ctx version
+ - oilify: clamp inputs to avoid nan in output
+ - gegl:load fix possible double free
+ - rgbe-write: plug leaks in error paths
+
+    
+Core:
+~~~~~
+
+Fixes of some potential NULL dereferences on custom dataformats for malformed
+inputs.
+
+
+Build
+~~~~~
+
+gegl can now be used as a subproject.
+
+The CI rule used on gitlab is now a much simpler one based on fedora, the arch
+based build started being fragile in working around kernel version dependancy.
+
+Contributors to this release:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Alan Mortensen, Anders Jonsson, Axel Viala, Behnam Momeni, darnuria,
+dimspingos, Felix Schwarz, Hugo Carvalho, Jehan, Jordi Mas, Luming Zh, Marcia
+van den Hout, Marco Ciampa, Martin, Michael Drake, Øyvind Kolås, Piotr Drąg,
+Rodrigo Lledó, Sabri Ünal, Thomas Manni, Tim Sabsch, Xavier Claessens, Yuri
+Chornoivan and Zurab Kargareteli.
+
+
+GEGL-0.4.36 2022-02-21
+----------------------
+
+The primary addition in this release is SIMD dispatch, buffer access functions
+get built for x86-64 v2 and v3 microarchitecture levels as well as ARM neon.
+the same applies to core operations where we have .so bundles for the variants
+as well as a generic build.
+
+Operations:
+~~~~~~~~~~~
+
+The npd operation fixed with multiple threads.
+
+Contributors to this release
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Alan Mortensen, Anders Jonsson, Caleb Xu, Jehan, Øyvind Kolås and zamfofex.
+
+
+GEGL-0.4.34 2021-12-19
+----------------------
+
+Operations:
+~~~~~~~~~~~
+
+magick-load: use g_spawn_async instead of system to run the image magick
+convert fallback - preventing shell expansion on non-escaped/filtered
+paths in constructed commandline.
+
+ripple: avoid a possible division by zero.
+
+Build:
+~~~~~~
+
+Explicit dependency specification in meson for generated CL files.
+
+ctx has been moved to be part of gegl-common.so nearer to the operations
+using it avoiding polluting the GEGL library symbol table with the ctx
+symbols.
+
+Contributors to this release:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Anders Jonsson, Asier Sarasua Garmendia, Boyuan Yang, dimspingos,
+Gavin Cui, Hugo Carvalho, Jehan Jordi Mas, krzygorz, Lukas Oberhuber,
+Marco Ciampa, Matej Urbančič, Øyvind Kolås, Rodrigo Lledó,
+Rūdolfs Mazurs and Simon McVittie.
+
+
 GEGL-0.4.32 2021-09-05
 ----------------------
 
@@ -54,22 +300,24 @@ Upload meson logs as artifcats, use release and debugoptimized build types.
 Pin glibc package in arch CI build to a version before it hard depends on linux
 4.4.
 
-New Operations:
-~~~~~~~~~~~~~~~
-  negative-darkroom: This operation is for artists who use hybrid workflow
-   technique of analog photography. After scanning a developed negative, this
-   operation is used to invert the scan to create a positive image by simulating
-   the light behaviour of darkroom enlarger and common photographic papers.
+negative-darkroom
+~~~~~~~~~~~~~~~~~
 
-Operations:
-~~~~~~~~~~~
-  jpg-load,png-load,tiff-load: show ICC relatd problems as warnings.
-  rgbe-load : fix handling of exponent=0 in RLE encoded files.
-  color-reduction : Added blue-noise modes, the patents are expired for some 
-  years already, also added fix to levels parameters; enabling bi-level.
-  fattal02 : ensure gaussian pyramid has at least one level.
+New operation for artists who use hybrid workflow
+technique of analog photography. After scanning a developed negative, this
+operation is used to invert the scan to create a positive image by simulating
+the light behaviour of darkroom enlarger and common photographic papers.
 
-  paint-select (in workshop): multi-level banded graphcut, sub-region rather
+Operations
+~~~~~~~~~~
+
+ - jpg-load,png-load,tiff-load: show ICC relatd problems as warnings.
+ - rgbe-load : fix handling of exponent=0 in RLE encoded files.
+ - color-reduction : Added blue-noise modes, the patents are expired for some 
+ - years already, also added fix to levels parameters; enabling bi-level.
+ - fattal02 : ensure gaussian pyramid has at least one level.
+
+ - paint-select (in workshop): multi-level banded graphcut, sub-region rather
     than full buffer rcomputations and other improvements.
 
 Contributors to this release:
@@ -1109,11 +1357,11 @@ Better clone accounting in tile cache.
 Operations
 ~~~~~~~~~~
 
-  exp-combine: code cleanup/simplification
-  libraw: make bounding box handling consistent with rest of code.
-  transform ops: re-enabled multi-threading, reduced some format
-                 conversions and added wiggle-room in required/invalidated
-                 calculations.
+  - exp-combine: code cleanup/simplification
+  - libraw: make bounding box handling consistent with rest of code.
+  - transform ops: re-enabled multi-threading, reduced some format
+      conversions and added wiggle-room in required/invalidated
+      calculations.
 
 GEGL-0.3.24 2017-11-24
 ----------------------
