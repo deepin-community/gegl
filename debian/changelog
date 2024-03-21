@@ -1,3 +1,9 @@
+gegl (1:0.4.32-2deepin1) unstable; urgency=medium
+
+  * raw-load: make compatible with LibRaw 0.21.0
+
+ -- LiChengGang <lichenggang@uniontech.com>  Thu, 21 Mar 2024 11:30:48 +0800
+
 gegl (1:0.4.32-2) unstable; urgency=medium
 
   * Team upload
