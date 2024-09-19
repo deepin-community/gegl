@@ -1,3 +1,9 @@
+gegl (1:0.4.48-2.4deepin0) unstable; urgency=medium
+
+  * No source change upload against GCC 12.
+
+ -- Tianyu Chen <sweetyfish@deepin.org>  Thu, 19 Sep 2024 22:47:59 +0800
+
 gegl (1:0.4.48-2.4) unstable; urgency=medium
 
   * Non-maintainer upload.
