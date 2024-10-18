@@ -65,6 +65,9 @@ Description: Generic Graphics Library Test Program
  This package contains a bunch of test programs.
 
 Package: libgegl-0.4-0
+Provides: ${:Provides}
+Replaces: libgegl-0.4-0
+Breaks: libgegl-0.4-0 (<< ${source:Version})
 Section: libs
 Architecture: any
 Multi-Arch: same
@@ -101,7 +104,7 @@ Architecture: any
 Multi-Arch: same
 Depends: gir1.2-gegl-0.4 (= ${binary:Version}),
          libbabl-dev (>= 1:0.1.99),
-         libgegl-0.4-0 (= ${binary:Version}),
+         libgegl-0.4- (= ${binary:Version}),
          libglib2.0-dev (>= 2.16.1),
          libjson-glib-dev,
          ${gir:Depends},

@@ -1,0 +1,13 @@
+--- debian/changelog
++++ debian/changelog
+@@ -1,10 +1,3 @@
+-gegl (1:0.4.48-1.1~exp1) experimental; urgency=medium
+-
+-  * Non-maintainer upload.
+-  * Rename libraries for 64-bit time_t transition.
+-
+- -- Steve Langasek <vorlon@debian.org>  Sat, 24 Feb 2024 05:55:17 +0000
+-
+ gegl (1:0.4.48-1) unstable; urgency=medium
+ 
+   * New upstream release
