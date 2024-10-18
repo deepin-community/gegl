@@ -1,9 +1,3 @@
-gegl (1:0.4.48-2.4deepin1) unstable; urgency=medium
-
-  * revert 64-bit time_t transition patch.
-
- -- lichenggang <lichenggang@deepin.org>  Fri, 18 Oct 2024 14:45:41 +0800
-
 gegl (1:0.4.48-2.4deepin0) unstable; urgency=medium
 
   * No source change upload against GCC 12.
