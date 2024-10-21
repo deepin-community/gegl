@@ -1,4 +1,4 @@
-libgegl-0.4.so.0 libgegl-0.4-0t64 #MINVER#
+libgegl-0.4.so.0 libgegl-0.4-0 #MINVER#
 * Build-Depends-Package: libgegl-dev
  (regex|optional=private)"^_ctx.*@Base$" 1:0.4.32
  (regex|optional=private)"^ctx.*@Base$" 1:0.4.32
@@ -905,7 +905,7 @@ libgegl-0.4.so.0 libgegl-0.4-0t64 #MINVER#
  gegl_visitor_visit_node@Base 0.3.0
  gegl_visitor_visit_pad@Base 0.3.0
  real_gegl_instrument@Base 0.3.0
-libgegl-npd-0.4.so libgegl-0.4-0t64 #MINVER#
+libgegl-npd-0.4.so libgegl-0.4-0 #MINVER#
  npd_SED@Base 0.3.0
  npd_add_control_point@Base 0.3.0
  npd_apply_transformation@Base 0.3.0
