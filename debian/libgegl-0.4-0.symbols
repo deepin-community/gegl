@@ -946,7 +946,7 @@ libgegl-npd-0.4.so libgegl-0.4-0 #MINVER#
  npd_set_deformation_type@Base 0.3.0
  npd_set_pixel_color@Base 0.3.0
  npd_set_point_coordinates@Base 0.3.0
-libgegl-sc-0.4.so libgegl-0.4-0t64 #MINVER#
+libgegl-sc-0.4.so libgegl-0.4-0 #MINVER#
  AdvancingFront_set_head@Base 0.3.0
  _p2tr_point_insert_edge@Base 0.3.0
  _p2tr_point_remove_edge@Base 0.3.0

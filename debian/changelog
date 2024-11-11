@@ -1,3 +1,9 @@
+gegl (1:0.4.48-2.4deepin2) unstable; urgency=medium
+
+  * update t64 time_t transition. 
+
+ -- lichenggang <lichenggang@deepin.org>  Mon, 11 Nov 2024 14:27:53 +0800
+
 gegl (1:0.4.48-2.4deepin1) unstable; urgency=medium
 
   * revert 64-bit time_t transition patch.
