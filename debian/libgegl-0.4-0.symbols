@@ -1,10 +1,6 @@
 libgegl-0.4.so.0 libgegl-0.4-0 #MINVER#
 * Build-Depends-Package: libgegl-dev
- (regex|optional=private)"^_ctx.*@Base$" 1:0.4.32
- (regex|optional=private)"^ctx.*@Base$" 1:0.4.32
  (optional=private)gtx_glyph_free@Base 1:0.4.32
- (optional=private)thash@Base 1:0.4.32
- (optional=private)thash_decode@Base 1:0.4.32
  _gegl_buffer_drop_hot_tile@Base 0.3.0
  _gegl_cl_is_accelerated@Base 0.3.0
  _gegl_float_epsilon_equal@Base 0.3.0
@@ -78,11 +74,6 @@ libgegl-0.4.so.0 libgegl-0.4-0 #MINVER#
  gegl_buffer_introspectable_new@Base 0.3.0
  gegl_buffer_introspectable_set@Base 0.3.0
  gegl_buffer_is_shared@Base 0.3.0
- gegl_buffer_iterator2_add@Base 0.4.10
- gegl_buffer_iterator2_empty_new@Base 0.4.10
- gegl_buffer_iterator2_new@Base 0.4.10
- gegl_buffer_iterator2_next@Base 0.4.10
- gegl_buffer_iterator2_stop@Base 0.4.10
  gegl_buffer_iterator_add@Base 0.3.0
  gegl_buffer_iterator_empty_new@Base 0.3.0
  gegl_buffer_iterator_new@Base 0.3.0
@@ -214,6 +205,8 @@ libgegl-0.4.so.0 libgegl-0.4-0 #MINVER#
  gegl_color_get_cmyk@Base 1:0.4.48
  gegl_color_get_components@Base 0.3.0
  gegl_color_get_format@Base 0.4.14
+ gegl_color_get_hsla@Base 1:0.4.50
+ gegl_color_get_hsva@Base 1:0.4.50
  gegl_color_get_pixel@Base 0.3.0
  gegl_color_get_rgba@Base 0.3.0
  gegl_color_get_rgba_with_space@Base 1:0.4.48
@@ -222,6 +215,8 @@ libgegl-0.4.so.0 libgegl-0.4-0 #MINVER#
  gegl_color_set_bytes@Base 1:0.4.48
  gegl_color_set_cmyk@Base 1:0.4.48
  gegl_color_set_components@Base 0.3.0
+ gegl_color_set_hsla@Base 1:0.4.50
+ gegl_color_set_hsva@Base 1:0.4.50
  gegl_color_set_pixel@Base 0.3.0
  gegl_color_set_rgba@Base 0.3.0
  gegl_color_set_rgba_with_space@Base 1:0.4.48
@@ -278,13 +273,13 @@ libgegl-0.4.so.0 libgegl-0.4-0 #MINVER#
  gegl_dot_visitor_get_type@Base 0.3.0
  gegl_dot_visitor_set_string_to_append@Base 0.3.0
  gegl_downscale_2x2@Base 0.3.0
- (arch=armel armhf)gegl_downscale_2x2_arm_neon@Base 1:0.4.36-2
+ (arch=armel armhf)gegl_downscale_2x2_arm_neon@Base 1:0.4.37
  gegl_downscale_2x2_generic@Base 1:0.4.36
- (arch=armel armhf)gegl_downscale_2x2_get_fun_arm_neon@Base 1:0.4.36-2
+ (arch=armel armhf)gegl_downscale_2x2_get_fun_arm_neon@Base 1:0.4.37
  gegl_downscale_2x2_get_fun_generic@Base 1:0.4.36
  (arch=amd64 x32)gegl_downscale_2x2_get_fun_x86_64_v2@Base 1:0.4.36
  (arch=amd64 x32)gegl_downscale_2x2_get_fun_x86_64_v3@Base 1:0.4.36
- (arch=armel armhf)gegl_downscale_2x2_nearest_arm_neon@Base 1:0.4.36-2
+ (arch=armel armhf)gegl_downscale_2x2_nearest_arm_neon@Base 1:0.4.37
  gegl_downscale_2x2_nearest_generic@Base 1:0.4.36
  (arch=amd64 x32)gegl_downscale_2x2_nearest_x86_64_v2@Base 1:0.4.36
  (arch=amd64 x32)gegl_downscale_2x2_nearest_x86_64_v3@Base 1:0.4.36
@@ -453,6 +448,8 @@ libgegl-0.4.so.0 libgegl-0.4-0 #MINVER#
  gegl_node_get_output_proxy@Base 0.3.0
  gegl_node_get_output_visitable@Base 0.3.22
  gegl_node_get_pad@Base 0.3.0
+ gegl_node_get_pad_description@Base 1:0.4.50
+ gegl_node_get_pad_label@Base 1:0.4.50
  gegl_node_get_pads@Base 0.3.0
  gegl_node_get_parent@Base 0.3.0
  gegl_node_get_passthrough@Base 0.3.0
@@ -741,17 +738,17 @@ libgegl-0.4.so.0 libgegl-0.4-0 #MINVER#
  gegl_render_op@Base 0.3.0
  gegl_render_op_valist@Base 0.3.0
  gegl_resample_bilinear@Base 0.3.2
- (arch=armel armhf)gegl_resample_bilinear_arm_neon@Base 1:0.4.36-2
+ (arch=armel armhf)gegl_resample_bilinear_arm_neon@Base 1:0.4.37
  gegl_resample_bilinear_generic@Base 1:0.4.36
  (arch=amd64 x32)gegl_resample_bilinear_x86_64_v2@Base 1:0.4.36
  (arch=amd64 x32)gegl_resample_bilinear_x86_64_v3@Base 1:0.4.36
  gegl_resample_boxfilter@Base 0.3.0
- (arch=armel armhf)gegl_resample_boxfilter_arm_neon@Base 1:0.4.36-2
+ (arch=armel armhf)gegl_resample_boxfilter_arm_neon@Base 1:0.4.37
  gegl_resample_boxfilter_generic@Base 1:0.4.36
  (arch=amd64 x32)gegl_resample_boxfilter_x86_64_v2@Base 1:0.4.36
  (arch=amd64 x32)gegl_resample_boxfilter_x86_64_v3@Base 1:0.4.36
  gegl_resample_nearest@Base 0.3.0
- (arch=armel armhf)gegl_resample_nearest_arm_neon@Base 1:0.4.36-2
+ (arch=armel armhf)gegl_resample_nearest_arm_neon@Base 1:0.4.37
  gegl_resample_nearest_generic@Base 1:0.4.36
  (arch=amd64 x32)gegl_resample_nearest_x86_64_v2@Base 1:0.4.36
  (arch=amd64 x32)gegl_resample_nearest_x86_64_v3@Base 1:0.4.36
@@ -906,6 +903,7 @@ libgegl-0.4.so.0 libgegl-0.4-0 #MINVER#
  gegl_visitor_visit_pad@Base 0.3.0
  real_gegl_instrument@Base 0.3.0
 libgegl-npd-0.4.so libgegl-0.4-0 #MINVER#
+* Build-Depends-Package: libgegl-dev
  npd_SED@Base 0.3.0
  npd_add_control_point@Base 0.3.0
  npd_apply_transformation@Base 0.3.0
@@ -947,6 +945,7 @@ libgegl-npd-0.4.so libgegl-0.4-0 #MINVER#
  npd_set_pixel_color@Base 0.3.0
  npd_set_point_coordinates@Base 0.3.0
 libgegl-sc-0.4.so libgegl-0.4-0 #MINVER#
+* Build-Depends-Package: libgegl-dev
  AdvancingFront_set_head@Base 0.3.0
  _p2tr_point_insert_edge@Base 0.3.0
  _p2tr_point_remove_edge@Base 0.3.0

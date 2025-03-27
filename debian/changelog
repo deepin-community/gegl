@@ -1,20 +1,53 @@
-gegl (1:0.4.48-2.4deepin2) unstable; urgency=medium
+gegl (1:0.4.58-1deepin1) unstable; urgency=medium
 
-  * update t64 time_t transition. 
+  * revert t64.
 
- -- lichenggang <lichenggang@deepin.org>  Mon, 11 Nov 2024 14:27:53 +0800
+ -- lhdjply <lhdjply@126.com>  Thu, 27 Mar 2025 09:34:53 +0800
 
-gegl (1:0.4.48-2.4deepin1) unstable; urgency=medium
+gegl (1:0.4.58-1) unstable; urgency=medium
 
-  * revert 64-bit time_t transition patch.
+  * New upstream bugfix release required by gimp 3.0.2
 
- -- lichenggang <lichenggang@deepin.org>  Fri, 18 Oct 2024 14:45:41 +0800
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Wed, 26 Mar 2025 08:57:08 -0400
 
-gegl (1:0.4.48-2.4deepin0) unstable; urgency=medium
+gegl (1:0.4.56-1) unstable; urgency=medium
 
-  * No source change upload against GCC 12.
+  * New upstream release
+  * Remove ancient Breaks/Replace/Pre-Depends
+  * debian/libgegl-0.4-0t64.symbols: Update
 
- -- Tianyu Chen <sweetyfish@deepin.org>  Thu, 19 Sep 2024 22:47:59 +0800
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Sun, 16 Mar 2025 14:51:16 -0400
+
+gegl (1:0.4.54-1) unstable; urgency=medium
+
+  * New upstream release
+  * Allow build tests to run in parallel
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Sun, 09 Feb 2025 16:27:03 -0500
+
+gegl (1:0.4.52-1) unstable; urgency=medium
+
+  * New upstream release
+  * Stop using dh-sequence-gnome
+  * Remove unused Lintian overrides
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Fri, 27 Dec 2024 09:02:13 -0500
+
+gegl (1:0.4.50-1) unstable; urgency=medium
+
+  * New upstream release
+  * Acknowledge all previous NMUs.
+  * Update Standards-Version to 4.7.0, with no changes needed.
+  * Update symbols files to add new symbols.
+
+ -- Jordi Mallach <jordi@debian.org>  Tue, 05 Nov 2024 01:11:10 +0100
+
+gegl (1:0.4.48-2.5) unstable; urgency=medium
+
+  * Non-maintainer upload.
+  * Revert Maintainer field to GNOME Maintainers.
+
+ -- Bastian Germann <bage@debian.org>  Sat, 13 Apr 2024 07:23:10 +0000
 
 gegl (1:0.4.48-2.4) unstable; urgency=medium
 

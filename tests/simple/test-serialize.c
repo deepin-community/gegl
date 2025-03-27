@@ -74,21 +74,21 @@ TestCase tests[] = {
 
     {"over aux= [ ",
      "svg:src-over",
-     "No such op 'gegl:['"}, 
+     "gegl:over has no aux property, properties: 'srgb', "},
 
-    /* the following cause undesired warnings on console */
+    /* the following cause undesired warnings on console and does not look nice */
     {"over aux=[ string='foo bar' ]",
      "svg:src-over",
-     ""},
+     "(null) does not have a pad called output"},
 
-    /* the following should have error message */
+    /* the following should have better error messages */
     {"over aux=[ ",
      "svg:src-over",
-     ""},
+     "(null) does not have a pad called output"},
 
     {"over aux=[ ]",
      "svg:src-over",
-     ""},
+     "(null) does not have a pad called output"},
 
     {"exposure foo=2",
      "gegl:exposure",
@@ -148,7 +148,8 @@ test_serialize (void)
     g_free (serialization);
     if (error)
     {
-      if (strcmp (error->message, tests[i].expected_error))
+      if (g_ascii_strncasecmp (error->message, tests[i].expected_error,
+                               strlen (tests[i].expected_serialization)+1))
       {
        printf ("%s\nexpected error:\n%s\nbut got error:\n%s\n", 
                       tests[i].argv_chain,

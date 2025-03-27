@@ -2,22 +2,22 @@
 # Copyright (C) 2018 gegl's COPYRIGHT HOLDER
 # This file is distributed under the same license as the gegl package.
 #
-# yurchor <yurchor@ukr.net>, 2018, 2020, 2021, 2022, 2023, 2024.
+# yurchor <yurchor@ukr.net>, 2018, 2020, 2021, 2022, 2023, 2024, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: gegl master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gegl/issues/\n"
-"POT-Creation-Date: 2024-02-11 16:28+0000\n"
-"PO-Revision-Date: 2024-02-11 19:42+0200\n"
+"POT-Creation-Date: 2025-02-07 22:06+0000\n"
+"PO-Revision-Date: 2025-02-08 18:40+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
-"Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
+"Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=n==1 ? 3 : n%10==1 && n%100!=11 ? 0 : n"
 "%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Lokalize 23.04.1\n"
+"X-Generator: Lokalize 23.04.3\n"
 
 #: bin/gegl.c:179
 #, c-format
@@ -167,7 +167,7 @@ msgstr ""
 "\n"
 "\n"
 
-#: bin/ui-core.c:4387 gegl/gegl-serialize.c:672
+#: bin/ui-core.c:4387 gegl/gegl-serialize.c:690
 #, c-format
 msgid "BablFormat \"%s\" does not exist."
 msgstr "Не існує BablFormat «%s»."
@@ -350,66 +350,71 @@ msgstr "Ніколи"
 msgid "Always"
 msgstr "Завжди"
 
-#: gegl/gegl-init.c:225
+#: gegl/gegl-init.c:358
 msgid "Where GEGL stores its swap"
 msgstr "Місце, де GEGL зберігатиме файл резервної пам'яті"
 
-#: gegl/gegl-init.c:230
+#: gegl/gegl-init.c:363
 msgid "Compression algorithm used for data stored in the swap"
 msgstr "Алгоритм стискання для даних, які зберігаються у резервній пам'яті"
 
-#: gegl/gegl-init.c:235
+#: gegl/gegl-init.c:368
 msgid "How much memory to (approximately) use for caching imagery"
 msgstr ""
 "Об'єм пам'яті (приблизно), який слід використовувати для кешування даних "
 "зображень"
 
-#: gegl/gegl-init.c:240
+#: gegl/gegl-init.c:373
 msgid "Default size of tiles in GeglBuffers"
 msgstr "Типовий розмір плиток у GeglBuffer-ах"
 
-#: gegl/gegl-init.c:245
+#: gegl/gegl-init.c:378
 msgid "The count of pixels to compute simultaneously"
 msgstr "Кількість пікселів, значення для яких слід обчислювати одночасно"
 
-#: gegl/gegl-init.c:250
+#: gegl/gegl-init.c:383
 msgid ""
 "The quality of rendering, a value between 0.0 (fast) and 1.0 (reference)"
 msgstr "Якість обробки. Значення від 0.0 (швидко) до 1.0 (ідеально)"
 
-#: gegl/gegl-init.c:255
+#: gegl/gegl-init.c:388
 msgid "The number of concurrent processing threads to use"
 msgstr "Кількість паралельних потоків обробки"
 
-#: gegl/gegl-init.c:260
+#: gegl/gegl-init.c:393
 msgid "Disable OpenCL"
 msgstr "Вимкнути OpenCL"
 
-#: gegl/gegl-init.c:272
+#: gegl/gegl-init.c:405
 msgid "Show GEGL Options"
 msgstr "Показати параметри GEGL"
 
-#: gegl/gegl-serialize.c:305
+#: gegl/gegl-serialize.c:227 gegl/gegl-serialize.c:231
+#, c-format
+msgid "%s does not have a pad called %s"
+msgstr "У %s немає буфера із назвою %s"
+
+#: gegl/gegl-serialize.c:323
 #, c-format
 msgid "unhandled path data %s:%s\n"
 msgstr "непридатні до обробки дані шляху, %s:%s\n"
 
-#: gegl/gegl-serialize.c:541
+#: gegl/gegl-serialize.c:559
 #, c-format
 msgid "op '%s' not found, partial matches: "
 msgstr "Не знайдено дії «%s». Часткові збіги: "
 
-#: gegl/gegl-serialize.c:570
+#: gegl/gegl-serialize.c:588
 #, c-format
 msgid "%s has no %s property."
 msgstr "У %s немає властивості %s."
 
-#: gegl/gegl-serialize.c:576
+#: gegl/gegl-serialize.c:594
 #, c-format
 msgid "%s has no %s property, properties: "
 msgstr "У %s немає властивості %s. Властивості: "
 
-#: gegl/gegl-serialize.c:807
+#: gegl/gegl-serialize.c:826
 #, c-format
 msgid "No such op '%s'"
 msgstr "Немає дії «%s»"
@@ -440,6 +445,7 @@ msgid "Output pad for generated image buffer."
 msgstr "Буфер виведення для створеного буфера зображення."
 
 #: gegl/operation/gegl-operation-composer3.c:86
+#: gegl/operation/gegl-operation-filter.c:96
 msgid "Input pad, for image buffer input."
 msgstr "Буфер введення для вхідного буфера зображення."
 
@@ -452,6 +458,10 @@ msgstr "Допоміжний буфер вхідних даних для буф�
 #: gegl/operation/gegl-operation-composer3.c:104
 msgid "Second auxiliary image buffer input pad."
 msgstr "Другий допоміжний вхідний буфер для буфера зображення."
+
+#: gegl/operation/gegl-operation-filter.c:95
+msgid "Input"
+msgstr "Вхід"
 
 #: operations/common/absolute.c:72
 msgid "Absolute"
@@ -638,9 +648,161 @@ msgstr "Обрізати альфу"
 msgid "Keep alpha values inside a specific range"
 msgstr "Зберегти значення альфи у вказаному діапазоні"
 
+#: operations/common/bevel.c:47
+msgid "Chamfer"
+msgstr "Фаска"
+
+#: operations/common/bevel.c:49
+msgid "Bump"
+msgstr "Витискання"
+
+#: operations/common/bevel.c:52
+msgid "Bevel Type"
+msgstr "Тип рельєфу"
+
+#: operations/common/bevel.c:55
+msgid "The family of bevel to use"
+msgstr "Використане сімейство рельєфів"
+
+#: operations/common/bevel.c:59
+msgid "None (for use with GIMPs blending options)"
+msgstr "Немає (для використання з варіантами змішування у GIMP)"
+
+#: operations/common/bevel.c:61 operations/common/styles.c:202
+#: operations/common/styles.c:310 operations/common/styles.c:418
+msgid "Hard Light"
+msgstr "Яскраве світло"
+
+#: operations/common/bevel.c:63 operations/common/styles.c:59
+#: operations/common/styles.c:198 operations/common/styles.c:414
+msgid "Multiply"
+msgstr "Множення"
+
+#: operations/common/bevel.c:65 operations/common/styles.c:206
+#: operations/common/styles.c:312 operations/common/styles.c:422
+msgid "Color Dodge"
+msgstr "Висвітлювання кольорів"
+
+#: operations/common/bevel.c:67 operations/common/styles.c:204
+#: operations/common/styles.c:420
+msgid "Darken"
+msgstr "Затемнення"
+
+#: operations/common/bevel.c:69
+msgid "Lighten"
+msgstr "Освітлення"
+
+#: operations/common/bevel.c:71 operations/common/styles.c:200
+#: operations/common/styles.c:416
+#: operations/workshop/external/paint-select.cc:30
+msgid "Add"
+msgstr "Додати"
+
+#: operations/common/bevel.c:74 operations/common-gpl3+/sinus.c:67
+msgid "Blend Mode"
+msgstr "Режим змішування"
+
+#: operations/common/bevel.c:77
+msgid ""
+"What blending mode the bevel's emboss will be. Light Map is a special blend "
+"mode that allows users to extract the filters output as a light map which "
+"should be put on a layer above or be used with Gimp's blending options."
+msgstr ""
+"Режим змішування для рельєфу фаски. «Карта освітлення» є особливим режимом "
+"змішування, який надає користувачам змогу видобути результати фільтрування "
+"як карту освітлення, яку має бути накладено на шар вище або використано з "
+"варіантами змішування GIMP."
+
+#: operations/common/bevel.c:79
+msgid "Distance Map Setting"
+msgstr "Параметр карти відстаней"
+
+#: operations/common/bevel.c:81
+msgid ""
+"Distance Map is unique to chamfer bevel and has three settings that alter "
+"the structure of the chamfer."
+msgstr ""
+"«Картка відстаней» є унікальною для фаски і має три параметри, які змінюють "
+"структуру фаски."
+
+#: operations/common/bevel.c:84 operations/common/bloom.c:35
+#: operations/common/box-blur.c:25 operations/common/c2g.c:28
+#: operations/common/edge-neon.c:47 operations/common/local-threshold.c:24
+#: operations/common/median-blur.c:42 operations/common/snn-mean.c:26
+#: operations/common/stress.c:27 operations/common/unsharp-mask.c:24
+#: operations/common/vignette.c:40 operations/common/wavelet-blur-1d.c:28
+#: operations/common/wavelet-blur.c:27 operations/common-cxx/focus-blur.c:85
+#: operations/common-cxx/lens-blur.cc:24
+#: operations/common-cxx/variable-blur.c:30
+#: operations/common-gpl3+/shadows-highlights.c:40
+#: operations/common-gpl3+/spiral.c:47 operations/common-gpl3+/supernova.c:44
+#: operations/common-gpl3+/whirl-pinch.c:46
+#: operations/external/matting-levin.c:29 operations/workshop/boxblur-1d.c:27
+#: operations/workshop/boxblur.c:24
+#: operations/workshop/external/spyrograph.c:63
+msgid "Radius"
+msgstr "Радіус"
+
+#: operations/common/bevel.c:89
+msgid "Radius of softening for making bump of the shape."
+msgstr "Радіус пом'якшення для створення рельєфу форми."
+
+#: operations/common/bevel.c:92 operations/common-gpl3+/bump-map.c:56
+#: operations/common-gpl3+/emboss.c:40
+msgid "Elevation"
+msgstr "Висота"
+
+#: operations/common/bevel.c:93
+msgid "Elevation angle of the Bevel."
+msgstr "Кут підняття фаски."
+
+#. The only issue  with this filter is that emboss depth= above 15 does nothing on chamfer bevel , but works great on bump bevel.
+#. so I made an extra node just for it that only updates emboss depth=, as a result depth and sharpness' are co-existing properties
+#.
+#. I am fully aware 'depth' and 'detail' are just words used to describe the same thing.
+#: operations/common/bevel.c:104 operations/common-gpl3+/bump-map.c:59
+#: operations/common-gpl3+/emboss.c:45
+#: operations/common-gpl3+/fractal-trace.c:60
+#: operations/common-gpl3+/texturize-canvas.c:44
+msgid "Depth"
+msgstr "Глибина"
+
+#: operations/common/bevel.c:105
+msgid "Emboss depth - Brings out depth and detail of the bump bevel."
+msgstr "Глибина рельєфу — надає глибини і деталізації рельєфу фаски."
+
+#: operations/common/bevel.c:109
+msgid "Light Angle"
+msgstr "Кут освітлення"
+
+#: operations/common/bevel.c:110
+msgid "Direction of a light source illuminating and shading the bevel."
+msgstr "Напрям на джерело світла, що освітлює та відтіняє рельєф."
+
+#: operations/common/bevel.c:309
+msgid "Bevel"
+msgstr "Фаска"
+
+#: operations/common/bevel.c:311
+msgid ""
+"Two bevel effects in one place, Chamfer - which simulates lighting of "
+"chamfered 3D-edges, and Bump - the second make a 3D inflation effect by an "
+"emboss covering a blur. Both bevels benefit from color filled alpha defined "
+"shapes."
+msgstr ""
+"Два ефекти барельєфа в одному місці. «Фаска» — імітує освітлення рельєфу "
+"просторових країв, і «Витискання» — застосовує ефект просторового надування "
+"накладанням рельєфу з розмиванням. Обидва рельєфи покращуються від "
+"заповнених кольором прозорих визначених форм."
+
+#: operations/common/bevel.c:313
+msgid "Bevel..."
+msgstr "Фаска…"
+
 #: operations/common/bilateral-filter.c:26
 #: operations/common/domain-transform.c:29 operations/common/dropshadow.c:46
-#: operations/common-cxx/focus-blur.c:45 operations/common-cxx/lens-blur.cc:25
+#: operations/common/inner-glow.c:58 operations/common-cxx/focus-blur.c:45
+#: operations/common-cxx/lens-blur.cc:25
 #: operations/common-gpl3+/gaussian-blur-selective.c:29
 #: operations/workshop/bilateral-filter-fast.c:43
 msgid "Blur radius"
@@ -667,7 +829,7 @@ msgstr "Старанність у збереженні країв"
 msgid "Bilateral Filter"
 msgstr "Двобічний фільтр"
 
-#: operations/common/bilateral-filter.c:299
+#: operations/common/bilateral-filter.c:298
 msgid ""
 "Like a gaussian blur; but where the contribution for each neighborhood pixel "
 "is also weighted by the color difference with the original center pixel."
@@ -694,31 +856,13 @@ msgstr "М’якість"
 msgid "Glow-area edge softness"
 msgstr "М'якість краю області німба"
 
-#: operations/common/bloom.c:35 operations/common/box-blur.c:25
-#: operations/common/c2g.c:28 operations/common/edge-neon.c:47
-#: operations/common/local-threshold.c:24 operations/common/median-blur.c:42
-#: operations/common/snn-mean.c:26 operations/common/stress.c:27
-#: operations/common/unsharp-mask.c:24 operations/common/vignette.c:40
-#: operations/common/wavelet-blur-1d.c:28 operations/common/wavelet-blur.c:27
-#: operations/common-cxx/focus-blur.c:85 operations/common-cxx/lens-blur.cc:24
-#: operations/common-cxx/variable-blur.c:30
-#: operations/common-gpl3+/shadows-highlights.c:40
-#: operations/common-gpl3+/spiral.c:47 operations/common-gpl3+/supernova.c:44
-#: operations/common-gpl3+/whirl-pinch.c:46
-#: operations/external/matting-levin.c:29 operations/workshop/boxblur-1d.c:27
-#: operations/workshop/boxblur.c:24
-#: operations/workshop/external/spyrograph.c:63
-msgid "Radius"
-msgstr "Радіус"
-
 #: operations/common/bloom.c:36 operations/common-gpl3+/softglow.c:26
 msgid "Glow radius"
 msgstr "Радіус сяйва"
 
-#. Changing the name of a ENUM list will result in all presets breaking
 #: operations/common/bloom.c:42 operations/common/noise-reduction.c:26
 #: operations/common-cxx/denoise-dct.cc:38 operations/common-cxx/warp.cc:34
-#: operations/common-gpl3+/wind.c:64 operations/workshop/chamfer.c:57
+#: operations/common-gpl3+/wind.c:64
 msgid "Strength"
 msgstr "Сила"
 
@@ -865,7 +1009,7 @@ msgstr ""
 #: operations/common/noise-perlin.c:33 operations/common/noise-simplex.c:35
 #: operations/common/recursive-transform.c:36 operations/common/slic.c:38
 #: operations/common/stress.c:39 operations/common-gpl3+/fractal-explorer.c:55
-#: operations/workshop/shuffle-search.c:32
+#: operations/workshop/shuffle-search.c:31
 msgid "Iterations"
 msgstr "Ітерації"
 
@@ -995,9 +1139,9 @@ msgstr "Намалювати візерунок шахової дошки"
 
 #: operations/common/color.c:24 operations/common/color.c:87
 #: operations/common/color-overlay.c:26 operations/common/dropshadow.c:67
-#: operations/common/grid.c:64 operations/common/long-shadow.c:83
-#: operations/common/rectangle.c:48 operations/common/vignette.c:36
-#: operations/common-gpl3+/color-to-alpha.c:29
+#: operations/common/grid.c:64 operations/common/inner-glow.c:80
+#: operations/common/long-shadow.c:83 operations/common/rectangle.c:48
+#: operations/common/vignette.c:36 operations/common-gpl3+/color-to-alpha.c:29
 #: operations/common-gpl3+/supernova.c:60
 #: operations/common-gpl3+/tile-paper.c:31
 #: operations/common-gpl3+/value-propagate.c:54 operations/external/text.c:37
@@ -1022,10 +1166,16 @@ msgstr ""
 msgid "Grid size"
 msgstr "Розмір ґратки"
 
+#.
+#. property_double (imagehue, _("Hue rotation"),  0.0)
+#. description  (_("Hue adjustment"))
+#. value_range  (-180.0, 180.0)
+#. description (_("Hue rotation of the uploaded image file or whatever is on canvas"))
+#. ui_meta ("visible", "guichange {imageoutlinebevel}")
 #: operations/common/color-assimilation-grid.c:31
 #: operations/common/color-rotate.c:84 operations/common/fattal02.c:39
 #: operations/common/mantiuk06.c:33 operations/common/noise-hsv.c:34
-#: operations/common/saturation.c:404
+#: operations/common/saturation.c:404 operations/common/styles.c:387
 #: operations/external/lcms-from-profile.c:35
 #: operations/workshop/selective-hue-saturation.c:38
 msgid "Saturation"
@@ -1073,7 +1223,7 @@ msgstr ""
 "Розтягнути гаму кольорів так, щоб вона вкривала максимально можливий "
 "діапазон, зберігши відтінок і освітленість незмінними."
 
-#: operations/common/color-overlay.c:27
+#: operations/common/color-overlay.c:27 operations/common/inner-glow.c:81
 msgid "The color to paint over the input"
 msgstr "Колір для малювання поверх вхідного"
 
@@ -1697,47 +1847,47 @@ msgstr "Показ"
 msgid "Display the input buffer in a window."
 msgstr "Показати вхідний буфер у вікні."
 
-#: operations/common/dither.c:25
+#: operations/common/dither.c:31
 msgid "Red levels"
 msgstr "Рівні червоного"
 
-#: operations/common/dither.c:26
+#: operations/common/dither.c:32
 msgid "Number of levels for red channel"
 msgstr "Кількість рівнів каналу червоного кольору"
 
-#: operations/common/dither.c:30
+#: operations/common/dither.c:36
 msgid "Green levels"
 msgstr "Рівні зеленого"
 
-#: operations/common/dither.c:31
+#: operations/common/dither.c:37
 msgid "Number of levels for green channel"
 msgstr "Кількість рівнів каналу зеленого кольору"
 
-#: operations/common/dither.c:35
+#: operations/common/dither.c:41
 msgid "Blue levels"
 msgstr "Рівні синього"
 
-#: operations/common/dither.c:36
+#: operations/common/dither.c:42
 msgid "Number of levels for blue channel"
 msgstr "Кількість рівнів каналу синього кольору"
 
-#: operations/common/dither.c:40
+#: operations/common/dither.c:46
 msgid "Alpha levels"
 msgstr "Рівні альфа-каналу"
 
-#: operations/common/dither.c:41
+#: operations/common/dither.c:47
 msgid "Number of levels for alpha channel"
 msgstr "Кількість рівнів альфа-каналу"
 
-#: operations/common/dither.c:45
+#: operations/common/dither.c:51
 msgid "Dithering method"
 msgstr "Метод розмиття"
 
-#: operations/common/dither.c:47
+#: operations/common/dither.c:53
 msgid "The dithering method to use"
 msgstr "Метод розмиття, яким слід скористатися"
 
-#: operations/common/dither.c:49 operations/common/matting-global.c:28
+#: operations/common/dither.c:55 operations/common/matting-global.c:28
 #: operations/common/noise-cell.c:55 operations/common/noise-cie-lch.c:38
 #: operations/common/noise-hsv.c:40 operations/common/noise-hurl.c:37
 #: operations/common/noise-pick.c:38 operations/common/noise-rgb.c:55
@@ -1749,15 +1899,15 @@ msgstr "Метод розмиття, яким слід скористатися"
 #: operations/common-gpl3+/supernova.c:63
 #: operations/common-gpl3+/tile-paper.c:81 operations/common-gpl3+/wind.c:68
 #: operations/workshop/segment-kmeans.c:37
-#: operations/workshop/shuffle-search.c:66
+#: operations/workshop/shuffle-search.c:59
 msgid "Random seed"
 msgstr "База випадковості"
 
-#: operations/common/dither.c:619
+#: operations/common/dither.c:640
 msgid "Dither"
 msgstr "Змішування"
 
-#: operations/common/dither.c:622
+#: operations/common/dither.c:643
 msgid ""
 "Reduce the number of colors in the image, by reducing the levels per channel "
 "(colors and alpha). Different dithering methods can be specified to "
@@ -1803,27 +1953,30 @@ msgstr ""
 "рекурсивної методики перетворення областей. Подібний до двобічного фільтра, "
 "але працює швидше."
 
-#: operations/common/dropshadow.c:27 operations/common/median-blur.c:27
-#: operations/common/pixelize.c:28 operations/common/vignette.c:26
-#: operations/common-cxx/focus-blur.c:35 operations/workshop/chamfer.c:43
+#: operations/common/dropshadow.c:27 operations/common/inner-glow.c:30
+#: operations/common/median-blur.c:27 operations/common/pixelize.c:28
+#: operations/common/styles.c:96 operations/common/vignette.c:26
+#: operations/common-cxx/focus-blur.c:35
 msgid "Square"
 msgstr "Квадрат"
 
-#: operations/common/dropshadow.c:28 operations/common/median-blur.c:28
-#: operations/common/newsprint.c:26 operations/common/vignette.c:25
-#: operations/common-cxx/focus-blur.c:34 operations/workshop/chamfer.c:44
+#: operations/common/dropshadow.c:28 operations/common/inner-glow.c:31
+#: operations/common/median-blur.c:28 operations/common/newsprint.c:26
+#: operations/common/styles.c:97 operations/common/vignette.c:25
+#: operations/common-cxx/focus-blur.c:34
 msgid "Circle"
 msgstr "Коло"
 
-#: operations/common/dropshadow.c:29 operations/common/median-blur.c:29
-#: operations/common/newsprint.c:27 operations/common/pixelize.c:26
+#: operations/common/dropshadow.c:29 operations/common/inner-glow.c:32
+#: operations/common/median-blur.c:29 operations/common/newsprint.c:27
+#: operations/common/pixelize.c:26 operations/common/styles.c:98
 #: operations/common/vignette.c:27 operations/common-cxx/focus-blur.c:36
-#: operations/workshop/chamfer.c:45
 msgid "Diamond"
 msgstr "Ромб"
 
-#: operations/common/dropshadow.c:32 operations/common/layer.c:36
-#: operations/common/rectangle.c:26 operations/common-gpl3+/plasma.c:40
+#: operations/common/dropshadow.c:32 operations/common/inner-glow.c:42
+#: operations/common/layer.c:36 operations/common/rectangle.c:26
+#: operations/common-gpl3+/plasma.c:40
 #: operations/common-gpl3+/polar-coordinates.c:52
 #: operations/common-gpl3+/spiral.c:35 operations/core/crop.c:25
 #: operations/transform/border-align.c:24 operations/transform/reflect.c:26
@@ -1834,12 +1987,14 @@ msgstr "Ромб"
 msgid "X"
 msgstr "X"
 
-#: operations/common/dropshadow.c:33
+#: operations/common/dropshadow.c:33 operations/common/inner-glow.c:43
+#: operations/common/styles.c:145
 msgid "Horizontal shadow offset"
 msgstr "Зміщення тіні за горизонталлю"
 
-#: operations/common/dropshadow.c:39 operations/common/layer.c:41
-#: operations/common/rectangle.c:31 operations/common-gpl3+/plasma.c:47
+#: operations/common/dropshadow.c:39 operations/common/inner-glow.c:49
+#: operations/common/layer.c:41 operations/common/rectangle.c:31
+#: operations/common-gpl3+/plasma.c:47
 #: operations/common-gpl3+/polar-coordinates.c:59
 #: operations/common-gpl3+/spiral.c:41 operations/core/crop.c:30
 #: operations/transform/border-align.c:30 operations/transform/reflect.c:30
@@ -1850,23 +2005,24 @@ msgstr "Зміщення тіні за горизонталлю"
 msgid "Y"
 msgstr "Y"
 
-#: operations/common/dropshadow.c:40
+#: operations/common/dropshadow.c:40 operations/common/inner-glow.c:50
+#: operations/common/styles.c:154
 msgid "Vertical shadow offset"
 msgstr "Зміщення тіні за вертикаллю"
 
-#: operations/common/dropshadow.c:53
+#: operations/common/dropshadow.c:53 operations/common/inner-glow.c:36
 msgid "Grow shape"
 msgstr "Збільшити форму"
 
-#: operations/common/dropshadow.c:56
+#: operations/common/dropshadow.c:56 operations/common/inner-glow.c:39
 msgid "The shape to expand or contract the shadow in"
 msgstr "Форма для розширення або стискання тіні"
 
-#: operations/common/dropshadow.c:58
+#: operations/common/dropshadow.c:58 operations/common/inner-glow.c:66
 msgid "Grow radius"
 msgstr "Радіус збільшення"
 
-#: operations/common/dropshadow.c:65
+#: operations/common/dropshadow.c:65 operations/common/inner-glow.c:73
 msgid ""
 "The distance to expand the shadow before blurring; a negative value will "
 "contract the shadow instead"
@@ -1882,9 +2038,10 @@ msgstr "Колір тіні (типово, «black»)"
 #. It does make sense to sometimes have opacities > 1 (see GEGL logo
 #. * for example)
 #.
-#: operations/common/dropshadow.c:74 operations/common/layer.c:33
-#: operations/common/opacity.c:25 operations/common/opacity.c:289
-#: operations/external/vector-fill.c:29 operations/external/vector-stroke.c:34
+#: operations/common/dropshadow.c:74 operations/common/inner-glow.c:75
+#: operations/common/layer.c:33 operations/common/opacity.c:25
+#: operations/common/opacity.c:289 operations/external/vector-fill.c:29
+#: operations/external/vector-stroke.c:34
 msgid "Opacity"
 msgstr "Непрозорість"
 
@@ -1928,11 +2085,11 @@ msgstr ""
 "Зберігати від'ємні значення у результаті. Якщо вимкнено, буде використано "
 "значення за модулем."
 
-#: operations/common/edge-sobel.c:404
+#: operations/common/edge-sobel.c:397
 msgid "Sobel Edge Detection"
 msgstr "Виявлення країв Собеля"
 
-#: operations/common/edge-sobel.c:408
+#: operations/common/edge-sobel.c:401
 msgid "Specialized direction-dependent edge detection"
 msgstr "Спеціалізоване виявлення країв із залежністю від напрямку"
 
@@ -2021,7 +2178,7 @@ msgstr "Поріг градієнта для зниження удосконал
 msgid "Fattal et al. 2002 Tone Mapping"
 msgstr "Проектування тонів за Fattal et al. 2002"
 
-#: operations/common/fattal02.c:1366
+#: operations/common/fattal02.c:1365
 msgid ""
 "Adapt an image, which may have a high dynamic range, for presentation using "
 "a low dynamic range. This operator attenuates the magnitudes of local image "
@@ -2131,7 +2288,7 @@ msgstr "Одновимірне розмиття за Гаусом"
 #: operations/common/icc-save.c:25 operations/common/magick-load.c:26
 #: operations/common/open-buffer.c:25 operations/common/save.c:26
 #: operations/core/load.c:29 operations/external/exr-save.cc:24
-#: operations/external/ff-load.c:29 operations/external/ff-save.c:29
+#: operations/external/ff-load.c:30 operations/external/ff-save.c:30
 #: operations/external/gif-load.c:34 operations/external/jp2-load.c:25
 #: operations/external/jpg-load.c:24 operations/external/jpg-save.c:25
 #: operations/external/npy-save.c:31 operations/external/png-load.c:32
@@ -2264,6 +2421,7 @@ msgid "Chroma adjustment"
 msgstr "Регулювання колірності"
 
 #: operations/common/hue-chroma.c:33 operations/common/noise-cie-lch.c:29
+#: operations/common/styles.c:392
 #: operations/workshop/selective-hue-saturation.c:42
 msgid "Lightness"
 msgstr "Освітленість"
@@ -2383,6 +2541,36 @@ msgid "Compute gradient magnitude and/or direction by central differences"
 msgstr ""
 "Обчислити амплітуду градієнта і/або напрямок за допомогою центральних різниць"
 
+#: operations/common/inner-glow.c:85
+msgid "Median fix for non-affected pixels on edges"
+msgstr "Усереднене виправлення для незмінених пікселів на краях"
+
+#: operations/common/inner-glow.c:87
+msgid ""
+"Median Blur covers unaffected pixels. Making this slider too high will make "
+"it outline-like. So only slide it as high as you need to cover thin shape "
+"corners."
+msgstr ""
+"Усереднене розмивання стосується незмінених пікселів. Надто велике значення "
+"на цьому повзунку перетворить його на контурне. Тому посувайте його до "
+"позиції, яка потрібна вам для покриття тонких кутів форми."
+
+#: operations/common/inner-glow.c:171
+msgid "Inner Glow"
+msgstr "Внутрішнє сяйво"
+
+#: operations/common/inner-glow.c:173
+msgid ""
+"GEGL does an inner shadow glow effect; for more interesting use different "
+"blend mode than the default, Replace."
+msgstr ""
+"GEGL додає ефекти внутрішнього сяйва; щоб отримати цікавіший результат, "
+"скористайтеся іншим режимом злиття, ніж типовий, «Заміна»."
+
+#: operations/common/inner-glow.c:175
+msgid "Inner Glow..."
+msgstr "Внутрішнє сяйво,"
+
 #: operations/common/introspect.c:27
 msgid "Node"
 msgstr "Вузол"
@@ -2496,7 +2684,7 @@ msgstr "Найвищий рівень освітленості на виході
 #: operations/common/levels.c:206 operations/common/posterize.c:24
 #: operations/common-cxx/piecewise-blend.cc:29
 #: operations/external/matting-levin.c:41
-#: operations/workshop/shuffle-search.c:56
+#: operations/workshop/shuffle-search.c:48
 msgid "Levels"
 msgstr "Рівні"
 
@@ -2824,11 +3012,11 @@ msgstr "Подробиці"
 msgid "Level of emphasis on image gradient details"
 msgstr "Рівень акцентованості на подробицях градієнтів зображення"
 
-#: operations/common/mantiuk06.c:1655
+#: operations/common/mantiuk06.c:1642
 msgid "Mantiuk 2006 Tone Mapping"
 msgstr "Проектування тонів за Мантюком, 2006"
 
-#: operations/common/mantiuk06.c:1660
+#: operations/common/mantiuk06.c:1646
 msgid ""
 "Adapt an image, which may have a high dynamic range, for presentation using "
 "a low dynamic range. This operator constrains contrasts across multiple "
@@ -3181,11 +3369,23 @@ msgid "Clip base + fog to have a pure white output value"
 msgstr ""
 "Обрізати основу + туман для отримання чистого білого вихідного значення"
 
-#: operations/common/negative-darkroom.c:52
-msgid "Density boost"
-msgstr "Підсилення щільності"
+#: operations/common/negative-darkroom.c:51
+#| msgid "Clip base + fog"
+msgid "Add base and fog"
+msgstr "Додати основу і туман"
 
-#: operations/common/negative-darkroom.c:53
+#: operations/common/negative-darkroom.c:52
+msgid "Artificially reintroduce base and fog."
+msgstr "Штучно впровадити повторно основу та туман."
+
+#: operations/common/negative-darkroom.c:57
+#| msgid "Density boost"
+msgid "Cyan density boost"
+msgstr "Підсилення щільності блакитного"
+
+#: operations/common/negative-darkroom.c:58
+#: operations/common/negative-darkroom.c:63
+#: operations/common/negative-darkroom.c:68
 msgid ""
 "Boost paper density to take advantage of increased dynamic range of a "
 "monitor compared to a photographic paper"
@@ -3193,138 +3393,194 @@ msgstr ""
 "Підвищити щільність паперу для того, щоб скористатися більшим динамічним "
 "діапазоном монітора, порівняно із фотопапером"
 
-#: operations/common/negative-darkroom.c:57
+#: operations/common/negative-darkroom.c:62
+msgid "Density boost"
+msgstr "Підсилення щільності"
+
+#: operations/common/negative-darkroom.c:67
+#| msgid "Density boost"
+msgid "Yellow density boost"
+msgstr "Підсилення щільності жовтого"
+
+#: operations/common/negative-darkroom.c:72
+#| msgid "Contrast boost"
+msgid "Contrast boost R"
+msgstr "Збільшення контрастності R"
+
+#: operations/common/negative-darkroom.c:73
+#| msgid ""
+#| "Increase contrast for papers with fixed contrast (usually color papers)"
+msgid ""
+"Increase red contrast for papers with fixed contrast (usually color papers)"
+msgstr ""
+"Збільшити контрастність червоного для паперу із фіксованою контрастністю"
+" (зазвичай, "
+"кольорового паперу)"
+
+#: operations/common/negative-darkroom.c:77
 msgid "Contrast boost"
 msgstr "Збільшення контрастності"
 
-#: operations/common/negative-darkroom.c:58
+#: operations/common/negative-darkroom.c:78
 msgid ""
 "Increase contrast for papers with fixed contrast (usually color papers)"
 msgstr ""
 "Збільшити контрастність для паперу із фіксованою контрастністю (зазвичай, "
 "кольорового паперу)"
 
-#: operations/common/negative-darkroom.c:63
+#: operations/common/negative-darkroom.c:82
+#| msgid "Contrast boost"
+msgid "Contrast boost B"
+msgstr "Збільшення контрастності B"
+
+#: operations/common/negative-darkroom.c:83
+#| msgid ""
+#| "Increase contrast for papers with fixed contrast (usually color papers)"
+msgid ""
+"Increase blue contrast for papers with fixed contrast (usually color papers)"
+msgstr ""
+"Збільшити контрастність синього для паперу із фіксованою контрастністю"
+" (зазвичай, "
+"кольорового паперу)"
+
+#: operations/common/negative-darkroom.c:88
 msgid "Dodge/burn multiplier"
 msgstr "Коефіцієнт освітлення/вигорання"
 
-#: operations/common/negative-darkroom.c:64
+#: operations/common/negative-darkroom.c:89
 msgid "The f-stop of dodge/burn for pure white/black auxiliary input"
 msgstr ""
 "Фокусне число освітлення/вигорання для повністю чорно-білих допоміжних "
 "вхідних даних"
 
-#: operations/common/negative-darkroom.c:68
+#: operations/common/negative-darkroom.c:93
 msgid "Enable preflashing"
 msgstr "Увімкнути попередній спалах"
 
-#: operations/common/negative-darkroom.c:69
+#: operations/common/negative-darkroom.c:94
 msgid "Show preflash controls"
 msgstr "Показати керування попереднім спалахом"
 
-#: operations/common/negative-darkroom.c:71
+#: operations/common/negative-darkroom.c:96
 msgid "Red preflash"
 msgstr "Попередній спалах червоним"
 
-#: operations/common/negative-darkroom.c:72
+#: operations/common/negative-darkroom.c:97
 msgid "Preflash the negative with red light to reduce contrast of the print"
 msgstr ""
 "Попередній спалах у негативі із червоним світлом для зменшення контрастності "
 "відбитка"
 
-#: operations/common/negative-darkroom.c:76
+#: operations/common/negative-darkroom.c:101
 msgid "Green preflash"
 msgstr "Попередній спалах зеленим"
 
-#: operations/common/negative-darkroom.c:77
+#: operations/common/negative-darkroom.c:102
 msgid "Preflash the negative with green light to reduce contrast of the print"
 msgstr ""
 "Попередній спалах у негативі із зеленим світлом для зменшення контрастності "
 "відбитка"
 
-#: operations/common/negative-darkroom.c:81
+#: operations/common/negative-darkroom.c:106
 msgid "Blue preflash"
 msgstr "Попередній спалах синім"
 
-#: operations/common/negative-darkroom.c:82
+#: operations/common/negative-darkroom.c:107
 msgid "Preflash the negative with blue light to reduce contrast of the print"
 msgstr ""
 "Попередній спалах у негативі із синім світлом для зменшення контрастності "
 "відбитка"
 
-#: operations/common/negative-darkroom.c:86
+#: operations/common/negative-darkroom.c:111
 msgid "Illuminant adjustment"
 msgstr "Коригування освітлювача"
 
-#: operations/common/negative-darkroom.c:87
+#: operations/common/negative-darkroom.c:112
 msgid "Show illuminant controls"
 msgstr "Показати засоби керування освітлювачем"
 
-#: operations/common/negative-darkroom.c:88
+#: operations/common/negative-darkroom.c:113
 msgid "X multiplier"
 msgstr "Коефіцієнт X"
 
-#: operations/common/negative-darkroom.c:89
+#: operations/common/negative-darkroom.c:114
 msgid "Adjust the X tristimulus value for output"
 msgstr "Скоригувати триколірне значення X для виведення"
 
-#: operations/common/negative-darkroom.c:92
+#: operations/common/negative-darkroom.c:117
 msgid "Z multiplier"
 msgstr "Коефіцієнт Z"
 
-#: operations/common/negative-darkroom.c:93
+#: operations/common/negative-darkroom.c:118
 msgid "Adjust the Z tristimulus value for output"
 msgstr "Скоригувати триколірне значення Z для виведення"
 
-#: operations/common/negative-darkroom.c:386
+#: operations/common/negative-darkroom.c:437
 msgid "Negative Darkroom"
 msgstr "Темна кімната для негативів"
 
-#: operations/common/negative-darkroom.c:389
-msgid "Simulate a negative film enlargement in an analog darkroom."
-msgstr "Імітувати збільшення плівкового негатива у аналоговій темній кімнаті."
+#: operations/common/negative-darkroom.c:440
+#| msgid "Simulate a negative film enlargement in an analog darkroom."
+msgid "Simulate a film enlargement in an analog darkroom."
+msgstr "Імітувати збільшення плівки у аналоговій темній кімнаті."
 
 #: operations/common/negative-darkroom/negative-darkroom-curve-enum.c:2
+msgid "Kodak Professional Ultra Endura"
+msgstr "Kodak Professional Ultra Endura"
+
+#: operations/common/negative-darkroom/negative-darkroom-curve-enum.c:3
+msgid "Kodak Professional Portra Endura"
+msgstr "Kodak Professional Portra Endura"
+
+#: operations/common/negative-darkroom/negative-darkroom-curve-enum.c:4
+msgid "Kodak Professional Supra Endura"
+msgstr "Kodak Professional Supra Endura"
+
+#: operations/common/negative-darkroom/negative-darkroom-curve-enum.c:5
+msgid "Kodak Ektachrome Radiance III"
+msgstr "Kodak Ektachrome Radiance III"
+
+#: operations/common/negative-darkroom/negative-darkroom-curve-enum.c:6
 msgid "Fujicolor Crystal Archive Digital Pearl Paper"
 msgstr "Папір Crystal Archive Digital Pearl Fujicolor"
 
-#: operations/common/negative-darkroom/negative-darkroom-curve-enum.c:3
+#: operations/common/negative-darkroom/negative-darkroom-curve-enum.c:7
 msgid "Ilford Ilfobrom Galerie FB 1"
 msgstr "Ilford Ilfobrom Galerie FB 1"
 
-#: operations/common/negative-darkroom/negative-darkroom-curve-enum.c:4
+#: operations/common/negative-darkroom/negative-darkroom-curve-enum.c:8
 msgid "Ilford Ilfobrom Galerie FB 2"
 msgstr "Ilford Ilfobrom Galerie FB 2"
 
-#: operations/common/negative-darkroom/negative-darkroom-curve-enum.c:5
+#: operations/common/negative-darkroom/negative-darkroom-curve-enum.c:9
 msgid "Ilford Ilfobrom Galerie FB 3"
 msgstr "Ilford Ilfobrom Galerie FB 3"
 
-#: operations/common/negative-darkroom/negative-darkroom-curve-enum.c:6
+#: operations/common/negative-darkroom/negative-darkroom-curve-enum.c:10
 msgid "Ilford Ilfobrom Galerie FB 4"
 msgstr "Ilford Ilfobrom Galerie FB 4"
 
-#: operations/common/negative-darkroom/negative-darkroom-curve-enum.c:7
+#: operations/common/negative-darkroom/negative-darkroom-curve-enum.c:11
 msgid "Ilford Multigrade IV RC Deluxe"
 msgstr "Ilford Multigrade IV RC Deluxe"
 
-#: operations/common/negative-darkroom/negative-darkroom-curve-enum.c:8
+#: operations/common/negative-darkroom/negative-darkroom-curve-enum.c:12
 msgid "Foma Fomabrom C"
 msgstr "Foma Fomabrom C"
 
-#: operations/common/negative-darkroom/negative-darkroom-curve-enum.c:9
+#: operations/common/negative-darkroom/negative-darkroom-curve-enum.c:13
 msgid "Foma Fomabrom N"
 msgstr "Foma Fomabrom N"
 
-#: operations/common/negative-darkroom/negative-darkroom-curve-enum.c:10
+#: operations/common/negative-darkroom/negative-darkroom-curve-enum.c:14
 msgid "Foma Fomabrom Sp"
 msgstr "Foma Fomabrom Sp"
 
-#: operations/common/negative-darkroom/negative-darkroom-curve-enum.c:11
+#: operations/common/negative-darkroom/negative-darkroom-curve-enum.c:15
 msgid "Foma Fomabrom S"
 msgstr "Foma Fomabrom S"
 
-#: operations/common/negative-darkroom/negative-darkroom-curve-enum.c:12
+#: operations/common/negative-darkroom/negative-darkroom-curve-enum.c:16
 msgid "Foma Fomabrom Variant III"
 msgstr "Foma Fomabrom, варіант III"
 
@@ -3561,11 +3817,11 @@ msgstr ""
 "обчислення робить перетворення слабким для ненасичених кольорів і, ймовірно, "
 "сильнішим для кольорових ділянок."
 
-#: operations/common/newsprint.c:653
+#: operations/common/newsprint.c:662
 msgid "Newsprint"
 msgstr "Газетний папір"
 
-#: operations/common/newsprint.c:658
+#: operations/common/newsprint.c:667
 msgid "Digital halftoning with optional modulations. "
 msgstr "Цифров напівтонування із додатковою модуляцією."
 
@@ -3626,7 +3882,7 @@ msgstr "Більші значення зменшують випадковіст�
 msgid "Add CIE Lch Noise"
 msgstr "Додати шум CIE Lch"
 
-#: operations/common/noise-cie-lch.c:199
+#: operations/common/noise-cie-lch.c:198
 msgid "Randomize lightness, chroma and hue independently"
 msgstr ""
 "Зробити випадковими незалежно одне від одного освітленість, колірність і "
@@ -3692,11 +3948,11 @@ msgid ""
 "Controls the number of iterations; lower values give less plastic results"
 msgstr "Керує кількістю ітерацій. Менші значення — менш пластичні результати"
 
-#: operations/common/noise-reduction.c:455
+#: operations/common/noise-reduction.c:461
 msgid "Noise Reduction"
 msgstr "Зменшення шумності"
 
-#: operations/common/noise-reduction.c:460
+#: operations/common/noise-reduction.c:465
 msgid "Anisotropic smoothing operation"
 msgstr "Операція анізотропного згладжування"
 
@@ -3768,11 +4024,11 @@ msgstr "Величина розповсюдження за горизонтал�
 msgid "Vertical spread amount"
 msgstr "Величина розповсюдження за вертикаллю"
 
-#: operations/common/noise-spread.c:158
+#: operations/common/noise-spread.c:183
 msgid "Noise Spread"
 msgstr "Розповсюдження шуму"
 
-#: operations/common/noise-spread.c:162
+#: operations/common/noise-spread.c:187
 msgid "Move pixels around randomly"
 msgstr "Змістити навколишні точки випадковим чином"
 
@@ -4273,7 +4529,7 @@ msgstr ""
 msgid "Symmetric Nearest Neighbor"
 msgstr "Найближча сусідня симетрія"
 
-#: operations/common/snn-mean.c:387
+#: operations/common/snn-mean.c:386
 msgid ""
 "Noise reducing edge preserving blur filter based on Symmetric Nearest "
 "Neighbors"
@@ -4302,7 +4558,7 @@ msgstr "Кут зору"
 msgid "Camera angle of view"
 msgstr "Кут огляду камери"
 
-#: operations/common/spherize.c:40 operations/workshop/chamfer.c:63
+#: operations/common/spherize.c:40
 msgid "Curvature"
 msgstr "Кривина"
 
@@ -4422,6 +4678,511 @@ msgstr ""
 "зображення). Ця версія відрізняється від «Авторозтягування контрастності» "
 "тим, що працює у просторі HSV із зберігає відтінок."
 
+#: operations/common/styles.c:29
+msgid "Color, Outline and Shadow"
+msgstr "Колір, контур і тінь"
+
+#: operations/common/styles.c:30
+msgid "Bevel and Inner Glow"
+msgstr "Фаска та внутрішнє сяйво"
+
+#: operations/common/styles.c:31
+msgid "Image upload and Outline Bevel"
+msgstr "Вивантаження зображення та фаска контуру"
+
+#. List of all GUI options
+#. GUI Change list in GUI
+#: operations/common/styles.c:38
+msgid "Part of filter to be displayed"
+msgstr "Частина фільтра, яку слід показати"
+
+#: operations/common/styles.c:41
+msgid "Display a different part of the GUI"
+msgstr "Показати іншу частину графічного інтерфейсу"
+
+#. Color Overlays GUI options begin here
+#: operations/common/styles.c:45
+msgid "Color overlay"
+msgstr "Накладання кольору"
+
+#: operations/common/styles.c:47
+msgid "Color overlay setting"
+msgstr "Параметр накладки кольору"
+
+#: operations/common/styles.c:49
+msgid "Color policy"
+msgstr "Правила кольорів"
+
+#: operations/common/styles.c:50
+msgid "Change the blend mode of the color overlay"
+msgstr "Змінити режим злиття накладки кольорів"
+
+#: operations/common/styles.c:57
+msgid "No Color"
+msgstr "Без кольору"
+
+#: operations/common/styles.c:61
+msgid "Solid Color"
+msgstr "Суцільний колір"
+
+#. Outline's normal GUI options begin here
+#: operations/common/styles.c:67
+msgid "Enable Outline"
+msgstr "Увімкнути контур"
+
+#: operations/common/styles.c:68
+msgid "Disable or enable the outline"
+msgstr "Вимкнути або увімкнути контур"
+
+#: operations/common/styles.c:71
+msgid "Outline opacity"
+msgstr "Непрозорість контуру"
+
+#: operations/common/styles.c:74
+msgid "Opacity of the outline"
+msgstr "Непрозорість контуру"
+
+#: operations/common/styles.c:78
+msgid "Outline X"
+msgstr "Контур за X"
+
+#: operations/common/styles.c:79
+msgid "Horizontal outline offset"
+msgstr "Горизонтальний зсув контуру"
+
+#: operations/common/styles.c:86
+msgid "Outline Y"
+msgstr "Контур за Y"
+
+#: operations/common/styles.c:87
+msgid "Vertical outline offset"
+msgstr "Вертикальний зсув контуру"
+
+#: operations/common/styles.c:101
+msgid "Outline grow shape"
+msgstr "Форма зростання контуру"
+
+#: operations/common/styles.c:104
+msgid "The shape to expand or contract the outline in"
+msgstr "Форма для розширення або стискання контуру"
+
+#: operations/common/styles.c:108
+msgid "Outline blur radius"
+msgstr "Радіус розмивання контуру"
+
+#: operations/common/styles.c:114
+msgid "A mild blur for the outline"
+msgstr "М'яке розмиття для контуру"
+
+#: operations/common/styles.c:118
+msgid "Outline grow radius"
+msgstr "Радіус збільшення контуру"
+
+#: operations/common/styles.c:125
+msgid "The distance to expand the outline"
+msgstr "Відстань розширення контуру"
+
+#. Shadow's GUI options begin here
+#: operations/common/styles.c:130
+msgid "Outline’s color"
+msgstr "Колір контуру"
+
+#: operations/common/styles.c:131
+msgid "Color of the outline (defaults to 'black') "
+msgstr "Колір контуру (типовим є чорний)"
+
+#: operations/common/styles.c:136
+msgid "Shadow/Glow opacity"
+msgstr "Непрозорість тіні/сяйва"
+
+#: operations/common/styles.c:140
+msgid ""
+"Shadow opacity which will also enable or disable the shadow glow effect"
+msgstr "Непрозорість тіні, яка також вмикає або вимикає ефект тіні/сяйва"
+
+#: operations/common/styles.c:144
+msgid "Shadow/Glow X"
+msgstr "X тіні/сяйва"
+
+#: operations/common/styles.c:150
+msgid "Horizontal axis of the shadow glow"
+msgstr "Горизонтальна вісь тіні або сяйва"
+
+#: operations/common/styles.c:153
+msgid "Shadow/Glow Y"
+msgstr "Y тіні/сяйва"
+
+#: operations/common/styles.c:159
+msgid "Vertical axis of the shadow glow"
+msgstr "Вертикальна вісь тіні або сяйва"
+
+#: operations/common/styles.c:162
+msgid "Shadow/Glow’s color"
+msgstr "Колір тіні/сяйва"
+
+#. TRANSLATORS: the string 'black' should not be translated
+#: operations/common/styles.c:164
+msgid "The shadow’s color (defaults to 'black')"
+msgstr "Колір тіні (типово, «black»)"
+
+#: operations/common/styles.c:167
+msgid "Shadow/Glow grow radius"
+msgstr "Радіус зростання тіні/сяйва"
+
+#: operations/common/styles.c:174
+msgid "The distance to expand the shadow before blurring."
+msgstr "Відстань поширення тіні до розмивання."
+
+#: operations/common/styles.c:177
+msgid "Shadow/Glow blur radius"
+msgstr "Радіус розмивання тіні/сяйва"
+
+#: operations/common/styles.c:183
+msgid "The shadow’s blur range"
+msgstr "Діапазон розмивання тіні"
+
+#. Bevel's GUI options begin here
+#. This is the Bevel's ENUM List listed in the GUI
+#. This is the ENUM list for bevel's emboss blend modes
+#: operations/common/styles.c:191
+msgid "Enable Bevel"
+msgstr "Увімкнути фаску"
+
+#: operations/common/styles.c:192
+msgid "Whether to add a bevel effect"
+msgstr "Визначає, чи слід додавати ефект фаски"
+
+#: operations/common/styles.c:209
+msgid "Bevel blend mode"
+msgstr "Режим змішування фаски"
+
+#: operations/common/styles.c:210
+msgid "Blend mode of the bevel"
+msgstr "Режим змішування для фаски"
+
+#: operations/common/styles.c:218
+msgid "Chamfer Bevel"
+msgstr "Витесати фаску"
+
+#: operations/common/styles.c:220
+msgid "Bump Bevel"
+msgstr "Витиснути фаску"
+
+#: operations/common/styles.c:223
+msgid "Select Bevel"
+msgstr "Вибір фаски"
+
+#: operations/common/styles.c:226
+msgid "Type of bevel "
+msgstr "Тип фаски"
+
+#: operations/common/styles.c:232
+msgid "Bevel depth"
+msgstr "Глибина фаски"
+
+#: operations/common/styles.c:233
+msgid "Emboss depth for the bevel"
+msgstr "Глибина рельєфу для фаски"
+
+#: operations/common/styles.c:239
+msgid "Bevel elevation"
+msgstr "Висота фаски"
+
+#: operations/common/styles.c:240
+msgid "Emboss elevation of the bevel"
+msgstr "Висота рельєфу фаски"
+
+#: operations/common/styles.c:247
+msgid "Bevel azimuth"
+msgstr "Азимут фаски"
+
+#: operations/common/styles.c:248
+msgid "Emboss azimuth of the bevel"
+msgstr "Азимут рельєфу фаски"
+
+#: operations/common/styles.c:255
+msgid "Bevel radius (bump only)"
+msgstr "Радіус фаски (лише витискання)"
+
+#: operations/common/styles.c:259
+msgid ""
+"Internal gaussian blur to inflate the bump bevel. This option does not work "
+"on chamfer"
+msgstr ""
+"Внутрішнє гаусове розмивання для розширення витискної фаски. Цей параметр не "
+"працює для витесаної фаски"
+
+#: operations/common/styles.c:265
+msgid "Levels low output lighting for Bevel"
+msgstr "Низькорівневе виведення світла для фаски"
+
+#: operations/common/styles.c:266
+msgid "Levels low output as a light adjustment for the bevel"
+msgstr "Низькорівневе виведення як коригування освітлення для фаски"
+
+#: operations/common/styles.c:274
+msgid "Levels high output lighting for Bevel"
+msgstr "Високорівневе виведення світла для фаски"
+
+#: operations/common/styles.c:275
+msgid "Levels high output as a light adjustment for the bevel"
+msgstr "Високорівневе виведення як коригування освітлення для фаски"
+
+#: operations/common/styles.c:283
+msgid "Dark Bevel/ignore image mode"
+msgstr "Темна фаска/ігнорувати режим зображення"
+
+#: operations/common/styles.c:284
+msgid ""
+"This instructs the bevel to ignore image details if there is an image file "
+"overlay below it. It also allows bevel to work better when the user selects "
+"darker colors. The effect is noticeable on bump bevel but barely effects "
+"chamfer bevel"
+msgstr ""
+"Це означає, що фаска ігнорує деталі зображення, якщо під нею є накладка "
+"файла зображення. Це також уможливлює кращу роботу фаски, коли користувач "
+"вибирає темніші кольори. Ефект помітний на витискній фасці, але майже не "
+"впливає на витесану фаску"
+
+#. This operation is extremely important for bevels with image file overlays
+#. Inner Glow GUI options begin here
+#: operations/common/styles.c:294
+msgid "Enable Inner Glow"
+msgstr "Увімкнути внутрішнє сяйво"
+
+#: operations/common/styles.c:295
+msgid "Whether to add the inner glow effect"
+msgstr "Визначає, чи слід додавати ефект внутрішнього сяйва"
+
+#: operations/common/styles.c:304
+msgid "Normal"
+msgstr "Звичайний"
+
+#: operations/common/styles.c:306
+msgid "Overlay"
+msgstr "Накладання"
+
+#: operations/common/styles.c:308
+msgid "Screen"
+msgstr "Проєктування"
+
+#: operations/common/styles.c:314
+msgid "Plus"
+msgstr "Додавання"
+
+#: operations/common/styles.c:317
+msgid "Blend mode of Inner Glow"
+msgstr "Режим розмивання внутрішнього сяйва"
+
+#: operations/common/styles.c:323
+msgid "Inner Glow's blur radius"
+msgstr "Радіус розмивання внутрішнього сяйва"
+
+#: operations/common/styles.c:329
+msgid "Blur control of the inner glow"
+msgstr "Керування розмиванням внутрішнього сяйва"
+
+#: operations/common/styles.c:333
+msgid "Inner Glow's grow radius"
+msgstr "Радіус зростання внутрішнього сяйва"
+
+#: operations/common/styles.c:340
+msgid "The distance to expand the inner glow before blurring"
+msgstr "Відстань поширення внутрішнього сяйва до розмивання"
+
+#: operations/common/styles.c:344
+msgid "Inner Glow's opacity"
+msgstr "Непрозорість внутрішнього сяйва"
+
+#: operations/common/styles.c:347
+msgid "Opacity of the inner glow"
+msgstr "Непрозорість внутрішнього сяйва"
+
+#: operations/common/styles.c:351
+msgid "Inner Glow's color"
+msgstr "Колір внутрішнього сяйва"
+
+#: operations/common/styles.c:352
+msgid "The color of the inner glow"
+msgstr "Колір внутрішнього сяйва"
+
+#: operations/common/styles.c:356
+msgid "Inner Glow's unmodified pixel fix"
+msgstr "Виправлення внутрішнього сяйва для незмінених пікселів"
+
+#: operations/common/styles.c:358
+msgid "Cover pixels that inner glow might miss"
+msgstr "Покрити пікселі, які може пропустити ефект внутрішнього сяйва"
+
+#. Without this Inner Glow would miss many pixels around alpha defined shapes edges'
+#. Image file overlay GUI options begin here
+#: operations/common/styles.c:365
+msgid "Enable image upload"
+msgstr "Увімкнути вивантаження зображення"
+
+#: operations/common/styles.c:366 operations/common/styles.c:465
+msgid "Whether to enable or disable the image file upload."
+msgstr "Визначає, увімкнути чи вимкнути вивантаження файлів зображень."
+
+#: operations/common/styles.c:369
+msgid "Image file overlay"
+msgstr "Накладка-файл на зображення"
+
+#: operations/common/styles.c:370
+msgid ""
+"Upload an image file from your computer to be in the fill area. Allows (png, "
+"jpg, raw, svg, bmp, tif, ...)"
+msgstr ""
+"Вивантажити файл зображення з вашого комп'ютера для заповнення області "
+"заливання. (Можна використовувати png, jpg, raw, svg, bmp, tif, ...)"
+
+#: operations/common/styles.c:374
+msgid "Opacity of image file overlay"
+msgstr "Непрозорість накладки-файла зображення"
+
+#: operations/common/styles.c:377
+msgid "Opacity of the image file overlay that was uploaded. "
+msgstr "Непрозорість файлової накладки зображення, яке було вивантажено. "
+
+#: operations/common/styles.c:388
+msgid ""
+"Saturation adjustment of the uploaded image file or whatever is on canvas"
+msgstr "Коригування насиченості вивантаженого файла зображення на полотні"
+
+#: operations/common/styles.c:393
+msgid ""
+"Lightness adjustment of the uploaded image file or whatever is on canvas"
+msgstr "Коригування освітленості вивантаженого файла зображення на полотні"
+
+#. Outline special options in GUI begin here
+#: operations/common/styles.c:398
+msgid "Enable advanced options on Outline (requires outline)"
+msgstr "Увімкнути додаткові параметри контуру (потребує увімкнення контуру)"
+
+#: operations/common/styles.c:399
+msgid "Turn on advanced outline abilities"
+msgstr "Увімкнути додаткові можливості роботи з контуром"
+
+#: operations/common/styles.c:404
+msgid "Enable Outline Bevel (requires advanced options)"
+msgstr "Увімкнути фаску контуру (потребує додаткових параметрів)"
+
+#: operations/common/styles.c:405
+msgid "Turn on outlines ability to bevel"
+msgstr "Увімкнути можливість створення фаски для контуру"
+
+#: operations/common/styles.c:426
+msgid "Outline Bevel blend mode"
+msgstr "Режим злиття фаски контуру"
+
+#: operations/common/styles.c:427
+msgid "Blend mode of the outline bevel"
+msgstr "Режим змішування для фаски контуру"
+
+#: operations/common/styles.c:434
+msgid "Outline Bevel depth"
+msgstr "Глибина фаски контуру"
+
+#: operations/common/styles.c:435
+msgid "Emboss depth for the outline bevel"
+msgstr "Глибина рельєфу для фаски контуру"
+
+#: operations/common/styles.c:440
+msgid "Outline Bevel elevation"
+msgstr "Висота фаски контуру"
+
+#: operations/common/styles.c:441
+msgid "Emboss elevation for the outline bevel"
+msgstr "Висота рельєфу для фаски контуру"
+
+#: operations/common/styles.c:447
+msgid "Outline Bevel azimuth"
+msgstr "Азимут фаски контуру"
+
+#: operations/common/styles.c:448
+msgid "Emboss azimuth for the outline bevel"
+msgstr "Азимут рельєфу для фаски контуру"
+
+#: operations/common/styles.c:455
+msgid "Outline Bevel radius"
+msgstr "Радіус фаски контуру"
+
+#: operations/common/styles.c:456
+msgid "Internal gaussian blur to inflate the outline bevel"
+msgstr "Внутрішнє гаусове розмивання для розширення фаски контуру"
+
+#: operations/common/styles.c:464
+msgid "Enable image upload on Outline (requires advanced options)"
+msgstr ""
+"Увімкнути вивантаження зображень на контур (потребує додаткових можливостей)"
+
+#: operations/common/styles.c:469
+msgid "Outline image file overlay"
+msgstr "Накладка-файл зображення контуру"
+
+#: operations/common/styles.c:470
+msgid ""
+"Upload an image file from your computer to be in the outline area. Allows "
+"(png, jpg, raw, svg, bmp, tif, ...)"
+msgstr ""
+"Вивантажити файл зображення з вашого комп'ютера для заповнення області "
+"контуру. (Можна використовувати png, jpg, raw, svg, bmp, tif, ...)"
+
+#: operations/common/styles.c:475
+msgid "Outline image opacity"
+msgstr "Непрозорість зображення контуру"
+
+#: operations/common/styles.c:476
+msgid "Outline image opacity adjustment"
+msgstr "Коригування непрозорості зображення-контуру"
+
+#: operations/common/styles.c:481
+msgid "Levels low output lighting for Outline Bevel"
+msgstr "Низькорівневе виведення світла для фаски контуру"
+
+#: operations/common/styles.c:482
+msgid "Levels low output as a light adjustment for the outline bevel"
+msgstr "Низькорівневе виведення як коригування освітлення для фаски контуру"
+
+#: operations/common/styles.c:489
+msgid "Levels high output lighting for Outline Bevel"
+msgstr "Високорівневе виведення світла для фаски контуру"
+
+#: operations/common/styles.c:490
+msgid "Levels high output as a light adjustment for the outline bevel"
+msgstr "Високорівневе виведення як коригування освітлення для фаски контуру"
+
+#: operations/common/styles.c:498
+msgid "Outline Dark Bevel/ignore image mode"
+msgstr "Темна фаска контуру/ігнорувати режим зображення"
+
+#: operations/common/styles.c:499
+msgid ""
+"This instructs the outline bevel to ignore image details if there is an "
+"image file overlay below it. It also allows outline bevel to work better "
+"when the user selects darker colors."
+msgstr ""
+"Наказу алгоритму фаски контуру ігнорувати деталі зображення, якщо під ним є "
+"файлова накладка-зображення. Це також покращує роботу ефекту фаски контуру, "
+"якщо користувач вибирає темніші кольори."
+
+#: operations/common/styles.c:1247
+msgid "GEGL Styles"
+msgstr "Стилі GEGL"
+
+#: operations/common/styles.c:1250
+msgid ""
+"An engine to style text and add popular effects to alpha channel images. "
+"Effects include outline, bevel, shadow, and inner glow all in one place."
+msgstr ""
+"Рушій для стилізації текст та додавання популярних ефектів до зображень із "
+"каналом прозорості. Серед ефектів одразу контур, фаска, тінь та внутрішнє "
+"сяйво."
+
+#: operations/common/styles.c:1253
+msgid "Text Styling..."
+msgstr "Стилізація тексту…"
+
 #: operations/common/svg-huerotate.c:27 operations/common/svg-matrix.c:27
 #: operations/common/svg-saturate.c:25
 msgid "Values"
@@ -4469,7 +5230,7 @@ msgid "Lowest value to be included."
 msgstr "Найнижче включене значення."
 
 #: operations/common/threshold.c:33
-msgid "Highest value to be include as white."
+msgid "Highest value to be included as white."
 msgstr "Найвище значення, яке буде включено як білий колір."
 
 #: operations/common/threshold.c:169
@@ -4892,11 +5653,11 @@ msgstr "Розмір латок, які буде використано для �
 msgid "Noise standard deviation"
 msgstr "Стандартне відхилення шуму"
 
-#: operations/common-cxx/denoise-dct.cc:480
+#: operations/common-cxx/denoise-dct.cc:486
 msgid "Denoise DCT"
 msgstr "Усування шуму з ДКП"
 
-#: operations/common-cxx/denoise-dct.cc:482
+#: operations/common-cxx/denoise-dct.cc:488
 msgid "Denoising algorithm using a per-patch DCT thresholding"
 msgstr ""
 "Алгоритм усування шуму з використанням порогових значень ДКП для окремих "
@@ -5189,17 +5950,6 @@ msgstr "Мозаїчна карта рельєфу"
 msgid "Azimuth"
 msgstr "Азимут"
 
-#: operations/common-gpl3+/bump-map.c:56 operations/common-gpl3+/emboss.c:40
-msgid "Elevation"
-msgstr "Висота"
-
-#: operations/common-gpl3+/bump-map.c:59 operations/common-gpl3+/emboss.c:45
-#: operations/common-gpl3+/fractal-trace.c:60
-#: operations/common-gpl3+/texturize-canvas.c:44
-#: operations/workshop/chamfer.c:60
-msgid "Depth"
-msgstr "Глибина"
-
 #: operations/common-gpl3+/bump-map.c:74
 msgid "Waterlevel"
 msgstr "Рівень води"
@@ -5413,11 +6163,11 @@ msgstr "Поріг непрозорості"
 msgid "The limit above which colors remain opaque."
 msgstr "Межа, вище від якої кольори стають непрозорими."
 
-#: operations/common-gpl3+/color-to-alpha.c:285
+#: operations/common-gpl3+/color-to-alpha.c:283
 msgid "Color to Alpha"
 msgstr "Колір у альфу"
 
-#: operations/common-gpl3+/color-to-alpha.c:291
+#: operations/common-gpl3+/color-to-alpha.c:289
 msgid "Convert a specified color to transparency, works best with white."
 msgstr "Робить заданий колір прозорим, найкраще працює з білим."
 
@@ -5485,7 +6235,7 @@ msgstr "Розмір блоку усування черезрядковості 
 msgid "Deinterlace"
 msgstr "Усунення черезрядковості"
 
-#: operations/common-gpl3+/deinterlace.c:317
+#: operations/common-gpl3+/deinterlace.c:316
 msgid "Fix images where every other row or column is missing"
 msgstr ""
 "Виправляє зображення де пропущено дані кожного другого рядка або стовпчика"
@@ -5675,6 +6425,22 @@ msgstr "Координата X центра зміщення"
 msgid "Y coordinate of the displacement center"
 msgstr "Координата Y центра зміщення"
 
+#: operations/common-gpl3+/displace.c:190
+msgid "Horizontal/Radial"
+msgstr "Горизонтальне/Радіальне"
+
+#: operations/common-gpl3+/displace.c:191
+msgid "Horizontal or radial per pixel input"
+msgstr "Горизонтальне або радіальне поточне введення"
+
+#: operations/common-gpl3+/displace.c:199
+msgid "Vertical/Angular"
+msgstr "Вертикальне/Кутове"
+
+#: operations/common-gpl3+/displace.c:200
+msgid "Vertical or angular per pixel input"
+msgstr "Вертикальне або кутове поточкове введення"
+
 #: operations/common-gpl3+/displace.c:479
 msgid "Displace"
 msgstr "Зміщення"
@@ -5771,7 +6537,7 @@ msgstr "Кут підняття (у градусах):"
 msgid "Filter width"
 msgstr "Ширина фільтра"
 
-#: operations/common-gpl3+/emboss.c:284
+#: operations/common-gpl3+/emboss.c:283
 msgid "Simulates an image created by embossing"
 msgstr "Надає зображенню вигляд барельєфа"
 
@@ -6313,7 +7079,7 @@ msgstr "Колір з'єднань"
 msgid "Light color"
 msgstr "Колір освітлення"
 
-#: operations/common-gpl3+/mosaic.c:81 operations/workshop/chamfer.c:69
+#: operations/common-gpl3+/mosaic.c:81
 msgid "Light direction"
 msgstr "Напрямок освітлення"
 
@@ -6349,7 +7115,7 @@ msgstr ""
 msgid "Circular Motion Blur"
 msgstr "Розмиття обертальним рухом"
 
-#: operations/common-gpl3+/motion-blur-circular.c:454
+#: operations/common-gpl3+/motion-blur-circular.c:453
 msgid "Circular motion blur"
 msgstr "Розмиття обертальним рухом"
 
@@ -6449,11 +7215,11 @@ msgstr "Режим інтенсивності"
 msgid "Use pixel luminance values"
 msgstr "Використання значень освітленості пікселів"
 
-#: operations/common-gpl3+/oilify.c:587
+#: operations/common-gpl3+/oilify.c:612
 msgid "Mask radius buffer"
 msgstr "Буфер маски радіусів"
 
-#: operations/common-gpl3+/oilify.c:588
+#: operations/common-gpl3+/oilify.c:613
 msgid ""
 "Per pixel buffer for modulating the mask radius, expecting a scaling factor "
 "in range 0.0-1.0"
@@ -6461,11 +7227,11 @@ msgstr ""
 "Буфер для окремих пікселів, у якому зберігаються значення модуляції радіуса "
 "маски. Коефіцієнт масштабування має перебувати у діапазоні від 0.0 до 1.0"
 
-#: operations/common-gpl3+/oilify.c:591
+#: operations/common-gpl3+/oilify.c:616
 msgid "Exponent buffer"
 msgstr "Буфер степенів"
 
-#: operations/common-gpl3+/oilify.c:592
+#: operations/common-gpl3+/oilify.c:617
 msgid ""
 "Per pixel buffer for modulating the exponent parameter, expecting a scaling "
 "factor in range 0.0-1.0"
@@ -6473,11 +7239,11 @@ msgstr ""
 "Буфер для окремих пікселів, у якому зберігаються значення параметра степені. "
 "Коефіцієнт масштабування має перебувати у діапазоні від 0.0 до 1.0"
 
-#: operations/common-gpl3+/oilify.c:603
+#: operations/common-gpl3+/oilify.c:628
 msgid "Oilify"
 msgstr "Олійна фарба"
 
-#: operations/common-gpl3+/oilify.c:607
+#: operations/common-gpl3+/oilify.c:632
 msgid "Emulate an oil painting"
 msgstr "Імітація олійного живопису"
 
@@ -6741,11 +7507,6 @@ msgstr "Якщо встановлено, візерунок буде дещо б
 #: operations/common-gpl3+/sinus.c:63
 msgid "Bilinear"
 msgstr "Білінійний"
-
-#. Changing the name of a ENUM list will result in all presets breaking
-#: operations/common-gpl3+/sinus.c:67 operations/workshop/chamfer.c:49
-msgid "Blend Mode"
-msgstr "Режим змішування"
 
 #: operations/common-gpl3+/sinus.c:72
 msgid "Power used to stretch the blend"
@@ -7117,7 +7878,7 @@ msgstr "Чи слід поширювати непрозорість піксел
 msgid "Value Propagate"
 msgstr "Поширення значення"
 
-#: operations/common-gpl3+/value-propagate.c:650
+#: operations/common-gpl3+/value-propagate.c:649
 msgid ""
 "Propagate certain values to neighboring pixels. Erode and dilate any color "
 "or opacity."
@@ -7502,19 +8263,19 @@ msgstr "шлях до цільового файлу для запису."
 msgid "tile size to use."
 msgstr "розмір плитки."
 
-#: operations/external/ff-load.c:30
+#: operations/external/ff-load.c:31
 msgid "Path of video file to load"
 msgstr "Шлях до відеофайлу для завантаження"
 
-#: operations/external/ff-load.c:32
+#: operations/external/ff-load.c:33
 msgid "Frame number"
 msgstr "Кількість кадрів"
 
-#: operations/external/ff-load.c:36 operations/external/gif-load.c:38
+#: operations/external/ff-load.c:37 operations/external/gif-load.c:38
 msgid "frames"
 msgstr "кадрів"
 
-#: operations/external/ff-load.c:37
+#: operations/external/ff-load.c:38
 msgid ""
 "Number of frames in video, updates at least when first frame has been "
 "decoded."
@@ -7522,189 +8283,189 @@ msgstr ""
 "Кількість кадрів у відео. Буде оновлено принаймні при декодуванні першого "
 "кадру."
 
-#: operations/external/ff-load.c:41
+#: operations/external/ff-load.c:42
 msgid "audio_sample_rate"
 msgstr "Частота дискретизації звуку"
 
-#: operations/external/ff-load.c:42
+#: operations/external/ff-load.c:43
 msgid "audio_channels"
 msgstr "Кількість каналів звуку"
 
-#: operations/external/ff-load.c:44
+#: operations/external/ff-load.c:45
 msgid "frame-rate"
 msgstr "Частота кадрів"
 
-#: operations/external/ff-load.c:45
+#: operations/external/ff-load.c:46
 msgid "Frames per second, permits computing time vs frame"
 msgstr "Частота кадрів, надає змогу обчислити момент появи кадру"
 
-#: operations/external/ff-load.c:49
+#: operations/external/ff-load.c:50
 msgid "video-codec"
 msgstr "Відеокодек"
 
-#: operations/external/ff-load.c:50
+#: operations/external/ff-load.c:51
 msgid "audio-codec"
 msgstr "Аудіокодек"
 
-#: operations/external/ff-load.c:52 operations/external/ff-save.c:32
+#: operations/external/ff-load.c:53 operations/external/ff-save.c:33
 msgid "audio"
 msgstr "Звук"
 
-#: operations/external/ff-load.c:868
+#: operations/external/ff-load.c:877
 msgid "FFmpeg Frame Loader"
 msgstr "Завантажувач кадрів FFmpeg"
 
-#: operations/external/ff-load.c:870
+#: operations/external/ff-load.c:879
 msgid "FFmpeg video frame importer."
 msgstr "Імпортер кадрів відео FFmpeg"
 
-#: operations/external/ff-save.c:30 operations/external/png-save.c:27
+#: operations/external/ff-save.c:31 operations/external/png-save.c:27
 #: operations/external/ppm-save.c:26 operations/external/rgbe-save.c:27
 msgid "Target path and filename, use '-' for stdout."
 msgstr "Цільовий шлях і назва файлу; вкажіть '-' для stdout"
 
-#: operations/external/ff-save.c:33
+#: operations/external/ff-save.c:34
 msgid "Audio codec"
 msgstr "Звуковий кодек"
 
-#: operations/external/ff-save.c:34
+#: operations/external/ff-save.c:35
 msgid ""
 "Audio codec to use, or auto to use a good default based on container format."
 msgstr ""
 "Звуковий кодек, яким слід скористатися. «Авто», якщо слід використати "
 "типовий формат для контейнера."
 
-#: operations/external/ff-save.c:35
+#: operations/external/ff-save.c:36
 msgid "audio sample rate"
 msgstr "частота дискретизації звуку"
 
-#: operations/external/ff-save.c:36
+#: operations/external/ff-save.c:37
 msgid "-1 means autodetect on first audio fragment"
 msgstr "-1 означає «автоматично визначити перший звуковий фрагмент»"
 
-#: operations/external/ff-save.c:38
+#: operations/external/ff-save.c:39
 msgid "audio bitrate in kb/s"
 msgstr "швидкість потоку звуку в кбіт/сек"
 
-#: operations/external/ff-save.c:39 operations/external/ff-save.c:47
+#: operations/external/ff-save.c:40 operations/external/ff-save.c:48
 msgid "Target encoded video bitrate in kb/s"
 msgstr "Бітова швидкість закодованого відео-результату у кбіт/с"
 
-#: operations/external/ff-save.c:41
+#: operations/external/ff-save.c:42
 msgid "Frames/second"
 msgstr "Кадрів/секунду"
 
-#: operations/external/ff-save.c:44
+#: operations/external/ff-save.c:45
 msgid "Video codec"
 msgstr "Відеокодек"
 
-#: operations/external/ff-save.c:45
+#: operations/external/ff-save.c:46
 msgid ""
 "Video codec to use, or auto to use a good default based on container format."
 msgstr ""
 "Відеокодек, яким слід скористатися. «Авто», якщо слід використати типовий "
 "формат для контейнера."
 
-#: operations/external/ff-save.c:46
+#: operations/external/ff-save.c:47
 msgid "video bitrate in kb/s"
 msgstr "швидкість потоку відео в кбіт/сек"
 
-#: operations/external/ff-save.c:48
+#: operations/external/ff-save.c:49
 msgid "Video bufsize"
 msgstr "Розмір буфера відео"
 
-#: operations/external/ff-save.c:50
+#: operations/external/ff-save.c:51
 msgid "Container format"
 msgstr "Формат контейнера"
 
-#: operations/external/ff-save.c:51
+#: operations/external/ff-save.c:52
 msgid ""
 "Container format to use, or auto to autodetect based on file extension."
 msgstr ""
 "Формат контейнера, яким слід скористатися, або auto для автоматичного "
 "визначення на основі суфікса назви файла."
 
-#: operations/external/ff-save.c:54
+#: operations/external/ff-save.c:55
 msgid "global quality"
 msgstr "загальна якість"
 
-#: operations/external/ff-save.c:57
+#: operations/external/ff-save.c:58
 msgid "noise reduction"
 msgstr "Зменшення шумності"
 
-#: operations/external/ff-save.c:58
+#: operations/external/ff-save.c:59
 msgid "scenechange threshold"
 msgstr "поріг зміни сцени"
 
-#: operations/external/ff-save.c:59
+#: operations/external/ff-save.c:60
 msgid "video bitrate min"
 msgstr "мін. швидкість потоку відео"
 
-#: operations/external/ff-save.c:60
+#: operations/external/ff-save.c:61
 msgid "video bitrate max"
 msgstr "макс. швидкість потоку відео"
 
-#: operations/external/ff-save.c:61
+#: operations/external/ff-save.c:62
 msgid "video bitrate tolerance"
 msgstr "допуск швидкості потоку відео"
 
-#: operations/external/ff-save.c:64
+#: operations/external/ff-save.c:65
 msgid "keyint-min"
 msgstr "keyint-min"
 
-#: operations/external/ff-save.c:65
+#: operations/external/ff-save.c:66
 msgid "trellis"
 msgstr "сітка"
 
-#: operations/external/ff-save.c:66
+#: operations/external/ff-save.c:67
 msgid "qmin"
 msgstr "qmin"
 
-#: operations/external/ff-save.c:67
+#: operations/external/ff-save.c:68
 msgid "qmax"
 msgstr "qmax"
 
-#: operations/external/ff-save.c:68
+#: operations/external/ff-save.c:69
 msgid "max_qdiff"
 msgstr "max_qdiff"
 
-#: operations/external/ff-save.c:69
+#: operations/external/ff-save.c:70
 msgid "me_range"
 msgstr "me_range"
 
-#: operations/external/ff-save.c:70
+#: operations/external/ff-save.c:71
 msgid "max_b_frames"
 msgstr "max_b_frames"
 
-#: operations/external/ff-save.c:71
+#: operations/external/ff-save.c:72
 msgid "gop-size"
 msgstr "Розмір Gop"
 
-#: operations/external/ff-save.c:72
+#: operations/external/ff-save.c:73
 msgid "qcompress"
 msgstr "qcompress"
 
-#: operations/external/ff-save.c:73
+#: operations/external/ff-save.c:74
 msgid "qblur"
 msgstr "qblur"
 
-#: operations/external/ff-save.c:74
+#: operations/external/ff-save.c:75
 msgid "i-quant-factor"
 msgstr "i-quant-factor"
 
-#: operations/external/ff-save.c:75
+#: operations/external/ff-save.c:76
 msgid "i-quant-offset"
 msgstr "i-quant-offset"
 
-#: operations/external/ff-save.c:76
+#: operations/external/ff-save.c:77
 msgid "me-subpel-quality"
 msgstr "me-subpel-quality"
 
-#: operations/external/ff-save.c:1218
+#: operations/external/ff-save.c:1244
 msgid "FFmpeg Frame Saver"
 msgstr "Записувач кадрів FFmpeg"
 
-#: operations/external/ff-save.c:1220
+#: operations/external/ff-save.c:1246
 msgid "FFmpeg video output sink"
 msgstr "Приймач вихідного відео FFmpeg"
 
@@ -8300,11 +9061,11 @@ msgstr "Зберегти в GdkPixbuf"
 msgid "Store image in a GdkPixbuf."
 msgstr "Зберегти зображення в GdkPixbuf"
 
-#: operations/external/sdl2-display.c:196
+#: operations/external/sdl2-display.c:197
 msgid "SDL2 Display"
 msgstr "SDL2-дисплей"
 
-#: operations/external/sdl2-display.c:199
+#: operations/external/sdl2-display.c:200
 msgid ""
 "Displays the input buffer in an SDL2 window (restricted to one display op/"
 "process, due to SDL2 implementation issues)."
@@ -8320,11 +9081,11 @@ msgstr "Назва піктограми"
 msgid "Icon to be used for output window"
 msgstr "Піктограма, що буде використана для вікна виведення"
 
-#: operations/external/sdl-display.c:168
+#: operations/external/sdl-display.c:169
 msgid "SDL Display"
 msgstr "SDL-дисплей"
 
-#: operations/external/sdl-display.c:171
+#: operations/external/sdl-display.c:172
 msgid ""
 "Displays the input buffer in an SDL window (restricted to one display op/"
 "process, due to SDL implementation issues)."
@@ -8462,7 +9223,7 @@ msgid "use floating point"
 msgstr "використовувати числа з рухомою крапкою"
 
 #: operations/external/tiff-save.c:31
-msgid "floating point -1 means auto, 0 means integer 1 meant float."
+msgid "floating point -1 means auto, 0 means integer, 1 means float."
 msgstr ""
 "Значення із рухомою крапкою -1 означає «автоматично», 0 означає «ціле», 1 "
 "означає «число із рухомою крапкою»."
@@ -8557,7 +9318,7 @@ msgstr ""
 msgid "Vector Stroke"
 msgstr "Векторybq inhb["
 
-#: operations/external/vector-stroke.c:360
+#: operations/external/vector-stroke.c:359
 msgid "Renders a vector stroke"
 msgstr "Створює векторний мазок"
 
@@ -9148,11 +9909,11 @@ msgstr "Плавність"
 msgid "Level of smoothness"
 msgstr "Рівень згладжування"
 
-#: operations/workshop/bilateral-filter-fast.c:501
+#: operations/workshop/bilateral-filter-fast.c:505
 msgid "Bilateral Box Filter"
 msgstr "Двобічний прямокутний фільтр"
 
-#: operations/workshop/bilateral-filter-fast.c:506
+#: operations/workshop/bilateral-filter-fast.c:510
 msgid ""
 "A fast approximation of bilateral filter, using a box-filter instead of a "
 "gaussian blur."
@@ -9211,7 +9972,7 @@ msgstr "Нормалізувати виведення до діапазону [�
 msgid "Connected Components"
 msgstr "З'єднані компоненти"
 
-#: operations/workshop/connected-components.c:290
+#: operations/workshop/connected-components.c:292
 msgid ""
 "Fills each connected region of the input, separated from the rest of the "
 "input by a given color, with a unique color."
@@ -9305,10 +10066,6 @@ msgid ""
 msgstr ""
 "Скриптове прототипування з lua для створення/фільтрування на рівні пікселів. "
 "Докладніший опис можна знайти на http://pippin.gimp.org/image-processing/"
-
-#: operations/workshop/external/paint-select.cc:30
-msgid "Add"
-msgstr "Додати"
 
 #: operations/workshop/external/paint-select.cc:31
 msgid "Subtract"
@@ -9645,7 +10402,7 @@ msgstr "Визначає, чи краї зображення також засі
 msgid "Voronoi Diagram"
 msgstr "Діаграма Вороного"
 
-#: operations/workshop/external/voronoi-diagram.cc:531
+#: operations/workshop/external/voronoi-diagram.cc:533
 msgid "Paints each non-seed pixel with the color of the nearest seed pixel."
 msgstr ""
 "Замальовує кожен незасіяниий піксель кольором найближчого засіяного пікселя."
@@ -9808,112 +10565,89 @@ msgstr "Вибірковий відтінок-насиченість"
 msgid "Selective adjust Hue, Saturation and Lightness"
 msgstr "Вибіркове коригування відтінку, освітленості та насиченості"
 
-#: operations/workshop/shuffle-search.c:39
-#| msgid "chance"
+#: operations/workshop/shuffle-search.c:38
 msgid "Chance"
 msgstr "Можливість"
 
-#: operations/workshop/shuffle-search.c:46
-#| msgid "X Phase"
+#: operations/workshop/shuffle-search.c:45
 msgid "Phase"
 msgstr "Фаза"
 
-#: operations/workshop/shuffle-search.c:57
+#: operations/workshop/shuffle-search.c:49
 msgid "Only used if no aux image is provided"
 msgstr "Буде використано, лише якщо не надано допоміжного зображення"
 
-#: operations/workshop/shuffle-search.c:1049
+#: operations/workshop/shuffle-search.c:592
 msgid "Optimize Dither"
 msgstr "Оптимізувати розмивання"
 
-#: operations/workshop/shuffle-search.c:1052
+#: operations/workshop/shuffle-search.c:595
 msgid ""
-"Shuffles pixels with neighbors to optimize dither, by shuffling neighboring "
-"pixels; if an image is provided as aux input, it is used as dithering "
-"starting point."
+"Shuffles pixels, and quantization with neighbors to optimize dither, by "
+"shuffling neighboring pixels."
 msgstr ""
-"Перемішує пікселі із сусідніми для оптимізації розмивання шляхом "
-"перемішування сусідніх пікселів; якщо як допоміжні вхідні дані надано "
-"зображення, його буде використано як початкову точку розмивання."
+"Перемішує пікселі і виконує квантизацію із сусідніми пікселями для "
+"оптимізації розмивання шляхом перемішування сусідніх пікселів."
 
-#: operations/workshop/chamfer.c:27
-msgid "HardLight"
-msgstr "Жорстке світло"
+#~ msgid "Ctx script"
+#~ msgstr "Скрипт ctx"
 
-#: operations/workshop/chamfer.c:29
-msgid "Multiply"
-msgstr "Множення"
+#~| msgid "Renders a ctx vector graphics"
+#~ msgid "Renders a ctx vector graphics script"
+#~ msgstr "Обробляє сценарій векторної графіки ctx"
 
-#: operations/workshop/chamfer.c:33
-msgid "Darken"
-msgstr "Затемнення"
+#~| msgid "Hard Light"
+#~ msgid "Hardlight"
+#~ msgstr "Жорстке світло"
 
-#: operations/workshop/chamfer.c:35
-msgid "Lighten"
-msgstr "Освітлення"
+#~ msgid "Soft Light"
+#~ msgstr "Розсіяне світло"
 
-#: operations/workshop/chamfer.c:39
-msgid "Soft Light"
-msgstr "Розсіяне світло"
+#~ msgid "What blending mode a light map will be applied with."
+#~ msgstr "Режим змішування, з яким буде застосовано світлову мапу."
 
-#: operations/workshop/chamfer.c:52
-msgid "What blending mode a light map will be applied with."
-msgstr "Режим змішування, з яким буде застосовано світлову мапу."
+#~ msgid ""
+#~ "Curvature at 0.5 we are close to a circle shape, 1.0 is straight, values "
+#~ "above 1.0 are concave."
+#~ msgstr ""
+#~ "Кривина у 0.5 дає форми, які близькі до кола, 1.0 — до прямої, значення, "
+#~ "які перевищують 1.0, дають увігнуті форми."
 
-#: operations/workshop/chamfer.c:64
-msgid ""
-"Curvature at 0.5 we are close to a circle shape, 1.0 is straight, values "
-"above 1.0 are concave."
-msgstr ""
-"Кривина у 0.5 дає форми, які близькі до кола, 1.0 — до прямої, значення, які "
-"перевищують 1.0, дають увігнуті форми."
+#~ msgid ""
+#~ "Light angle (degrees). For most blend modes this rotates lighting of the "
+#~ "bevel."
+#~ msgstr ""
+#~ "Кут освітлення (у градусах). Для більшості режимів злиття це обертає "
+#~ "освітлення фаски."
 
-#: operations/workshop/chamfer.c:70
-msgid ""
-"Light angle (degrees). For most blend modes this rotates lighting of the "
-"bevel."
-msgstr ""
-"Кут освітлення (у градусах). Для більшості режимів злиття це обертає "
-"освітлення фаски."
+#~ msgid "Detailed options"
+#~ msgstr "Докладні параметри"
 
-#: operations/workshop/chamfer.c:76
-msgid "Detailed options"
-msgstr "Докладні параметри"
+#~ msgid "Mask with initial alpha"
+#~ msgstr "Маска із початковою альфою"
 
-#: operations/workshop/chamfer.c:78
-msgid "Mask with initial alpha"
-msgstr "Маска із початковою альфою"
+#~ msgid ""
+#~ "Keep alpha coverage, avoids growing of the shape beyond initial position."
+#~ msgstr ""
+#~ "Зберігає покриття альфи, уникає збільшення форми за початкову позицію."
 
-#: operations/workshop/chamfer.c:80
-msgid ""
-"Keep alpha coverage, avoids growing of the shape beyond initial position."
-msgstr ""
-"Зберігає покриття альфи, уникає збільшення форми за початкову позицію."
+#~ msgid "Light Elevation"
+#~ msgstr "Підвищення освітленості"
 
-#: operations/workshop/chamfer.c:86
-msgid "Light Elevation"
-msgstr "Підвищення освітленості"
+#~ msgid ""
+#~ "Elevation angle (degrees). For most blend modes this shifts the lightest "
+#~ "colors of the bevel."
+#~ msgstr ""
+#~ "Кут підвищення (у градусах). Для більшості режимів злиття це зсуває "
+#~ "найсвітліші кольори фаски."
 
-#: operations/workshop/chamfer.c:87
-msgid ""
-"Elevation angle (degrees). For most blend modes this shifts the lightest "
-"colors of the bevel."
-msgstr ""
-"Кут підвищення (у градусах). Для більшості режимів злиття це зсуває "
-"найсвітліші кольори фаски."
+#~ msgid "Choose Internal Median Shape"
+#~ msgstr "Вибрати внутрішню середню форму"
 
-#: operations/workshop/chamfer.c:118
-msgid "Choose Internal Median Shape"
-msgstr "Вибрати внутрішню середню форму"
-
-#: operations/workshop/chamfer.c:348
-msgid "Chamfer"
-msgstr "Фаска"
-
-#: operations/workshop/chamfer.c:350
-msgid "Simulate lighting of a chamfered 3D-edges for an alpha-defined shape."
-msgstr ""
-"Імітує освітлення скошених просторових країв для визначеної альфою форми."
+#~ msgid ""
+#~ "Simulate lighting of a chamfered 3D-edges for an alpha-defined shape."
+#~ msgstr ""
+#~ "Імітує освітлення скошених просторових країв для визначеної альфою форми."
 
 #~ msgid "iterations"
 #~ msgstr "ітерацій"

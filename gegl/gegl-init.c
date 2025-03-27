@@ -55,6 +55,9 @@ DllMain (HINSTANCE hinstDLL,
 
 #endif
 
+#ifdef __APPLE__
+#import <Foundation/Foundation.h>
+#endif
 
 #include "gegl-debug.h"
 
@@ -144,6 +147,100 @@ gegl_config_use_opencl_notify (GObject    *gobject,
                                      NULL);
 }
 
+#if defined (_WIN32) && !defined (__CYGWIN__)
+extern IMAGE_DOS_HEADER __ImageBase;
+
+static HMODULE
+this_module (void)
+{
+  return (HMODULE) &__ImageBase;
+}
+#endif
+
+static gchar *
+gegl_init_get_prefix (void)
+{
+  gchar *prefix = NULL;
+
+#if defined (_WIN32) && !defined (__CYGWIN__)
+
+  prefix = g_win32_get_package_installation_directory_of_module (this_module ());
+
+#elif defined (__APPLE__)
+
+  NSAutoreleasePool *pool;
+  NSString          *resource_path;
+  gchar             *basename;
+  gchar             *basepath;
+  gchar             *dirname;
+
+  pool = [[NSAutoreleasePool alloc] init];
+
+  resource_path = [[NSBundle mainBundle] resourcePath];
+
+  basename = g_path_get_basename ([resource_path UTF8String]);
+  basepath = g_path_get_dirname ([resource_path UTF8String]);
+  dirname  = g_path_get_basename (basepath);
+
+  if (! strcmp (basename, ".libs"))
+    {
+      /*  we are running from the source dir, do normal unix things  */
+
+      prefix = g_strdup (GEGL_PREFIX);
+    }
+  else if (! strcmp (basename, "bin"))
+    {
+      /*  we are running the main app, but not from a bundle, the resource
+       *  path is the directory which contains the executable
+       */
+
+      prefix = g_strdup (basepath);
+    }
+  else if (strstr (basepath, "/Cellar/"))
+    {
+      /*  we are running from a Python.framework bundle built in homebrew
+       *  during the build phase
+       */
+
+      gchar *fulldir = g_strdup (basepath);
+      gchar *lastdir = g_path_get_basename (fulldir);
+      gchar *tmp_fulldir;
+
+      while (strcmp (lastdir, "Cellar"))
+        {
+          tmp_fulldir = g_path_get_dirname (fulldir);
+
+          g_free (lastdir);
+          g_free (fulldir);
+
+          fulldir = tmp_fulldir;
+          lastdir = g_path_get_basename (fulldir);
+        }
+      prefix = g_path_get_dirname (fulldir);
+
+      g_free (fulldir);
+      g_free (lastdir);
+    }
+  else
+    {
+      /*  if none of the above match, we assume that we are really in a bundle  */
+
+      prefix = g_strdup ([resource_path UTF8String]);
+    }
+
+  g_free (basename);
+  g_free (basepath);
+  g_free (dirname);
+
+  [pool drain];
+#endif
+
+  if (prefix == NULL)
+    prefix = g_strdup (GEGL_PREFIX);
+
+  return prefix;
+}
+
 static void
 gegl_init_i18n (void)
 {
@@ -151,10 +248,46 @@ gegl_init_i18n (void)
 
   if (! i18n_initialized)
     {
-      bindtextdomain (GETTEXT_PACKAGE, GEGL_LOCALEDIR);
+      gchar *localedir = NULL;
+
+      if (g_path_is_absolute (GEGL_LOCALEDIR))
+        localedir = g_strdup (GEGL_LOCALEDIR);
+
+#if defined (_WIN32) && !defined (__CYGWIN__)
+      wchar_t *dir_name_utf16;
+
+      if (localedir == NULL)
+        {
+          gchar *prefix;
+
+          prefix = gegl_init_get_prefix ();
+          localedir = g_build_filename (prefix, GEGL_LOCALEDIR, NULL);
+          g_free (prefix);
+        }
+
+      dir_name_utf16 = g_utf8_to_utf16 (localedir, -1, NULL, NULL, NULL);
+      if G_UNLIKELY (! dir_name_utf16)
+        g_printerr ("%s: Cannot translate the catalog directory to UTF-16\n", G_STRFUNC);
+      else
+        wbindtextdomain (GETTEXT_PACKAGE, dir_name_utf16);
+
+      g_free (dir_name_utf16);
+#else
+      if (localedir == NULL)
+        {
+          gchar *prefix;
+
+          prefix = gegl_init_get_prefix ();
+          localedir = g_build_filename (prefix, GEGL_LOCALEDIR, NULL);
+          g_free (prefix);
+        }
+
+      bindtextdomain (GETTEXT_PACKAGE, localedir);
+#endif
       bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
 
       i18n_initialized = TRUE;
+      g_free (localedir);
     }
 }
 
