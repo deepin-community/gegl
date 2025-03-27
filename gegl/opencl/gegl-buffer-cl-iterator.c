@@ -131,6 +131,11 @@ gegl_buffer_cl_iterator_add_2 (GeglBufferClIterator  *iterator,
       else
         i->conv[self] = gegl_cl_color_supported (buffer_format, format);
 
+      if (i->conv[self] != GEGL_CL_COLOR_NOT_SUPPORTED)
+        GEGL_NOTE (GEGL_DEBUG_OPENCL, "The OpenCL color conversion system is"
+                                      " outdated. This operation is dependent"
+                                      " on OpenCL for color conversion.");
+
       gegl_cl_color_babl (buffer_format, &i->buf_cl_format_size[self]);
       gegl_cl_color_babl (format,        &i->op_cl_format_size [self]);
 
@@ -259,7 +264,7 @@ dealloc_iterator(GeglBufferClIterators *i)
   g_slice_free (GeglBufferClIterators, i);
 }
 
-#define OPENCL_USE_CACHE 1
+#define OPENCL_USE_CACHE 0
 
 gboolean
 gegl_buffer_cl_iterator_next (GeglBufferClIterator *iterator, gboolean *err)
@@ -335,7 +340,7 @@ gegl_buffer_cl_iterator_next (GeglBufferClIterator *iterator, gboolean *err)
                       g_free(data);
                     }
                   else
-#ifdef OPENCL_USE_CACHE
+#if OPENCL_USE_CACHE
                     {
                       gegl_buffer_cl_cache_new (i->buffer[no], &i->roi[no], i->tex_buf[no]);
                       /* don't release this texture */

@@ -1,8 +1,7 @@
 project('gegl',
   'c', 'cpp',
   license: 'GPL3+',
-  version: '0.4.48',
-  # when meson version passes 0.53.0 remove alternate build summary
+  version: '0.4.58',
   meson_version: '>=0.55.0',
   default_options: [
     'c_std=gnu11',
@@ -22,6 +21,7 @@ project('gegl',
 
 config    = configuration_data()
 
+fs        = import('fs')
 pkgconfig = import('pkgconfig')
 i18n      = import('i18n')
 gnome     = import('gnome')
@@ -139,10 +139,6 @@ os_win32  = host_os.contains('mingw') or host_os.contains('windows')
 os_android= host_os.contains('android')
 os_osx    = host_os.contains('darwin')
 
-if os_osx and cc.get_id() != 'clang'
-  error('You should use Clang on OSx.')
-endif
-
 host_cpu_family = host_machine.cpu_family()
 if   host_cpu_family == 'x86'
   have_x86 = true
@@ -179,12 +175,10 @@ can_run_host_binaries = meson.can_run_host_binaries()
 cflags_common = []
 cflags_c      = []
 cflags_cpp    = []
+lflags_common = []
 
 cflags_common += '-DHAVE_CONFIG_H'
 
-if buildtype == 'debugoptimized' or buildtype == 'release'
-  cflags_common += '-Ofast'
-endif
 
 if buildtype == 'debugoptimized' or buildtype == 'debug'
   cflags_common += '-DGEGL_ENABLE_DEBUG'
@@ -206,8 +200,25 @@ if os_win32
   cflags_common += '-D_FILE_OFFSET_BITS=64'
 endif
 
+# Generate .pdb (CodeView) debug symbols (makes possible to debug with DIA SDK)
+#pdb_support = cc.has_argument('-gcodeview') and cc.has_link_argument('-Wl,--pdb=')
+#if os_win32 and pdb_support
+#  cflags_common += '-gcodeview'
+#  lflags_common += '-Wl,--pdb='
+#endif
 
-cflags_common += cc.get_supported_arguments(['-ftree-vectorize'])
+if os_win32 and cc.get_id() == 'clang'
+  # Optimize DWARF symbols to Dr. Mingw
+  # https://github.com/jrfonseca/drmingw/issues/42
+  cflags_common += '-gdwarf-aranges'
+  # Workaround to get colored output
+  # https://github.com/msys2/MINGW-packages/issues/2988
+  cflags_common += '-fansi-escape-codes'
+endif
+
+if buildtype == 'debugoptimized' or buildtype == 'release'
+  cflags_common += cc.get_supported_arguments(['-ftree-vectorize'])
+endif
 
 if host_cpu_family == 'x86_64'
   x86_64_v2_flags = cc.get_supported_arguments(['-march=x86-64','-msse2', '-msse2','-msse4.1','-msse4.2','-mpopcnt','-mssse3'])
@@ -220,7 +231,7 @@ elif host_cpu_family == 'arm'
   arm_neon_flags = cc.get_supported_arguments(['-mfpu=neon-vfpv4'])
   arm_neon_flags += ['-DSIMD_ARM_NEON']
 elif host_cpu_family == 'aarch64'
-  cflags_common += cc.get_supported_arguments(['-mfpu=neon-vfpv4'])
+  cflags_common += cc.get_supported_arguments(['-mfpu=neon-fp-armv8', '-ftree-vectorize'])
 endif
 
 cflags_c   = cflags_common + cflags_c
@@ -228,6 +239,16 @@ cflags_cpp = cflags_common + cflags_cpp
 
 add_project_arguments(cc.get_supported_arguments(cflags_c), language: 'c')
 add_project_arguments(cpp.get_supported_arguments(cflags_cpp), language: 'cpp')
+add_project_link_arguments(lflags_common, language: [ 'c', 'cpp' ])
+
+# on OSX ObjC and C sources are mixed so adding objc to the linkflags
+
+if os_osx
+  add_languages('objc')
+  osx_ldflags = ['-Wl,-framework,Foundation', '-Wl,-framework,AppKit']
+  add_project_link_arguments(osx_ldflags, language : ['objc', 'c'])
+  add_project_arguments('-xobjective-c', language : 'c')
+endif
 
 ################################################################################
 # Build Utilities
@@ -514,6 +535,14 @@ endif
 
 build_reference = get_option('gtk-doc') or build_gi_docgen
 
+#########################################################################
+# Install native debug data (.pdb) on Windows
+# Ideally meson should take care of it automatically.
+# See: https://github.com/mesonbuild/meson/issues/12977
+#if os_win32 and pdb_support
+#  install_win_debug_script = find_program('./meson_install_win_debug.sh')
+#  meson.add_install_script(install_win_debug_script)
+#endif
 
 #########################################################################
 # Subdirs

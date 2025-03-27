@@ -92,8 +92,6 @@ type_name##_get_type (void)                                             \
 void                                                             \
 type_name##_register_type (GTypeModule *type_module)                    \
   {                                                                     \
-    gchar  tempname[256];                                               \
-    gchar *p;                                                           \
     const GTypeInfo g_define_type_info =                                \
     {                                                                   \
       sizeof (TypeName##Class),                                         \
@@ -107,14 +105,10 @@ type_name##_register_type (GTypeModule *type_module)                    \
       (GInstanceInitFunc) type_name##_init,                             \
       NULL    /* value_table */                                         \
     };                                                                  \
-    g_snprintf (tempname, sizeof (tempname),                            \
-                "%s", #TypeName C_FILE);                                \
-    for (p = tempname; *p; p++)                                         \
-      if (*p=='.') *p='_';                                              \
                                                                         \
     type_name##_type_id = g_type_module_register_type (type_module,     \
                                                        TYPE_PARENT,     \
-                                                       tempname,        \
+                                                       #type_name,      \
                                                        &g_define_type_info, \
                                                        (GTypeFlags) flags); \
     { CODE ; }                                                          \
@@ -707,7 +701,7 @@ gegl_op_constructor (GType                  type,
 #undef property_path
 
   g_object_set_data_full (obj, "chant-data", obj, gegl_op_destroy_notify);
-  properties ++; /* evil hack to silence gcc */
+  if (properties) {}; /* silence compiler warnings */
   return obj;
 }
 

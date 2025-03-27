@@ -1,3 +1,0 @@
-# Superseding epoched packages that were removed from a popular third-party
-# repo: https://lists.debian.org/debian-devel/2020/08/msg00111.html
-gegl source: epoch-changed-but-upstream-version-did-not-go-backwards 0.4.24-1 -> 1:0.4.26-1

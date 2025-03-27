@@ -14,7 +14,8 @@ geglInclude = include_directories(
 gegl_cflags = [
   '-DLIBDIR="@0@"'.format(get_option('prefix') / get_option('libdir')),
   '-DG_LOG_DOMAIN="@0@"'.format('GEGL'),
-  '-DGEGL_LOCALEDIR="@0@"'.format(get_option('prefix') / get_option('localedir')),
+  '-DGEGL_LOCALEDIR="@0@"'.format(get_option('localedir')),
+  '-DGEGL_PREFIX="@0@"'.format(get_option('prefix')),
 ]
 
 gegl_version_h = configure_file(
@@ -129,18 +130,34 @@ if g_ir.found()
     'opencl' / 'gegl-cl-introspection-support.h',
   )
 
-  gegl_gir = gnome.generate_gir(gegl_lib,
-    sources: introspection_sources,
-    nsversion: api_version,
-    namespace: 'Gegl',
-    identifier_prefix: 'Gegl',
-    symbol_prefix: 'gegl',
-    header: 'gegl.h',
-    includes: [ 'GLib-2.0', 'GObject-2.0', 'Babl-0.1' ],
-    dependencies: [babl],
-    export_packages: 'gegl-' + api_version,
-    install: true,
-  )
+  if meson.version().version_compare('>=1.2')
+    gegl_gir = gnome.generate_gir(gegl_lib,
+      sources: introspection_sources,
+      nsversion: api_version,
+      namespace: 'Gegl',
+      identifier_prefix: 'Gegl',
+      symbol_prefix: 'gegl',
+      header: 'gegl.h',
+      includes: [ 'GLib-2.0', 'GObject-2.0', 'Babl-0.1' ],
+      dependencies: [babl],
+      export_packages: 'gegl-' + api_version,
+      install: true,
+      env: ['GEGL_BUILD=1'],
+    )
+  else
+    gegl_gir = gnome.generate_gir(gegl_lib,
+      sources: introspection_sources,
+      nsversion: api_version,
+      namespace: 'Gegl',
+      identifier_prefix: 'Gegl',
+      symbol_prefix: 'gegl',
+      header: 'gegl.h',
+      includes: [ 'GLib-2.0', 'GObject-2.0', 'Babl-0.1' ],
+      dependencies: [babl],
+      export_packages: 'gegl-' + api_version,
+      install: true,
+    )
+  endif
 
   if vapigen.found()
     configure_file(

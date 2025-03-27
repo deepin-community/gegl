@@ -20,6 +20,12 @@
 #include "config.h"
 #include <glib/gi18n-lib.h>
 
+// TODO : the results have incorrect gamma handling within levels for
+//        levels>2, the hack of doing it all in linear only works for level==2
+//
+//
+//
+
 #ifdef GEGL_PROPERTIES
 
 property_int  (red_levels, _("Red levels"), 6)
@@ -27,7 +33,7 @@ property_int  (red_levels, _("Red levels"), 6)
     value_range (2, 65536)
     ui_gamma (3.0)
 
-property_int  (green_levels, _("Green levels"), 7)
+property_int  (green_levels, _("Green levels"), 6)
     description(_("Number of levels for green channel"))
     value_range (2, 65536)
     ui_gamma (3.0)
@@ -64,10 +70,25 @@ static void
 prepare (GeglOperation *operation)
 {
   const Babl *space = gegl_operation_get_source_space (operation, "input");
-  gegl_operation_set_format (operation, "input",
-                             babl_format_with_space ("R'G'B'A u16", space));
-  gegl_operation_set_format (operation, "output",
-                             babl_format_with_space ("R'G'B'A u16", space));
+  GeglProperties *o = GEGL_PROPERTIES (operation);
+
+  if (o->red_levels == 2 &&
+      o->green_levels == 2 &&
+      o->blue_levels == 2 &&
+      o->dither_method != GEGL_DITHER_NONE)
+  {
+    gegl_operation_set_format (operation, "input",
+                               babl_format_with_space ("RGBA u16", space));
+    gegl_operation_set_format (operation, "output",
+                               babl_format_with_space ("RGBA u16", space));
+  }
+  else
+  {
+    gegl_operation_set_format (operation, "input",
+                               babl_format_with_space ("R'G'B'A u16", space));
+    gegl_operation_set_format (operation, "output",
+                               babl_format_with_space ("R'G'B'A u16", space));
+  }
 }
 
 static inline guint
@@ -219,7 +240,7 @@ process_row_bayer (GeglBufferIterator *gi,
           gdouble value_clamped;
           gdouble quantized;
 
-          bayer         = bayer_matrix_8x8 [((roi->y + y) % 8) * 8 + ((roi->x + x) % 8)];
+          bayer         = bayer_matrix_8x8 [((roi->y + y) & 7) * 8 + (( (roi->x) + x) & 7)];
           bayer         = ((bayer - 32) * 65536.0 / 65.0) / channel_levels [ch];
           value         = data_in [pixel + ch] + bayer;
           value_clamped = CLAMP (value, 0.0, 65535.0);
@@ -254,7 +275,7 @@ process_row_blue_noise (GeglBufferIterator *gi,
           gdouble value_clamped;
           gdouble quantized;
 
-          noise         = blue_noise_data_u8[ch * covariant][((roi->y + y) % 256) * 256 + ((roi->x + x) % 256)];
+          noise         = blue_noise_data_u8[ch * covariant][((roi->y + y) & 255) * 256 + ((roi->x + x) & 255)];
           noise         = 1.00 * ((noise - 128) * 65536.0 / 257.0) / channel_levels [ch];
           value         = data_in [pixel + ch] + noise;
           value_clamped = CLAMP (value, 0.0, 65535.0);

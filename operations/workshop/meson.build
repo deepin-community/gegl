@@ -7,7 +7,6 @@ gegl_workshop_sources = files(
   'bilateral-filter-fast.c',
   'boxblur-1d.c',
   'boxblur.c',
-  'chamfer.c',
   'connected-components.c',
   'demosaic-bimedian.c',
   'demosaic-simple.c',
@@ -19,7 +18,7 @@ gegl_workshop_sources = files(
   'rawbayer-load.c',
   'segment-kmeans.c',
   'shuffle-search.c',
-  'selective-hue-saturation.c',
+  'selective-hue-saturation.c'
 )
 
 gegl_workshop_sources += custom_target('module_workshop.c',
@@ -31,7 +30,7 @@ gegl_workshop_sources += custom_target('module_workshop.c',
 
 gegl_workshop = shared_library('gegl-workshop',
   gegl_workshop_sources,
-  include_directories: [ rootInclude, geglInclude, ],
+  include_directories: [ rootInclude, geglInclude],
   dependencies: [
     babl,
     glib,
