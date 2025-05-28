@@ -1,3 +1,48 @@
+GEGL-0.4.60 2025-05-08
+
+Ops:
+
+  • png-load: avoid crashing on some invalid files
+
+  • bevel: code cleanups, pass only valid values to gegl:emboss
+
+  • exr-save: fix scratch buffer computation for large images
+
+  • fractal-trace: add ui-ranges to coordiantes
+
+Build:
+
+  • porting of many shell scripts to python, improving build
+    compatibility for windows.
+
+Core:
+
+  • portability fixes for win32 for running graphviz from folders with
+    spaces in path
+
+  • depend on babl>=0.1.112 removing ifdefs keeping old variants
+    working
+
+  • Mark nodes as intert in ::dispose and check for this during
+    traversals, this fixes a crash when using a libc that has a
+    non-clobbering free.
+
+Contributors to this release, including translators:
+
+Bruno Lopes, Davide Ferracin, Jehan, Liam Quin, Muhammet Kara, budhil,
+Øyvind Kolås.
+
+GEGL-0.4.58 2025-03-23
+
+Ops:
+
+  • dither: fixed crash when applied to pixels with negative pixel
+    coordinates.
+
+Contributors to this release, including translator:
+
+Kolbjørn Stuestøl and Øyvind Kolås.
+
 GEGL-0.4.56 2025-03-16
 
 Ops:
@@ -2406,4 +2451,4 @@ Calvin Williamson, Caroline Dahloff Daniel Rogers, Garry R. Osgood, Jay
 Cox and Sven Neumann
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Last updated 2025-03-16 15:18:42 CET
+Last updated 2025-05-08 12:05:11 CEST
