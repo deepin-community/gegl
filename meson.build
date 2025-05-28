@@ -1,8 +1,8 @@
 project('gegl',
   'c', 'cpp',
   license: 'GPL3+',
-  version: '0.4.58',
-  meson_version: '>=0.55.0',
+  version: '0.4.62',
+  meson_version: '>=0.57.0',
   default_options: [
     'c_std=gnu11',
     'cpp_std=gnu++14',
@@ -44,7 +44,7 @@ project_source_root = meson.current_source_dir()
 #
 # Core - required
 dep_ver = {
-  'babl'            : '>=0.1.78',
+  'babl'            : '>=0.1.112',
   'glib'            : '>=2.44.0',
   'json-glib'       : '>=1.0.0',
   'poly2tri-c'      : '>=0.0.0',
@@ -200,12 +200,12 @@ if os_win32
   cflags_common += '-D_FILE_OFFSET_BITS=64'
 endif
 
-# Generate .pdb (CodeView) debug symbols (makes possible to debug with DIA SDK)
-#pdb_support = cc.has_argument('-gcodeview') and cc.has_link_argument('-Wl,--pdb=')
-#if os_win32 and pdb_support
-#  cflags_common += '-gcodeview'
-#  lflags_common += '-Wl,--pdb='
-#endif
+# Generate native .pdb (CodeView) debug symbols (for DIA or DbgHelp debuggers and LLDB)
+pdb_support = cc.has_argument('-gcodeview') and cc.has_link_argument('-Wl,--pdb=')
+if os_win32 and pdb_support
+  cflags_common += '-gcodeview'
+  lflags_common += '-Wl,--pdb='
+endif
 
 if os_win32 and cc.get_id() == 'clang'
   # Optimize DWARF symbols to Dr. Mingw
@@ -252,8 +252,6 @@ endif
 
 ################################################################################
 # Build Utilities
-
-env               = find_program('env', required: false)
 
 asciidoc          = find_program('asciidoc',
                      required: false, native: true)
@@ -511,7 +509,7 @@ if get_option('docs') == 'auto'
   if meson.is_cross_build()
     build_docs = false
     message('configure with -Ddocs=true to cross-build docs')
-  elif not asciidoc.found() or not env.found()
+  elif not asciidoc.found()
     build_docs = false
   endif
 elif get_option('docs') == 'false'
@@ -539,10 +537,10 @@ build_reference = get_option('gtk-doc') or build_gi_docgen
 # Install native debug data (.pdb) on Windows
 # Ideally meson should take care of it automatically.
 # See: https://github.com/mesonbuild/meson/issues/12977
-#if os_win32 and pdb_support
-#  install_win_debug_script = find_program('./meson_install_win_debug.sh')
-#  meson.add_install_script(install_win_debug_script)
-#endif
+if os_win32 and pdb_support
+  install_win_debug_script = find_program('./meson_install_win_debug.py')
+  meson.add_install_script(install_win_debug_script)
+endif
 
 #########################################################################
 # Subdirs
