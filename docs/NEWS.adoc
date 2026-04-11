@@ -1,4 +1,128 @@
-GEGL-0.4.60 2025-05-08
+GEGL-0.4.70 2025-03-24
+----------------------
+
+Core:
+-----
+ - GeglPath: avoid overflows when serializing paths with large coordinates
+ - GeglPath: avoid hang on parsing malformed paths.
+
+Ops:
+----
+ - png-save: avoid integer overflow when computing row_size
+ - exr-save: avoid integer overflow when computing width*height
+
+Build:
+------
+ - Improvements to defcheck, 
+ - More efforts to get rid of compiler warnings.
+
+Contributors to this release, including translators:
+----------------------------------------------------
+
+Alfred Wingate, Baurzhan Muftakhidinov, Bruno Lopes, Jehan, Luigino Camastra,
+Øyvind Kolås and Марко Костић.
+
+GEGL-0.4.68 2026-03-11
+----------------------
+
+Buffer:
+-------
+ - fix of a crash due to float/double precision differences
+
+Ops:
+----
+ - vibrance: new op to cater for PSD adjustments layers compatibility.
+ - tile-glass: handle buffers with negative offsets.
+ - watershed-transform: handle buffers with negative offsets; which impacted gegl:waterpixels done on selections in GIMP.
+ - rgbe-load: fix runlength induced buffer overflow
+
+Build:
+------
+ - tooling for verifying exported symbols.
+ - relocatable build for OSX
+ - improved UCRT conditional macros
+ - fix C++ symbol clashes when using link time optimization
+
+OpenCL:
+-------
+ - expose profiling hooks
+
+Contributors to this release, including translators:
+----------------------------------------------------
+
+Akascape, Alexander Alexandrov Shopov, Anders Jonsson, Asier Saratsua Garmendia,
+balooii balooii, Bruce Cowan, Bruno Lopes, dimspingos, Ekaterine Papava,
+Gabriele Barbero, HaroldKnowlden, Jacob Boerema, Jan Palus, Jan Tojnar,
+Jehan, Jordi Mas, luming zh, Marco Ciampa, Marcos Patrick, Martin,
+Ondřej Míchal, Øyvind Kolås, Sabri Ünal, YOSHIDA Shigeto and Yuri Chornoivan.
+
+
+GEGL-0.4.66 2025-12-11
+----------------------
+
+Core:
+------
+ - Improved relocability now also on linux.
+
+Ops:
+----
+ - gif-load: don't embed libnsgif directly
+
+Dependencies:
+-------------
+ - libnsgif: support using distro provided lib.
+ - ctx: synchronize with ctx-0.1.14
+
+General:
+--------
+ - Fixes for building with MSVC
+
+Contributors to this release, including translators:
+----------------------------------------------------
+
+Alan Mortensen, Alexander Alexandrov Shopov, Alfred Wingate,
+Bruno Lopes, Jehan, Jeremy Bícha, Marco Ciampa, Ondřej Míchal,
+Sabri Ünal, Ulf Martin Prill and Øyvind Kolås,
+
+GEGL-0.4.64 2025-10-04
+----------------------
+
+Ops:
+----
+ - GeglOperationPointComposer3 (a base class) got support for OpenCL processsing.
+ - ff-load: support ffmpeg8
+ - gif-load: more robust error handling
+ - threshold: make opencl variant more portable
+ - mirrors: improve subregion damage
+
+Build:
+------
+ - reduce bashisms
+ - only generate pdb (codeview) symbols on win32 - fixing gcc build breakage
+ - ci updates
+ - optiona DWARF debug symbols on windows
+ - drop many half-vendored subprojects (babl, glib, json-glib,  libjpeg-turbo, libpng)
+
+Per op-testing:
+---------------
+ - code cleanups
+ - use downloadable reference images addressed by hash in addition to hash comparisons.
+
+Core:
+-----
+ - escape registerted operation blurbs with g_markup_escape_text
+ - fix of dllexport redeclarations warnings on windows
+
+Contributors to this release, including translators:
+----------------------------------------------------
+Alexander Alexandrov Shopov, Alexander Shopov, Alx Sa, Anders Jonsson, Asier
+Saratsua Garmendia, Bruno Lopes, Cristian Secară, Ekaterine Papava, Jacob
+Boerema, Jehan, Jordi Mas, Kolbjørn Stuestøl, Kristjan SCHMIDT, Marco Ciampa,
+Martin, Nathan Follens, Ondřej Míchal, Sabri Ünal, Yuri Chornoivan, lillolollo,
+luming zh, and Øyvind Kolås.
+
+
+GEGL-0.4.62 2025-05-08
 ----------------------
 
 Ops:
@@ -20,7 +144,7 @@ Core:
 
  - portability fixes for win32 for running graphviz from folders with spaces in path
  - depend on babl>=0.1.112 removing ifdefs keeping old variants working
- - Mark nodes as intert in ::dispose and check for this during traversals, this
+ - Mark nodes as inert in ::dispose and check for this during traversals, this
    fixes a crash when using a libc that has a non-clobbering free.
 
 Contributors to this release, including translators:

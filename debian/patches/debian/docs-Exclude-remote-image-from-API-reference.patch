@@ -1,0 +1,21 @@
+From: Simon McVittie <smcv@debian.org>
+Date: Mon, 1 Sep 2025 15:08:20 +0100
+Subject: docs: Exclude remote image from API reference
+
+Forwarded: not-needed
+---
+ docs/reference/meson.build | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/docs/reference/meson.build b/docs/reference/meson.build
+index 1aa904d..0a2608c 100644
+--- a/docs/reference/meson.build
++++ b/docs/reference/meson.build
+@@ -31,7 +31,6 @@ if build_gi_docgen
+     output: '@BASENAME@',
+     configuration: {
+       'GEGL_VERSION':   version,
+-      'GEGL_LOGO_PATH': 'https://gegl.org/images/GEGL.png',
+     },
+   )
+ 

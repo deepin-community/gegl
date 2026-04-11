@@ -1,11 +1,11 @@
 project('gegl',
   'c', 'cpp',
   license: 'GPL3+',
-  version: '0.4.62',
-  meson_version: '>=0.57.0',
+  version: '0.4.70',
+  meson_version: '>=0.59.0',
   default_options: [
     'c_std=gnu11',
-    'cpp_std=gnu++14',
+    'cpp_std=c++14',
     'buildtype=debugoptimized',
   ],
 )
@@ -44,10 +44,11 @@ project_source_root = meson.current_source_dir()
 #
 # Core - required
 dep_ver = {
-  'babl'            : '>=0.1.112',
+  'babl'            : '>=0.1.116',
   'glib'            : '>=2.44.0',
   'json-glib'       : '>=1.0.0',
   'poly2tri-c'      : '>=0.0.0',
+  'libnsgif'        : '>=1.0.0',
 }
 
 # Core - optional
@@ -56,12 +57,21 @@ dep_ver += {
   'vapigen'         : '>=0.20.0',
 }
 
+# GEGL binary - required
+dep_ver += {
+  'libpng'          : '>=1.6.0',
+}
+
 # GEGL binary - optional
 dep_ver += {
   'gexiv2'          : '>=0.14.0',
-  'libpng'          : '>=1.6.0',
   'luajit'          : '>=2.0.4',
   'mrg'             : '>=0.0.0',
+}
+
+# Operations - required
+dep_ver += {
+  'libjpeg'         : '>=1.0.0',
 }
 
 # Operations - optional
@@ -73,7 +83,6 @@ dep_ver += {
   'jasper'          : '>=1.900.1',
   'lcms'            : '>=2.8',
   'lensfun'         : '>=0.2.5',
-  'libjpeg'         : '>=1.0.0',
   'libraw'          : '>=0.15.4',
   'librsvg'         : '>=2.40.6',
   'libspiro'        : '>=0.5.0',
@@ -180,41 +189,61 @@ lflags_common = []
 cflags_common += '-DHAVE_CONFIG_H'
 
 
-if buildtype == 'debugoptimized' or buildtype == 'debug'
-  cflags_common += '-DGEGL_ENABLE_DEBUG'
-endif
-
 cflags_common += [
   '-Winit-self',
   '-Wmissing-declarations',
   '-Wpointer-arith',
   '-Wno-unused-parameter',
-  '-Wno-cast-function-type',
+  '-Wno-cast-function-type'
 ]
 cflags_c = [
   '-Wmissing-prototypes',
   '-Wold-style-definition',
 ]
 
+
+# DEBUG SYMBOLS
+debugging_format = 'Disabled'
+if buildtype == 'debug' or buildtype == 'debugoptimized'
+  cflags_common += '-DGEGL_ENABLE_DEBUG'
+
+  if not os_win32
+    # DWARF symbols for GCC and LLDB on Unix
+    debugging_format = 'Native'
+  elif cc.get_argument_syntax() == 'msvc'
+    # CodeView symbols for DIA or DbgHelp debuggers and LLDB on Windows
+    debugging_format = 'Native'
+  elif os_win32 and get_option('win-debugging') == 'native' and cc.has_argument('-gcodeview') and cc.has_link_argument('-Wl,--pdb=') and cc.get_id() == 'clang'
+    # CodeView symbols for DIA or DbgHelp debuggers and LLDB on Windows
+    debugging_format = 'Native'
+    cflags_common += '-gcodeview'
+    lflags_common += '-Wl,--pdb='
+  else
+    # DWARF symbols for GCC and LLDB on Windows (fallback)
+    debugging_format = 'DWARF'
+    if cc.get_id() == 'clang'
+      # Optimize DWARF symbols to Dr. Mingw
+      # https://github.com/jrfonseca/drmingw/issues/42
+      cflags_common += '-gdwarf-aranges'
+    endif
+  endif
+endif
+
+
 if os_win32
   cflags_common += '-D_FILE_OFFSET_BITS=64'
-endif
 
-# Generate native .pdb (CodeView) debug symbols (for DIA or DbgHelp debuggers and LLDB)
-pdb_support = cc.has_argument('-gcodeview') and cc.has_link_argument('-Wl,--pdb=')
-if os_win32 and pdb_support
-  cflags_common += '-gcodeview'
-  lflags_common += '-Wl,--pdb='
-endif
+  if cc.get_id() == 'clang'
+    # Workaround to get colored output
+    # https://github.com/msys2/MINGW-packages/issues/2988
+    cflags_common += '-fansi-escape-codes'
+  endif
 
-if os_win32 and cc.get_id() == 'clang'
-  # Optimize DWARF symbols to Dr. Mingw
-  # https://github.com/jrfonseca/drmingw/issues/42
-  cflags_common += '-gdwarf-aranges'
-  # Workaround to get colored output
-  # https://github.com/msys2/MINGW-packages/issues/2988
-  cflags_common += '-fansi-escape-codes'
-endif
+  if cc.get_argument_syntax() == 'msvc'
+    #Needed otherwise MSVC get angry with the headers provided by UCRT
+    cflags_common += ['/D_USE_MATH_DEFINES']
+  endif
+endif #if os_win32
 
 if buildtype == 'debugoptimized' or buildtype == 'release'
   cflags_common += cc.get_supported_arguments(['-ftree-vectorize'])
@@ -244,11 +273,38 @@ add_project_link_arguments(lflags_common, language: [ 'c', 'cpp' ])
 # on OSX ObjC and C sources are mixed so adding objc to the linkflags
 
 if os_osx
-  add_languages('objc')
+  add_languages('objc', native: true)
   osx_ldflags = ['-Wl,-framework,Foundation', '-Wl,-framework,AppKit']
   add_project_link_arguments(osx_ldflags, language : ['objc', 'c'])
   add_project_arguments('-xobjective-c', language : 'c')
 endif
+
+# Build relocatable GEGL
+relocatable = false
+if get_option('relocatable-bundle') == 'platform-default'
+  if os_win32 or os_osx
+    relocatable = true
+  endif
+else
+  relocatable = (get_option('relocatable-bundle') == 'yes')
+endif
+config.set('ENABLE_RELOCATABLE', relocatable)
+
+################################################################################
+# C/C++ language support in the compiler
+
+config.set(
+  'GEGL_GNUC_VARIADIC_MACROS',
+  cc.compiles(
+    '''
+#include <stdio.h>
+#define X(foo...)   printf(foo)
+#define Y(foo, ...) printf(foo, ##__VA_ARGS__)
+void main(void) { X ("%d", 42); Y ("%d"); }
+    ''',
+    name: 'GNU C variadic macros extension'
+  )
+)
 
 ################################################################################
 # Build Utilities
@@ -321,7 +377,7 @@ poly2tri_c = dependency('poly2tri-c',
   required: false,
 )
 
-libnsgif = dependency('libnsgif',
+libnsgif = dependency('libnsgif',     version: dep_ver.get('libnsgif'),
   fallback: ['libnsgif', 'libnsgif'],
 )
 
@@ -537,7 +593,7 @@ build_reference = get_option('gtk-doc') or build_gi_docgen
 # Install native debug data (.pdb) on Windows
 # Ideally meson should take care of it automatically.
 # See: https://github.com/mesonbuild/meson/issues/12977
-if os_win32 and pdb_support
+if os_win32 and debugging_format == 'Native' and cc.get_argument_syntax() != 'msvc'
   install_win_debug_script = find_program('./meson_install_win_debug.py')
   meson.add_install_script(install_win_debug_script)
 endif
@@ -605,6 +661,32 @@ subdir('po')
 subdir('docs')
 
 
+if not os_osx and host_cpu_family != 'x86'
+  nm = find_program('nm', required: false)
+
+  # Verify .def files for Windows linking.
+  # We check this on non-Windows platform on CI, and on Windows itself.
+  custom_target('check-def-files',
+    input: [
+      gegl_def,
+      gegl_npd_def,
+      gegl_sc_def,
+    ],
+    depends: [
+      gegl_lib,
+      gegl_npd_lib,
+      seamlessclone_lib
+    ],
+    env: nm.found() ? { 'NM': nm.full_path() } : {},
+    output: [ 'check-def-files', ],
+    command: [
+      python, meson.project_source_root() / 'tools' / 'defcheck.py', '@INPUT@',
+    ],
+    build_by_default: true,
+  )
+endif
+
+
 if w3m.found()
   # Create NEWS file from html file
   if is_variable('news_html')
@@ -657,9 +739,11 @@ summary(
 )
 summary(
   {
-    'Build workshop'    : get_option('workshop'),
-    'Introspection'     : g_ir.found(),
-    'Vala support'      : vapigen.found(),
+    'Build workshop'       : get_option('workshop'),
+    'Introspection'        : g_ir.found(),
+    'Vala support'         : vapigen.found(),
+    'Debug symbols format' : debugging_format,
+    'Relocatable'          : relocatable,
   }, section: 'Optional features'
 )
 summary(

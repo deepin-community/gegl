@@ -1,4 +1,4 @@
 usr/lib/*/*.so.*
+usr/lib/*/gegl-*/*.so
 usr/lib/*/libgegl-npd-0.4.so
 usr/lib/*/libgegl-sc-0.4.so
-usr/lib/*/gegl-*/*.so

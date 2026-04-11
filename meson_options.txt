@@ -31,6 +31,13 @@ option('vapigen',
   value: 'auto',
   description: 'Vala .vapi generation - depends on introspection'
 )
+option('win-debugging',
+  type: 'combo',
+  choices: ['native', 'dwarf'],
+  value: 'native',
+  description: 'Build with native/CodeView debug symbols or with DWARF'
+)
+
 # Build settings
 option('parallel-tests',
   type: 'boolean',
@@ -42,6 +49,11 @@ option('operation-test',
   type: 'boolean',
   value: 'false',
   description: 'include gegl-tester in test suite'
+)
+
+option('relocatable-bundle', type: 'combo', value: 'platform-default',
+       description: 'build with resources considered bundled under the same prefix',
+       choices: [ 'yes', 'no', 'platform-default' ]
 )
 
 # optional dependencies
@@ -72,8 +84,3 @@ option('sdl1',          type: 'feature', value: 'disabled')
 option('sdl2',          type: 'feature', value: 'auto')
 option('umfpack',       type: 'feature', value: 'auto')
 option('webp',          type: 'feature', value: 'auto')
-
-# obsolete - no effect
-option('exiv2',         type: 'feature', value: 'disabled')
-option('libpng',        type: 'feature', value: 'disabled')
-option('libjpeg',       type: 'feature', value: 'disabled')

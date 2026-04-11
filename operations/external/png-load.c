@@ -34,7 +34,7 @@ property_file_path (path, _("File"), "")
 property_uri (uri, _("URI"), "")
   description (_("URI for file to load."))
 property_object (metadata, _("Metadata"), GEGL_TYPE_METADATA)
-  description (_("Object to supply image metadata"))
+  description (_("Object providing image metadata"))
 
 #else
 
@@ -134,7 +134,7 @@ error_fn(png_structp png_ptr, png_const_charp msg)
 static gboolean
 check_valid_png_header(GInputStream *stream, GError **err)
 {
-  const size_t hdr_size=8;
+#define hdr_size 8
   gssize hdr_read_size;
   unsigned char header[hdr_size];
 
@@ -163,6 +163,7 @@ check_valid_png_header(GInputStream *stream, GError **err)
       g_set_error(err, error_quark(), LOAD_PNG_WRONG_HEADER, "wrong png header");
       return FALSE;
     }
+#undef hdr_size
   return TRUE;
 }
 
@@ -174,23 +175,47 @@ get_babl_format(int bit_depth, int color_type, const Babl *space)
    if (color_type & PNG_COLOR_TYPE_RGB)
       {
         if (color_type & PNG_COLOR_MASK_ALPHA)
+#ifndef _UCRT
           strcpy (format_string, "R'G'B'A ");
+#else
+          strcpy_s (format_string, sizeof(format_string), "R'G'B'A ");
+#endif
         else
+#ifndef _UCRT
           strcpy (format_string, "R'G'B' ");
+#else
+          strcpy_s (format_string, sizeof(format_string), "R'G'B' ");
+#endif
       }
     else if ((color_type & PNG_COLOR_TYPE_GRAY) == PNG_COLOR_TYPE_GRAY)
       {
         if (color_type & PNG_COLOR_MASK_ALPHA)
+#ifndef _UCRT
           strcpy (format_string, "Y'A ");
+#else
+          strcpy_s (format_string, sizeof(format_string), "Y'A ");
+#endif
         else
+#ifndef _UCRT
           strcpy (format_string, "Y' ");
+#else
+          strcpy_s (format_string, sizeof(format_string), "Y' ");
+#endif
       }
     else if (color_type & PNG_COLOR_TYPE_PALETTE)
       {
         if (color_type & PNG_COLOR_MASK_ALPHA)
+#ifndef _UCRT
           strcpy (format_string, "R'G'B'A ");
+#else
+          strcpy_s (format_string, sizeof(format_string), "R'G'B'A ");
+#endif
         else
+#ifndef _UCRT
           strcpy (format_string, "R'G'B' ");
+#else
+          strcpy_s (format_string, sizeof(format_string), "R'G'B' ");
+#endif
       }
     else
       {
@@ -199,11 +224,19 @@ get_babl_format(int bit_depth, int color_type, const Babl *space)
 
     if (bit_depth <= 8)
       {
+#ifndef _UCRT
         strcat (format_string, "u8");
+#else
+        strcat_s (format_string, sizeof(format_string), "u8");
+#endif
       }
     else if(bit_depth == 16)
       {
+#ifndef _UCRT
         strcat (format_string, "u16");
+#else
+        strcat_s (format_string, sizeof(format_string), "u16");
+#endif
       }
     else
       {

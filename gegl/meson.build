@@ -96,18 +96,34 @@ opencl_dep = declare_dependency(
 )
 
 
+gegl_def = 'gegl-generic.def'
 if host_cpu_family == 'x86_64'
   simd_extra = [lib_gegl_x86_64_v2, lib_gegl_x86_64_v3]
+  simd_extra_def = ['gegl-x86_64.def']
 elif host_cpu_family == 'arm'
   simd_extra = [lib_gegl_arm_neon]
+  simd_extra_def = ['gegl-arm.def']
 else
   simd_extra = []
+  simd_extra_def = []
 endif
 
-gegl_lib = library(api_name,
-  gegl_sources,
-  include_directories: [rootInclude, geglInclude],
-  dependencies: [
+if not os_osx
+  gegl_def = custom_target('gegl.def',
+    input: [
+      'gegl-generic.def',
+      simd_extra_def,
+    ],
+    output: [ 'gegl.def', ],
+    command: [python, '-c', 'import sys; data="".join(open(f).read() for f in sys.argv[2:]); open(sys.argv[1],"w").write(data)', '@OUTPUT@', '@INPUT@'],
+    build_by_default: true,
+  )
+endif
+
+gegl_lib_args = {
+  'sources': gegl_sources,
+  'include_directories': [rootInclude, geglInclude],
+  'dependencies': [
     babl,
     glib,
     gio,
@@ -115,12 +131,19 @@ gegl_lib = library(api_name,
     gmodule,
     opencl_dep,
   ],
-  c_args: gegl_cflags,
+  'c_args': gegl_cflags,
 
-  link_with: simd_extra,
-  link_args: gegl_ldflags,
-  install: true,
-  version: so_version,
+  'link_with': simd_extra,
+  'link_args': gegl_ldflags,
+  'install': true,
+  'version': so_version,
+}
+#FIXME: some symbols are unreliable on Windows GNU compilers. See: #445
+if cc.get_argument_syntax() == 'msvc'
+  gegl_lib_args += {'vs_module_defs': gegl_def}
+endif
+gegl_lib = library(api_name,
+  kwargs: gegl_lib_args
 )
 
 

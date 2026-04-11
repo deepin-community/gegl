@@ -19,14 +19,28 @@ gegl_npd_headers = files(
   'npd.h',
 )
 
+#Needed otherwise defcheck.py fails
+gegl_npd_def = configure_file(
+  input: 'gegl-npd.def',
+  output: 'gegl-npd.def',
+  copy: true
+)
+
+gegl_npd_lib_args = {
+  'sources': gegl_npd_sources,
+  'dependencies': [ glib, babl, math ],
+  'include_directories': geglInclude,
+  'link_with': [ gegl_lib ],
+  'install': true,
+}
+#FIXME: For some mystical reason, GNU compilers create a libgegl-*npd.dll that
+#crashes, even it being mostly identical to the one with vs_module_defs (the
+#only difference is one line of .buildid, so let's use the .def conditionally)
+if cc.get_argument_syntax() == 'msvc'
+  gegl_npd_lib_args += {'vs_module_defs': gegl_npd_def}
+endif
 gegl_npd_lib = library(meson.project_name() + '-npd-' + api_version,
-  gegl_npd_sources,
-  dependencies: [ glib, babl, math, ],
-  include_directories: geglInclude,
-  link_with: [
-    gegl_lib,
-  ],
-  install: true,
+  kwargs: gegl_npd_lib_args
 )
 
 libnpd = declare_dependency(

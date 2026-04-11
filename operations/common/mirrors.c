@@ -373,6 +373,19 @@ get_required_for_output (GeglOperation       *operation,
   return result;
 }
 
+static GeglRectangle
+get_invalidated_by_change (GeglOperation       *operation,
+                           const gchar         *input_pad,
+                           const GeglRectangle *input_region)
+{
+  GeglRectangle *in_rect = gegl_operation_source_get_bounding_box (operation, "input");
+
+  if (in_rect && ! gegl_rectangle_is_infinite_plane (in_rect))
+    return *in_rect;
+
+  return *input_region;
+}
+
 /* Specify the input and output buffer formats.
  */
 static void
@@ -455,19 +468,19 @@ gegl_op_class_init (GeglOpClass *klass)
   operation_class = GEGL_OPERATION_CLASS (klass);
   filter_class    = GEGL_OPERATION_FILTER_CLASS (klass);
 
-  filter_class->process                    = process;
-  operation_class->prepare                 = prepare;
-  operation_class->process                 = operation_process;
-  operation_class->get_bounding_box        = get_bounding_box;
-  operation_class->get_required_for_output = get_required_for_output;
+  filter_class->process                      = process;
+  operation_class->prepare                   = prepare;
+  operation_class->process                   = operation_process;
+  operation_class->get_bounding_box          = get_bounding_box;
+  operation_class->get_required_for_output   = get_required_for_output;
+  operation_class->get_invalidated_by_change = get_invalidated_by_change;
 
   gegl_operation_class_set_keys (operation_class,
     "name",               "gegl:mirrors",
     "title",              _("Kaleidoscopic Mirroring"),
     "categories",         "blur",
     "position-dependent", "true",
-    "reference-hash",     "3e0a6b68f7211b45731d9d746ee9e279",
-    "reference-hashB",    "036b0fb3a52cfdd50d114118596a7adc",
+    "reference-hash",     "29aea116dd3ecf595ae19df9dcfc65a5",
     "description",        _("Create a kaleidoscope like effect."),
     NULL);
 }

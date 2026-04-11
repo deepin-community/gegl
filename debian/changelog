@@ -1,8 +1,86 @@
-gegl (1:0.4.62-1deepin1) unstable; urgency=medium
+gegl (1:0.4.70-1) unstable; urgency=medium
 
-  * revert t64.
+  * New upstream bugfix release
 
- -- lhdjply <lhdjply@126.com>  Wed, 28 May 2025 08:26:53 +0800
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Sun, 29 Mar 2026 09:58:03 -0700
+
+gegl (1:0.4.68-1) unstable; urgency=medium
+
+  * New upstream release
+  * Remove 2 patches applied in new release
+  * debian/libgegl-0.4.0t64.symbols: Update
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Thu, 19 Mar 2026 10:46:35 -0400
+
+gegl (1:0.4.66-3) unstable; urgency=medium
+
+  * Move Maintainer from Debian GNOME to Debian GNOME Extras
+  * Bump Standards Version to 4.7.3
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Thu, 08 Jan 2026 09:50:14 -0500
+
+gegl (1:0.4.66-2) unstable; urgency=high
+
+  * Cherry-pick patch to fix armhf build
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Sat, 13 Dec 2025 22:06:39 -0500
+
+gegl (1:0.4.66-1) unstable; urgency=high
+
+  * New upstream release
+  * Remove implicit function declaration patch: applied in new release
+  * Cherry-pick proposed security fix for ZDI-CAN-28266
+  * Remove unnecessary Priority: optional field
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Sat, 13 Dec 2025 21:14:08 -0500
+
+gegl (1:0.4.64-2) unstable; urgency=medium
+
+  * Add Build-Depends: python-gi-dev for build tests
+  * Remove unnecessary Build-Depends: asciidoc-base, graphviz
+  * Stop disabling sdl2 feature
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Thu, 27 Nov 2025 12:05:53 -0500
+
+gegl (1:0.4.64-1) unstable; urgency=high
+
+  * New upstream release
+  * Bump minimum babl
+  * Add patch to fix implicit function declaration
+  * Remove security patch applied in new release
+  * debian/watch: Convert to Version: 5
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Mon, 06 Oct 2025 23:24:01 -0400
+
+gegl (1:0.4.62-3.1) unstable; urgency=medium
+
+  * Non-maintainer upload.
+  * ZDI-CAN-27803: GIMP HDR File Parsing Heap-based Buffer Overflow Remote
+    Code Execution Vulnerability (CVE-2025-10921) (Closes: #1116470)
+
+ -- Salvatore Bonaccorso <carnil@debian.org>  Fri, 03 Oct 2025 17:37:16 +0200
+
+gegl (1:0.4.62-3) unstable; urgency=medium
+
+  * Team upload
+  * d/control: Replace B-D on libgirepository1.0-dev with
+    gobject-introspection
+  * d/copyright: Correct some duplicated glob patterns
+  * d/copyright: Update for some renamed files
+  * d/copyright: Add missing stanza for ctx.h
+  * d/p/debian/docs-Exclude-remote-image-from-API-reference.patch:
+    Add patch to avoid a remote image in the API reference documentation
+  * d/salsa-ci.yml: Add
+  * d/control: Remove Rules-Requires-Root, unnecessary since trixie
+  * d/control: Standards-Version: 4.7.2 (no changes required)
+
+ -- Simon McVittie <smcv@debian.org>  Mon, 08 Sep 2025 09:20:17 +0100
+
+gegl (1:0.4.62-2) unstable; urgency=medium
+
+  * Release to unstable
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Thu, 29 May 2025 08:24:59 -0400
 
 gegl (1:0.4.62-1) experimental; urgency=medium
 
