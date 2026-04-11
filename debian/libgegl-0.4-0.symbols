@@ -1,4 +1,4 @@
-libgegl-0.4.so.0 libgegl-0.4-0t64 #MINVER#
+libgegl-0.4.so.0 libgegl-0.4-0 #MINVER#
 * Build-Depends-Package: libgegl-dev
  _gegl_buffer_drop_hot_tile@Base 0.3.0
  _gegl_cl_is_accelerated@Base 0.3.0
@@ -898,7 +898,7 @@ libgegl-0.4.so.0 libgegl-0.4-0t64 #MINVER#
  gegl_visitor_traverse_topological@Base 0.3.22
  gegl_visitor_visit_node@Base 0.3.0
  gegl_visitor_visit_pad@Base 0.3.0
-libgegl-npd-0.4.so libgegl-0.4-0t64 #MINVER#
+libgegl-npd-0.4.so libgegl-0.4-0 #MINVER#
 * Build-Depends-Package: libgegl-dev
  npd_SED@Base 0.3.0
  npd_add_control_point@Base 0.3.0
@@ -940,7 +940,7 @@ libgegl-npd-0.4.so libgegl-0.4-0t64 #MINVER#
  npd_set_deformation_type@Base 0.3.0
  npd_set_pixel_color@Base 0.3.0
  npd_set_point_coordinates@Base 0.3.0
-libgegl-sc-0.4.so libgegl-0.4-0t64 #MINVER#
+libgegl-sc-0.4.so libgegl-0.4-0 #MINVER#
 * Build-Depends-Package: libgegl-dev
  AdvancingFront_set_head@Base 0.3.0
  _p2tr_point_insert_edge@Base 0.3.0
