@@ -1,3 +1,9 @@
+gegl (1:0.4.70-1deepin1) unstable; urgency=medium
+
+  * revert t64.
+
+ -- lhdjply <lhdjply@126.com>  Sat, 11 Apr 2026 09:24:29 +0800
+
 gegl (1:0.4.70-1) unstable; urgency=medium
 
   * New upstream bugfix release
