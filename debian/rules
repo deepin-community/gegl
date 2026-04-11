@@ -1,7 +1,5 @@
 #!/usr/bin/make -f
 
-built_binaries := $(shell dh_listpackages)
-
 export DEB_BUILD_MAINT_OPTIONS = hardening=+all
 export DEB_LDFLAGS_MAINT_APPEND = -Wl,-O1 -Wl,-O1 -Wl,-z,defs
 export DPKG_GENSYMBOLS_CHECK_LEVEL = 4
@@ -14,17 +12,11 @@ else
 	EXTRA_CONFIGURE_OPTIONS=
 endif
 
-ifeq ($(filter %-doc,$(built_binaries)),)
-EXTRA_CONFIGURE_OPTIONS += -Dgi-docgen=disabled
-else
-EXTRA_CONFIGURE_OPTIONS += -Dgi-docgen=enabled
-endif
-
 # Upstream test timeouts assume an otherwise unloaded system, but that
 # isn't necessarily the case for a porterbox or multiple parallel builds
 test_timeout_multiplier = 3
 
-ifneq ($(filter aarch64 arm% hppa mips% sparc%,$(DEB_HOST_ARCH_CPU)),)
+ifneq ($(filter aarch64 arm% hppa sparc%,$(DEB_HOST_ARCH_CPU)),)
 # These architectures are typically slower, particularly for the sort of
 # floating-point processing we're doing here
 test_timeout_multiplier = 10
@@ -41,14 +33,13 @@ endif
 override_dh_auto_configure:
 	dh_auto_configure -- \
 		-Dauto_features=enabled \
-		-Ddocs=true \
+		-Ddocs=false \
+		-Dgi-docgen=$(if $(filter %-doc,$(shell dh_listpackages)),enabled,disabled) \
 		-Djasper=disabled \
 		-Dlibav=disabled \
 		-Dlua=disabled \
 		-Dmrg=disabled \
-		-Dpygobject=disabled \
-		-Dsdl1=disabled \
-		-Dsdl2=disabled \
+		-Dpygobject=$(if $(filter nocheck,$(DEB_BUILD_OPTIONS)),disabled,enabled) \
 		$(EXTRA_CONFIGURE_OPTIONS)
 
 # These json files appear to only be needed for distcheck according to git log

@@ -57,8 +57,16 @@
 
 G_BEGIN_DECLS
 
-typedef struct _GeglProperties  GeglProperties;
+/* In C++ mode, make struct names unique per operation to avoid ODR violations */
+#define GEGL_OP_STRUCT_NAME_(a, b) a##_##b
+#define GEGL_OP_STRUCT_NAME(a, b) GEGL_OP_STRUCT_NAME_(a, b)
+#ifdef __cplusplus
+typedef struct GEGL_OP_STRUCT_NAME(_GeglOp, GEGL_OP_NAME)   GeglOp;
+#else
 typedef struct _GeglOp   GeglOp;
+#endif
+
+typedef struct GEGL_OP_STRUCT_NAME(_GeglProperties, GEGL_OP_NAME)  GeglProperties;
 
 
 static void gegl_op_init_properties     (GeglOp   *self);
@@ -192,13 +200,21 @@ type_name##_register_type (GTypeModule *type_module)                    \
 
 
 #ifdef GEGL_OP_Parent
+#ifdef __cplusplus
+struct GEGL_OP_STRUCT_NAME(_GeglOp, GEGL_OP_NAME)
+#else
 struct _GeglOp
+#endif
 {
   GEGL_OP_Parent parent_instance;
   gpointer       properties;
 };
 
+#ifdef __cplusplus
+typedef struct GEGL_OP_STRUCT_NAME(GeglOpClass, GEGL_OP_NAME)
+#else
 typedef struct
+#endif
 {
   MKCLASS(GEGL_OP_Parent)  parent_class;
 } GeglOpClass;
@@ -231,17 +247,17 @@ static const GeglModuleInfo modinfo =
 };
 
 /* prototypes added to silence warnings from gcc for -Wmissing-prototypes*/
-gboolean                gegl_module_register (GTypeModule *module);
-const GeglModuleInfo  * gegl_module_query    (GTypeModule *module);
+G_MODULE_EXPORT gboolean                gegl_module_register (GTypeModule *module);
+G_MODULE_EXPORT const GeglModuleInfo  * gegl_module_query    (GTypeModule *module);
 
 #ifndef GEGL_OP_BUNDLE
-G_MODULE_EXPORT const GeglModuleInfo *
+const GeglModuleInfo *
 gegl_module_query (GTypeModule *module)
 {
   return &modinfo;
 }
 
-G_MODULE_EXPORT gboolean
+gboolean
 gegl_module_register (GTypeModule *module)
 {
 #define do_reg_(a) gegl_op_##a##_register_type (module)
@@ -358,7 +374,7 @@ static GType enum_name ## _get_type (void)               \
 
 /* Properties */
 
-struct _GeglProperties
+struct GEGL_OP_STRUCT_NAME(_GeglProperties, GEGL_OP_NAME)
 {
   gpointer user_data; /* for use by the op implementation */
 #define property_double(name, label, def_val)          gdouble     name;
@@ -856,7 +872,7 @@ gegl_op_class_intern_init (gpointer klass)
     }
 
 #define description(blurb) \
-    pspec->_blurb = g_strdup (blurb);
+    pspec->_blurb = g_markup_escape_text (blurb, -1);
 #define value_range(min,max) \
     vpspec->minimum = min; vpspec->maximum = max; \
     upspec->ui_minimum = min; upspec->ui_maximum = max;

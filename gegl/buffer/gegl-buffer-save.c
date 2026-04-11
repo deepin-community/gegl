@@ -23,7 +23,14 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#ifdef HAVE_UNISTD_H
 #include <unistd.h>
+#endif
+#if !defined(HAVE_UNISTD_H) && defined(_WIN32)
+#include <io.h>
+#define write _write
+#define close _close
+#endif
 #include <errno.h>
 
 #include <glib-object.h>
@@ -37,8 +44,21 @@
 #include "gegl-tile.h"
 #include "gegl-buffer-index.h"
 
-#ifdef G_OS_WIN32
+#ifdef _WIN32
 #define BINARY_FLAG O_BINARY
+#ifdef _WIN64
+#include <basetsd.h>
+typedef SSIZE_T ssize_t;
+#endif
+#ifndef S_IRUSR
+#define S_IRUSR _S_IREAD
+#endif
+#ifndef S_IWUSR
+#define S_IWUSR _S_IWRITE
+#endif
+#ifndef S_IXUSR
+#define S_IXUSR 0
+#endif
 #else
 #define BINARY_FLAG 0
 #endif

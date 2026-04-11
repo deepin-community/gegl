@@ -312,9 +312,14 @@ rgbe_header_read_variables (rgbe_file *file,
             }
           else
             {
+#ifndef _UCRT
               guint linesize = lineend - data;
               strncpy (file->header.software, data,
                        MIN (linesize, G_N_ELEMENTS (file->header.software) - 1));
+#else
+              strncpy_s (file->header.software, sizeof(file->header.software),
+                         data, _TRUNCATE);
+#endif
             }
         }
 
@@ -624,6 +629,7 @@ rgbe_read_new_rle (const rgbe_file *file,
 {
   const guint8 *data;
   guint16       linesize;
+  guint32       max_size;
   guint         i;
   guint         component;
   gfloat       *pixoffset[RGBE_NUM_RGBE] =
@@ -646,6 +652,14 @@ rgbe_read_new_rle (const rgbe_file *file,
   data     = (guint8 *)g_mapped_file_get_contents (file->file) + *cursor;
   g_return_val_if_fail (data[OFFSET_R] == 2 && data[OFFSET_G] == 2, FALSE);
   linesize = (data[OFFSET_B] << 8) | data[OFFSET_E];
+  max_size = file->header.x_axis.size * file->header.y_axis.size * RGBE_NUM_RGBE;
+
+  if (RGBE_NUM_RGBE * linesize > max_size)
+    {
+      g_warning ("Invalid linesize %u is larger than maximum %u\n",
+                 RGBE_NUM_RGBE * linesize, max_size);
+      return FALSE;
+    }
 
   data += RGBE_NUM_RGBE;
 
@@ -670,6 +684,13 @@ rgbe_read_new_rle (const rgbe_file *file,
 
           data++;
 
+          /* Check if there's enought space in the buffer to avoid OOB */
+          if (length > (pixels + RGBE_NUM_RGBE * linesize - pixoffset[component]) / RGBE_NUM_RGBE)
+            {
+              g_warning ("Buffer overflow detected.");
+              return FALSE;
+            }
+        
           /* A compressed run */
           if (rle)
             {
@@ -923,7 +944,19 @@ rgbe_save_path (const gchar *path,
   FILE        *f       = NULL;
   gboolean     success = FALSE;
 
+#ifndef _UCRT
   f = (!strcmp (path, "-") ? stdout : fopen(path, "wb"));
+#else
+  if (!strcmp (path, "-"))
+    {
+      f = stdout;
+    }
+  else if (fopen_s(&f, path, "wb") != 0)
+    {
+      f = NULL;
+    }
+#endif
+
   if (!f)
       goto cleanup;
 

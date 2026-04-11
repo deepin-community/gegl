@@ -18,6 +18,10 @@
 
 #include "config.h"
 #include <glib/gi18n-lib.h>
+#if defined(_WIN32) && !defined(read)
+#include <io.h>
+#define read _read
+#endif
 
 #ifdef GEGL_PROPERTIES
 

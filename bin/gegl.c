@@ -22,6 +22,7 @@
 #include <glib/gprintf.h>
 #include <glib/gi18n-lib.h>
 #include <gegl.h>
+#include <locale.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -105,6 +106,8 @@ main (gint    argc,
   GError      *err       = NULL;
   gchar       *path_root = NULL;
 
+  setlocale (LC_ALL, "");
+
 #ifdef HAVE_MRG
   const gchar *renderer = g_getenv ("GEGL_RENDERER");
   if (renderer && ( !strcmp (renderer, "blit-mipmap") ||
@@ -121,8 +124,10 @@ main (gint    argc,
 #endif
                 NULL);
 
-  o = gegl_options_parse (argc, argv);
   gegl_init (NULL, NULL);
+
+  o = gegl_options_parse (argc, argv);
+
 #ifdef HAVE_SPIRO
   gegl_path_spiro_init ();
 #endif

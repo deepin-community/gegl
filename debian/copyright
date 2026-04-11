@@ -1,7 +1,6 @@
 Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
-Upstream-Name: gegl
-Upstream-Contact: Øyvind Kolås <pippin@gimp.org>
 Source: https://download.gimp.org/pub/gegl/
+Upstream-Name: gegl
 
 Files: *
 Copyright: 2003-2017 Øyvind Kolås <pippin@gimp.org>
@@ -41,7 +40,7 @@ License: LGPL-3+
 Files: gegl/gegl-enums.h
        operations/common/map-absolute.c
        operations/common/map-relative.c
-       operations/common/warp.c
+       operations/common-cxx/warp.cc
 Copyright: 2010-2011 Michael Muré
 License: LGPL-3+
 
@@ -91,13 +90,12 @@ Files: gegl/buffer/gegl-buffer-iterator-private.h
 Copyright: 2013 Michael Henning
 License: LGPL-3+
 
-Files: gegl/buffer/gegl-region-generic.*
-       gegl/buffer/gegl-buffer-iterator.*
+Files: gegl/graph/gegl-region-generic.*
 Copyright: 1987-1988, 1998 The Open Group
            1987-1988 Digital Equipment Corporation
 License: X-Open-Group-DEC
 
-Files: gegl/buffer/gegl-region.h
+Files: gegl/graph/gegl-region.h
 Copyright: 1995-1997 Peter Mattis, Spencer Kimball and Josh MacDonald
            1997-2000 GTK+ Team and others
 License: LGPL-3+
@@ -162,7 +160,6 @@ Copyright: 2003 Calvin Williamson
 License: LGPL-3+
 
 Files: gegl/module/gegldatafiles.*
-       gegl/graph/gegl-node-private.h
 Copyright: 1996 Federico Mena Quintero
 License: LGPL-3+
 
@@ -179,28 +176,26 @@ Files: gegl/opencl/*.h
 Copyright: 2008-2010 The Kronos Group Inc.
 License: Expat
 
-Files: gegl/buffer/gegl-buffer-cl*
-       gegl/opencl/gegl*
-       opencl/bilateral-filter-fast.cl.h
-       opencl/colors-8bit-lut.cl.h
+Files: gegl/opencl/gegl*
+       opencl/bilateral-filter-fast.cl
        operations/common/edge-sobel.c
        operations/workshop/bilateral-filter-fast.c
 Copyright: 2011-2013 Victor Oliveira
 License: LGPL-3+
 
 Files: gegl/opencl/gegl-cl-random.*
-       opencl/alien-map.cl.h
-       opencl/contrast-curve.cl.h
-       opencl/noise-hurl.cl.h
-       opencl/posterize.cl.h
-       opencl/random.cl.h
-       opencl/red-eye-removal.cl.h
-       opencl/stretch-contrast.cl.h
+       opencl/alien-map.cl
+       opencl/contrast-curve.cl
+       opencl/noise-hurl.cl
+       opencl/posterize.cl
+       opencl/random.cl
+       opencl/red-eye-removal.cl
+       opencl/stretch-contrast.cl
 Copyright: 2013 Carlos Zubieta
 License: LGPL-3+
 
 Files: gegl/opencl/gegl-cl-init.c
-       opencl/colors-8bit-lut.cl.h
+       opencl/colors-8bit-lut.cl
 Copyright: 2012 Victor Oliveira
            2013 Daniel Sabo
 License: LGPL-3+
@@ -256,15 +251,15 @@ Copyright: 2007 Øyvind Kolås
            2011 Michael Muré
 License: LGPL-3+
 
-Files: gcut/iconographer.c
-Copyright: 2015 Rituwall Inc, authored by pippin@gimp.org
+Files: libs/ctx/ctx.h
+Copyright: 2012-2025 Øyvind Kolps with contributors
 License: ISC
 
 Files: libs/npd/*
 Copyright: 2013 Marek Dvoroznak
 License: LGPL-3+
 
-Files: libs/poly2tri-c/*
+Files: subprojects/poly2tri-c/*
 Copyright: 2009-2010 Poly2Tri Contributors
            Barak Itkin
            2012 Jonathan Richard Shewchuk
@@ -282,7 +277,7 @@ Files: libs/rgbe/*
 Copyright: 2010 Danny Robson
 License: LGPL-3+
 
-Files: opencl/color-exchange.cl.h
+Files: opencl/color-exchange.cl
        operations/common/component-extract.c
        operations/common/image-gradient.c
        operations/common/median-blur.c
@@ -296,12 +291,12 @@ Files: opencl/color-exchange.cl.h
 Copyright: 2015-2017 Thomas Manni
 License: LGPL-3+
 
-Files: opencl/gblur-1d.cl.h
+Files: opencl/gblur-1d.cl
 Copyright: 2012-2013 Victor Oliveira
            2013 Téo Mazars
 License: LGPL-3+
 
-Files: opencl/pixelize.cl.h
+Files: opencl/pixelize.cl
 Copyright: 2012-2013 Victor Oliveira
            2013 Carlos Zubieta
 License: LGPL-3+
@@ -349,7 +344,6 @@ Files: operations/common-gpl3+/cubism.c
 Copyright: 1996 Spencer Kimball, Tracy Scott
            2011 Robert Sasu
 License: GPL-3+
-
 
 Files: operations/common-gpl3+/deinterlace.c
 Copyright: 1996 Federico Mena Quintero
@@ -482,10 +476,13 @@ Copyright: 1997 Spencer Kimball
            2013 Téo Mazars
 License: GPL-3+
 
+Files: operations/common/spherize.c
+Copyright: 2017 Ell
+License: LGPL-3+
+
 Files: operations/common-gpl3+/spiral.c
-       operations/common/spherize.c
-       operations/workshop/bayer-matrix.c
-       operations/workshop/linear-sinusoid.c
+       operations/common-gpl3+/bayer-matrix.c
+       operations/common-gpl3+/linear-sinusoid.c
        tests/simple/test-node-exponential.c
 Copyright: 2017 Ell
 License: GPL-3+
@@ -534,7 +531,7 @@ Files: operations/common/color-temperature.c
 Copyright: 2008 Jan Heller
 License: LGPL-3+
 
-Files: operations/common/distance-transform.c
+Files: operations/common-cxx/distance-transform.cc
 Copyright: 2014 Simon Budig
 License: LGPL-3+
 
@@ -823,45 +820,6 @@ Copyright: 2007 Étienne Bersac <bersace03@laposte.net>
            2012-2015 Matteo F. Vescovi <mfv@debian.org>
 License: LGPL-3+
 
-License: X-Open-Group-DEC
- Copyright 1987, 1988, 1998  The Open Group
- .
- All Rights Reserved.
- .
- The above copyright notice and this permission notice shall be included in
- all copies or substantial portions of the Software.
- .
- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
- OPEN GROUP BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN
- AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- .
- Except as contained in this notice, the name of The Open Group shall not be
- used in advertising or otherwise to promote the sale, use or other dealings
- in this Software without prior written authorization from The Open Group.
- .
- Copyright 1987, 1988 by Digital Equipment Corporation, Maynard, Massachusetts.
- .
- All Rights Reserved
- .
- Permission to use, copy, modify, and distribute this software and its
- documentation for any purpose and without fee is hereby granted,
- provided that the above copyright notice appear in all copies and that
- both that copyright notice and this permission notice appear in
- supporting documentation, and that the name of Digital not be
- used in advertising or publicity pertaining to distribution of the
- software without specific, written prior permission.
- .
- DIGITAL DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
- ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT SHALL
- DIGITAL BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR
- ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,
- WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION,
- ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
- SOFTWARE.
-
 License: BSD-3-clause-Poly2Tri
  Redistribution and use in source and binary forms, with or without
  modification, are permitted provided that the following conditions are
@@ -885,40 +843,6 @@ License: BSD-3-clause-Poly2Tri
  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-License: LGPL-2+
- This file is free software; you can redistribute it and/or modify it
- under the terms of the GNU Library General Public License as
- published by the Free Software Foundation; either version 2 of the
- License, or (at your option) any later version.
- .
- This file is distributed in the hope that it will be useful, but
- WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- Lesser General Public License for more details.
- .
- You should have received a copy of the GNU Library General Public License
- along with this program.  If not, see <http://www.gnu.org/licenses/>.
- .
- On Debian systems, the complete text of the GNU Lesser General
- Public License version 2 can be found in `/usr/share/common-licenses/LGPL-2'.
-
-License: LGPL-3+
- This file is free software; you can redistribute it and/or modify it
- under the terms of the GNU Lesser General Public License as
- published by the Free Software Foundation; either version 3 of the
- License, or (at your option) any later version.
- .
- This file is distributed in the hope that it will be useful, but
- WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- Lesser General Public License for more details.
- .
- You should have received a copy of the GNU Lesser General Public License
- along with this program.  If not, see <http://www.gnu.org/licenses/>.
- .
- On Debian systems, the complete text of the GNU Lesser General
- Public License version 3 can be found in `/usr/share/common-licenses/LGPL-3'.
 
 License: Expat
  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -968,3 +892,76 @@ License: ISC
  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+
+License: LGPL-2+
+ This file is free software; you can redistribute it and/or modify it
+ under the terms of the GNU Library General Public License as
+ published by the Free Software Foundation; either version 2 of the
+ License, or (at your option) any later version.
+ .
+ This file is distributed in the hope that it will be useful, but
+ WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+ .
+ You should have received a copy of the GNU Library General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ .
+ On Debian systems, the complete text of the GNU Lesser General
+ Public License version 2 can be found in `/usr/share/common-licenses/LGPL-2'.
+
+License: LGPL-3+
+ This file is free software; you can redistribute it and/or modify it
+ under the terms of the GNU Lesser General Public License as
+ published by the Free Software Foundation; either version 3 of the
+ License, or (at your option) any later version.
+ .
+ This file is distributed in the hope that it will be useful, but
+ WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+ .
+ You should have received a copy of the GNU Lesser General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ .
+ On Debian systems, the complete text of the GNU Lesser General
+ Public License version 3 can be found in `/usr/share/common-licenses/LGPL-3'.
+
+License: X-Open-Group-DEC
+ Copyright 1987, 1988, 1998  The Open Group
+ .
+ All Rights Reserved.
+ .
+ The above copyright notice and this permission notice shall be included in
+ all copies or substantial portions of the Software.
+ .
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+ OPEN GROUP BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN
+ AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ .
+ Except as contained in this notice, the name of The Open Group shall not be
+ used in advertising or otherwise to promote the sale, use or other dealings
+ in this Software without prior written authorization from The Open Group.
+ .
+ Copyright 1987, 1988 by Digital Equipment Corporation, Maynard, Massachusetts.
+ .
+ All Rights Reserved
+ .
+ Permission to use, copy, modify, and distribute this software and its
+ documentation for any purpose and without fee is hereby granted,
+ provided that the above copyright notice appear in all copies and that
+ both that copyright notice and this permission notice appear in
+ supporting documentation, and that the name of Digital not be
+ used in advertising or publicity pertaining to distribution of the
+ software without specific, written prior permission.
+ .
+ DIGITAL DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+ ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT SHALL
+ DIGITAL BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR
+ ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,
+ WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION,
+ ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
+ SOFTWARE.

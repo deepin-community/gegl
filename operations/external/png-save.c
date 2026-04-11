@@ -32,7 +32,7 @@ property_int (bitdepth, _("Bitdepth"), 16)
   description (_("8 and 16 are the currently accepted values."))
   value_range (8, 16)
 property_object(metadata, _("Metadata"), GEGL_TYPE_METADATA)
-  description (_("Object to supply image metadata"))
+  description (_("Object providing image metadata"))
 
 #else
 
@@ -153,30 +153,54 @@ export_png (GeglOperation       *operation,
       if (babl_format_get_n_components (babl) != 2)
         {
           png_color_type = PNG_COLOR_TYPE_RGB_ALPHA;
+#ifndef _UCRT
           strcpy (format_string, "R'G'B'A ");
+#else
+          strcpy_s (format_string, sizeof(format_string), "R'G'B'A ");
+#endif
         }
       else
         {
           png_color_type = PNG_COLOR_TYPE_GRAY_ALPHA;
+#ifndef _UCRT
           strcpy (format_string, "Y'A ");
+#else
+          strcpy_s (format_string, sizeof(format_string), "Y'A ");
+#endif
         }
     else
       if (babl_format_get_n_components (babl) != 1)
         {
           png_color_type = PNG_COLOR_TYPE_RGB;
+#ifndef _UCRT
           strcpy (format_string, "R'G'B' ");
+#else
+          strcpy_s (format_string, sizeof(format_string), "R'G'B' ");
+#endif
         }
       else
         {
           png_color_type = PNG_COLOR_TYPE_GRAY;
+#ifndef _UCRT
           strcpy (format_string, "Y' ");
+#else
+          strcpy_s (format_string, sizeof(format_string), "Y' ");
+#endif
         }
   }
 
   if (bit_depth == 16)
+#ifndef _UCRT
     strcat (format_string, "u16");
+#else
+    strcat_s (format_string, sizeof(format_string), "u16");
+#endif
   else
+#ifndef _UCRT
     strcat (format_string, "u8");
+#else
+    strcat_s (format_string, sizeof(format_string), "u8");
+#endif
 
   if (setjmp (png_jmpbuf (png)))
     return -1;
@@ -319,7 +343,14 @@ export_png (GeglOperation       *operation,
   if (bit_depth > 8)
     png_set_swap (png);
 #endif
-  pixels = g_malloc0 (width * babl_format_get_bytes_per_pixel (format));
+  gsize row_bytes = 0;
+  const gsize bpp = babl_format_get_bytes_per_pixel (format);
+  if (!g_size_checked_mul (&row_bytes, (gsize)width, bpp))
+  {
+    g_warning ("png-save: refusing to allocate row buffer for width %u", (guint)width);
+    return -1;
+  }
+  pixels = g_malloc0 (row_bytes);
 
   for (i=0; i< height; i++)
     {

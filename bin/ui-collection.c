@@ -22,7 +22,13 @@
 #include <sys/stat.h>
 #include <stdio.h>
 #include <stdlib.h>
+#ifdef HAVE_UNISTD_H
 #include <unistd.h>
+#endif
+#if !defined(HAVE_UNISTD_H) && defined(_WIN32)
+#include <io.h>
+#define unlink _unlink
+#endif
 #include <dirent.h>
 #include <math.h>
 #include <mrg.h>

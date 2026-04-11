@@ -94,7 +94,7 @@ read_line(GInputStream *stream, char *buffer, gsize max_length)
 static gint64
 read_value(GInputStream *stream)
 {
-    static const int MAX_CHARS = 20;
+#define MAX_CHARS 20
     char buffer[MAX_CHARS];
     gssize read = read_until(stream, buffer, MAX_CHARS, " \n", 2);
 
@@ -103,6 +103,7 @@ read_value(GInputStream *stream)
         // delimiter only, try read next value
         read = read_until(stream, buffer, MAX_CHARS, " \n", 2);
       }
+#undef MAX_CHARS 
 
     if (read <= 0)
       {
@@ -131,6 +132,9 @@ ppm_load_read_header(GInputStream *stream,
     gchar  header[MAX_CHARS_IN_ROW];
     gint   maxval;
     int    channel_count;
+#ifdef _UCRT
+    char   errbuf[256];
+#endif
 
     /* Check the PPM file Type P3 or P6 */
     if (read_line(stream, header, MAX_CHARS_IN_ROW) <= 0 ||
@@ -163,7 +167,12 @@ ppm_load_read_header(GInputStream *stream,
     img->width = strtol (header, &ptr, 10);
     if (errno)
       {
+#ifndef _UCRT
         g_warning ("Error reading width: %s", strerror(errno));
+#else
+        strerror_s (errbuf, sizeof(errbuf), errno);
+        g_warning ("Error reading width: %s", errbuf);
+#endif
         return FALSE;
       }
     else if (img->width < 0)
@@ -175,7 +184,12 @@ ppm_load_read_header(GInputStream *stream,
     img->height = strtol (ptr, &ptr, 10);
     if (errno)
       {
+#ifndef _UCRT
         g_warning ("Error reading height: %s", strerror(errno));
+#else
+        strerror_s (errbuf, sizeof(errbuf), errno);
+        g_warning ("Error reading height: %s", errbuf);
+#endif
         return FALSE;
       }
     else if (img->width < 0)

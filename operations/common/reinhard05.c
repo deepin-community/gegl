@@ -130,8 +130,8 @@ reinhard05_process (GeglOperation       *operation,
   const Babl *space = gegl_operation_get_format (operation, "output"); /* the format is sufficent */
   const GeglProperties *o = GEGL_PROPERTIES (operation);
 
-  const gint  pix_stride = 4, /* RGBA */
-              RGB        = 3;
+  const gint  pix_stride = 4; /* RGBA */
+#define       RGB          3
 
   gfloat *lum,
          *pix;
@@ -250,6 +250,7 @@ reinhard05_process (GeglOperation       *operation,
                    GEGL_AUTO_ROWSTRIDE);
   g_free (pix);
   g_free (lum);
+#undef RGB
 
   return TRUE;
 }
@@ -316,7 +317,7 @@ gegl_op_class_init (GeglOpClass *klass)
   "name",      "gegl:reinhard05",
   "title",      _("Reinhard 2005 Tone Mapping"),
   "categories" , "tonemapping",
-  "reference-hash", "fb6bb888c83014f5c452e64dcff11455",
+  "reference-hash", "b6dc68faab3e0dddd2f5ea21770c42d7",
   "reference-composition", composition,
   "description",
         _("Adapt an image, which may have a high dynamic range, for "

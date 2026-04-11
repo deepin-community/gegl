@@ -1,57 +1,55 @@
 Source: gegl
+Standards-Version: 4.7.3
+Maintainer: Debian GNOME Extras Maintainers <pkg-gnome-extras-maintainers@lists.alioth.debian.org>
+Uploaders: Emilio Pozuelo Monfort <pochu@debian.org>,
+           Jeremy Bícha <jbicha@ubuntu.com>,
 Section: devel
-Priority: optional
-Maintainer: Debian GNOME Maintainers <pkg-gnome-maintainers@lists.alioth.debian.org>
-Uploaders: Emilio Pozuelo Monfort <pochu@debian.org>, Jeremy Bícha <jbicha@ubuntu.com>
-Build-Depends: dpkg-dev (>= 1.22.5),
-               debhelper-compat (= 13),
+Build-Depends: debhelper-compat (= 13),
                dh-sequence-gir,
+               dpkg-dev (>= 1.22.5),
                gir1.2-babl-0.1-dev,
                gir1.2-glib-2.0-dev,
                gir1.2-gobject-2.0-dev,
-               graphviz,
+               gobject-introspection (>= 1.80),
                libavformat-dev,
-               libbabl-dev (>= 1:0.1.99),
+               libbabl-dev (>= 1:0.1.116),
                libblas-dev,
-               libcairo2-dev (>= 0.12.2),
-               libgdk-pixbuf-2.0-dev (>= 2.18.0),
+               libcairo2-dev,
+               libgdk-pixbuf-2.0-dev,
                libgexiv2-dev,
-               libgirepository1.0-dev (>= 1.32.0),
-               libglib2.0-dev (>= 2.28.0),
+               libglib2.0-dev,
                libjpeg-dev,
                libjson-glib-dev,
                liblensfun-dev,
                libmaxflow-dev,
-               libopenexr-dev (>= 1.6.1),
+               libopenexr-dev,
                libpango1.0-dev,
-               libpng-dev (>= 1.6.0),
-               libpoppler-glib-dev (>= 0.71.0),
+               libpng-dev,
+               libpoppler-glib-dev,
                libraw-dev,
-               librsvg2-dev (>= 2.40.6),
-               libsdl2-dev (>= 1.2.0),
-               libspiro-dev (>= 1:20190731-2~),
+               librsvg2-dev,
+               libsdl2-dev,
+               libspiro-dev,
                libsuitesparse-dev,
                libswscale-dev,
                libtiff-dev,
                libv4l-dev [!hurd-any],
-               libwebp-dev (>= 0.5.0),
-               meson (>= 0.54.0),
+               libwebp-dev,
+               meson,
                pkgconf,
-               valac (>= 0.20)
-Build-Depends-Indep: asciidoc-base <!nodoc>,
-                     gi-docgen,
+               python-gi-dev <!nocheck>,
+               valac,
+Build-Depends-Indep: gi-docgen <!nodoc>,
                      libbabl-doc <!nodoc>,
-                     libglib2.0-doc <!nodoc>
-Rules-Requires-Root: no
-Standards-Version: 4.7.0
-Vcs-Browser: https://salsa.debian.org/gnome-team/gegl
-Vcs-Git: https://salsa.debian.org/gnome-team/gegl.git
+                     libglib2.0-doc <!nodoc>,
+Vcs-Browser: https://salsa.debian.org/gnome-team/extras/gegl
+Vcs-Git: https://salsa.debian.org/gnome-team/extras/gegl.git
 Homepage: https://gegl.org/
 
 Package: gegl
 Architecture: any
 Depends: ${misc:Depends},
-         ${shlibs:Depends}
+         ${shlibs:Depends},
 Description: Generic Graphics Library Test Program
  GEGL (Generic Graphics Library) is a graph based image processing
  framework.
@@ -62,14 +60,17 @@ Description: Generic Graphics Library Test Program
  .
  This package contains a bunch of test programs.
 
-Package: libgegl-0.4-0
-Section: libs
+Package: libgegl-0.4-0t64
 Architecture: any
 Multi-Arch: same
-Depends: ${misc:Depends},
+Section: libs
+Depends: libgegl-common (>= ${source:Version}),
+         ${misc:Depends},
          ${shlibs:Depends},
-         libgegl-common (>= ${source:Version})
-Suggests: graphviz
+Suggests: graphviz,
+Breaks: libgegl-0.4-0 (<< ${source:Version}),
+Replaces: libgegl-0.4-0,
+Provides: ${t64:Provides},
 Description: Generic Graphics Library
  GEGL (Generic Graphics Library) is a graph based image processing
  framework.
@@ -81,7 +82,7 @@ Description: Generic Graphics Library
 Package: libgegl-common
 Architecture: all
 Multi-Arch: foreign
-Depends: ${misc:Depends}
+Depends: ${misc:Depends},
 Description: Generic Graphics Library - common files
  GEGL (Generic Graphics Library) is a graph based image processing
  framework.
@@ -93,17 +94,16 @@ Description: Generic Graphics Library - common files
  This package contains common data files and translations.
 
 Package: libgegl-dev
-Section: libdevel
 Architecture: any
 Multi-Arch: same
-Depends: libbabl-dev (>= 1:0.1.99),
-         libgegl-0.4-0 (= ${binary:Version}),
-         libglib2.0-dev (>= 2.16.1),
+Section: libdevel
+Depends: libbabl-dev (>= 1:0.1.116),
+         libgegl-0.4-0t64 (= ${binary:Version}),
+         libglib2.0-dev,
          libjson-glib-dev,
          ${gir:Depends},
          ${misc:Depends},
-         ${shlibs:Depends}
-Provides: ${gir:Provides}
+Provides: ${gir:Provides},
 Description: Generic Graphics Library (development files)
  GEGL (Generic Graphics Library) is a graph based image processing
  framework.
@@ -115,11 +115,11 @@ Description: Generic Graphics Library (development files)
  This package contains the development files.
 
 Package: libgegl-doc
-Section: doc
 Architecture: all
-Multi-Arch: foreign
-Depends: ${misc:Depends}
 Build-Profiles: <!nodoc>
+Multi-Arch: foreign
+Section: doc
+Depends: ${misc:Depends},
 Description: Generic Graphics Library (documentation)
  GEGL (Generic Graphics Library) is a graph based image processing
  framework.
@@ -131,11 +131,11 @@ Description: Generic Graphics Library (documentation)
  This package contains the documentation.
 
 Package: gir1.2-gegl-0.4
-Section: introspection
 Architecture: any
 Multi-Arch: same
+Section: introspection
 Depends: ${gir:Depends},
-         ${misc:Depends}
+         ${misc:Depends},
 Description: GObject introspection data for the Generic Graphics Library
  GEGL (Generic Graphics Library) is a graph based image processing
  framework.
